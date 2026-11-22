@@ -24,7 +24,7 @@
 #imp-net{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9000;padding:6px 10px;border-radius:8px;background:#3b2a12;color:#ffd590;font:600 12px/1.3 system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.3)}
 </style>
 <script src="imp-shim.js"></script>
-<script>(function(){try{var o=JSON.parse(localStorage.getItem("imp-icon-v1")||"null");if(!o||!o.i192)return;var b=location.href.replace(/[#?].*$/,"").replace(/[^\/]*$/,"");var m={name:"Imperium",short_name:"Imperium",description:"Buku catatan pribadi",id:b,start_url:b+"#overview",scope:b,display:"standalone",background_color:"#2a0f2e",theme_color:"#2a0f2e",orientation:"any",icons:[{src:o.i192,sizes:"192x192",type:"image/png"},{src:o.i512,sizes:"512x512",type:"image/png"},{src:o.m512,sizes:"512x512",type:"image/png",purpose:"maskable"}]};document.querySelector('link[rel="manifest"]').href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));document.querySelector('link[rel="icon"]').href=o.i192;document.querySelector('link[rel="apple-touch-icon"]').href=o.i180}catch(e){}})()</script>
+<script>(function(){try{var a=JSON.parse(localStorage.getItem("imp-icon-v1")||"null"),c=JSON.parse(localStorage.getItem("imp-cache-v1")||"null"),s=c&&c.appicon,o=(a&&s)?((+s.t||0)>(+a.t||0)?s:a):(a||s);if(!o||o.off||!o.i192)return;var b=location.href.replace(/[#?].*$/,"").replace(/[^\/]*$/,"");var m={name:"Imperium",short_name:"Imperium",description:"Buku catatan pribadi",id:b,start_url:b+"#overview",scope:b,display:"standalone",background_color:"#2a0f2e",theme_color:"#2a0f2e",orientation:"any",icons:[{src:o.i192,sizes:"192x192",type:"image/png"},{src:o.i512,sizes:"512x512",type:"image/png"},{src:o.m512,sizes:"512x512",type:"image/png",purpose:"maskable"}]};document.querySelector('link[rel="manifest"]').href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));document.querySelector('link[rel="icon"]').href=o.i192;document.querySelector('link[rel="apple-touch-icon"]').href=o.i180}catch(e){}})()</script>
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@500;700;800&display=swap">
 <style>
@@ -6590,6 +6590,17 @@ document.addEventListener("click",function(e){
     }catch(_){}
   }
   window.IMP_APPLY_ICON=applyIcon;
+  function recode(url,size,type,q){return new Promise(function(res){var im=new Image();im.onload=function(){var c=document.createElement("canvas");c.width=c.height=size;var x=c.getContext("2d");x.imageSmoothingQuality="high";x.drawImage(im,0,0,size,size);res(c.toDataURL(type,q))};im.onerror=function(){res(url)};im.src=url})}
+  async function compact(o){
+    var w=await recode(o.i512,512,"image/webp",.9),mw=await recode(o.m512,512,"image/webp",.9);
+    if(w.indexOf("data:image/webp")!==0){w=o.i512;mw=o.m512}
+    return {kind:"appicon",i512:w,m512:mw,i192:w,i180:await recode(o.i512,180,"image/png"),t:o.t};
+  }
+  function syncedIcon(){try{var c=JSON.parse(localStorage.getItem("imp-cache-v1")||"null");return c&&c.appicon||null}catch(_){return null}}
+  function localIcon(){try{return JSON.parse(localStorage.getItem(IK)||"null")}catch(_){return null}}
+  function pickIcon(){var a=localIcon(),b=syncedIcon();var w=(a&&b)?((+b.t||0)>(+a.t||0)?b:a):(a||b);return w&&!w.off&&w.i192?w:null}
+  var appliedT=-1;
+  function refreshIcon(){var w=pickIcon(),t=w?+w.t||1:0;if(t!==appliedT){appliedT=t;applyIcon(w);var cur=$("ic-cur");if(cur)cur.src=w?w.i192:"icon-192-v2.png"}}
   function makeIcons(img,bg,zoom){
     function draw(size,mask,fill){
       var c=document.createElement("canvas");c.width=c.height=size;var x=c.getContext("2d");
@@ -6602,13 +6613,14 @@ document.addEventListener("click",function(e){
       x.imageSmoothingQuality="high";x.drawImage(img,(size-dw)/2,(size-dh)/2,dw,dh);x.restore();
       return c.toDataURL("image/png");
     }
-    return {i192:draw(192,false,true),i512:draw(512,false,true),m512:draw(512,true,true),i180:draw(180,false,true),t:Date.now()};
+    var o={i192:draw(192,false,true),i512:draw(512,false,true),m512:draw(512,true,true),i180:draw(180,false,true),t:Date.now()};
+    return o;
   }
   function buildIconCard(){
     var host=$("tab-pengaturan");if(!host||$("imp-iconcard"))return;
     var c=document.createElement("div");c.className="setcard";c.id="imp-iconcard";
     c.innerHTML='<h3 class="set-h">Logo aplikasi di HP</h3>'
-      +'<p class="hint">Ganti ikon Imperium di layar utama HP dan di tab browser. Berlaku untuk perangkat ini.</p>'
+      +'<p class="hint">Ganti ikon Imperium di layar utama HP dan di tab browser. Berlaku di semua perangkat yang tersambung ke Spreadsheet Anda.</p>'
       +'<div class="ic-row"><div class="ic-prev"><img id="ic-cur" alt="Logo sekarang"><small>Sekarang</small></div><div class="ic-prev"><img id="ic-new" alt="" hidden><span class="ic-empty" id="ic-empty">Belum dipilih</span><small>Baru</small></div></div>'
       +'<label>Pilih gambar (PNG/JPG, persegi lebih bagus)<input type="file" id="ic-file" accept="image/*"></label>'
       +'<div class="ic-opts"><label>Warna latar<input type="color" id="ic-bg" value="#2a0f2e"></label><label>Ukuran<select id="ic-zoom"><option value="1">Penuh (dipotong persegi)</option><option value="0.82">Ada jarak tepi</option><option value="0.65">Kecil di tengah</option></select></label></div>'
@@ -6617,7 +6629,7 @@ document.addEventListener("click",function(e){
       +'<details class="ic-how"><summary>Supaya ikon di layar utama ikut berubah</summary><ol><li>Simpan logo baru di sini.</li><li>Hapus ikon Imperium lama dari layar utama HP (tekan lama → Hapus / Copot).</li><li>Buka lagi halaman Imperium di Chrome (Android) atau Safari (iPhone).</li><li>Android: menu ⋮ → <b>Instal aplikasi</b> / Tambahkan ke layar utama. iPhone: tombol Bagikan → <b>Tambah ke Layar Utama</b>.</li></ol></details>';
     var foot=host.querySelector("footer");host.insertBefore(c,foot||null);
     var img=null,cur=null;
-    try{cur=JSON.parse(localStorage.getItem(IK)||"null")}catch(_){}
+    cur=pickIcon();
     $("ic-cur").src=cur?cur.i192:"icon-192-v2.png";
     function preview(){if(!img)return;var o=makeIcons(img,$("ic-bg").value,+$("ic-zoom").value);$("ic-new").src=o.m512;$("ic-new").hidden=false;$("ic-empty").hidden=true;$("ic-save").disabled=false;return o}
     $("ic-file").onchange=function(){
@@ -6631,18 +6643,19 @@ document.addEventListener("click",function(e){
     $("ic-save").onclick=function(){
       var o=preview();if(!o)return;
       try{localStorage.setItem(IK,JSON.stringify(o))}catch(e){$("ic-msg").textContent="Gagal menyimpan logo (memori browser penuh). Coba gambar yang lebih kecil.";return}
-      applyIcon(o);$("ic-cur").src=o.i192;
-      $("ic-msg").textContent="Logo tersimpan. Ikon di tab browser sudah berganti. Untuk ikon di layar utama HP, ikuti langkah di bawah.";
+      appliedT=-1;refreshIcon();
+      $("ic-msg").textContent="Logo tersimpan dan dikirim ke perangkat lain (laptop/HP lain ikut berganti setelah sinkron). Untuk ikon di layar utama HP, ikuti langkah di bawah.";
+      compact(o).then(function(d){if(window.IMP_DOC_SAVE)window.IMP_DOC_SAVE("appicon",d)});
       c.querySelector(".ic-how").open=true;
     };
-    $("ic-reset").onclick=function(){try{localStorage.removeItem(IK)}catch(_){}applyIcon(null);$("ic-cur").src="icon-192-v2.png";$("ic-msg").textContent="Logo bawaan dipakai lagi. Pasang ulang ikon di layar utama agar ikut kembali.";};
+    $("ic-reset").onclick=function(){var off={kind:"appicon",off:true,t:Date.now()};try{localStorage.setItem(IK,JSON.stringify(off))}catch(_){}if(window.IMP_DOC_SAVE)window.IMP_DOC_SAVE("appicon",off);appliedT=-1;refreshIcon();$("ic-msg").textContent="Logo bawaan dipakai lagi. Pasang ulang ikon di layar utama agar ikut kembali.";};
   }
 
   /* ================= wiring ================= */
   var queued=false;
   function pass(){queued=false;try{fitStats()}catch(e){}try{labelTables()}catch(e){}try{foldForms()}catch(e){}}
   function boot(){
-    buildCountdown();try{buildIconCard()}catch(e){}pass();
+    buildCountdown();try{buildIconCard();refreshIcon();setInterval(refreshIcon,5000)}catch(e){}pass();
     new MutationObserver(function(){if(!queued){queued=true;requestAnimationFrame(pass)}}).observe(document.body,{childList:true,subtree:true});
     /* language switch: repaint countdown labels */
     new MutationObserver(function(){paint();document.querySelectorAll(".fold-tg").forEach(function(b){var f=$(b.getAttribute("aria-controls"));if(f&&f.hidden&&FOLD[f.id]&&f.id.indexOf("ie-")!==0)b.textContent=isID()?FOLD[f.id].id:FOLD[f.id].en})}).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
