@@ -3912,18 +3912,18 @@ window.I18N=(function(){
       const st=s.start||"",d=daysLeft(s.end),run=st?Math.max(0,-daysLeft(st)):0,tot=st?Math.max(0,daysLeft(s.end)-daysLeft(st)):0;
       const pct=tot?Math.min(100,Math.round(run/tot*100)):(d<=0?100:0);
       const cls=d<0?"t-crit":d<=3?"t-crit":d<=7?"t-warn":"t-ok";
-      const t=today(),lab=d<0?LTL("overdue","terlambat"):d===0?LTL("ends today","habis hari ini"):LTL("left","lagi");
+      const lab=d<0?LTL("days overdue","hari terlambat"):d===0?LTL("ends today","habis hari ini"):LTL("days left","hari lagi");
       const meta=[st?'<span class="mono">'+LTL("Start ","Mulai ")+esc(fmtDate(st))+'</span>':'','<span class="mono">'+LTL("Ends ","Habis ")+esc(fmtDate(s.end))+'</span>',CYCL[s.cycle]?'<span>🔁 '+CYCL[s.cycle]+'</span>':'',s.note?'<span>'+esc(s.note)+'</span>':''];
-      return '<li class="mid lt-row"><div class="days '+cls+'">'+(d===0?'<b>0</b>':ltBig(t,s.end))+'<span>'+lab+'</span></div><div class="grow"><div class="ttl">'+esc(s.name)+'</div>'
-        +(st?'<div class="lt-run"><span><b class="mono">'+(run?ltSpan(st,run>tot?s.end:t):"0 "+LTL("days","hari"))+'</b> '+LTL("of ","dari ")+ltSpan(st,s.end)+LTL(" used"," terpakai")+'</span><span class="mono">'+pct+'%</span></div><div class="lt-bar '+cls+'"><i style="width:'+pct+'%"></i></div>':'')
+      return '<li class="mid lt-row"><div class="days '+cls+'"><b>'+Math.abs(d)+'</b><span>'+lab+'</span></div><div class="grow"><div class="ttl">'+esc(s.name)+'</div>'
+        +(st?'<div class="lt-run"><span><b class="mono">'+run+'</b> '+LTL("of ","dari ")+tot+LTL(" days used"," hari terpakai")+'</span><span class="mono">'+pct+'%</span></div><div class="lt-bar '+cls+'"><i style="width:'+pct+'%"></i></div>':'')
         +'<div class="meta">'+meta.join("")+'</div></div>'+acts(s)+'</li>';
     };
     if(dn.length)h+='<h3 class="lt-h">⏳ '+LTL("Days left","Hari lagi")+'</h3>'+grouped(dn,rowDn);
     const rowUp=s=>{
       const n=-daysLeft(s.start),fut=n<0,t=today();
       const meta=['<span class="mono">'+LTL("Since ","Sejak ")+esc(fmtDate(s.start))+'</span>',s.note?'<span>'+esc(s.note)+'</span>':''];
-      return '<li class="mid lt-row"><div class="days t-info">'+ltBig(s.start,t)+'<span>'+(fut?LTL("to go","lagi"):LTL("running","berjalan"))+'</span></div><div class="grow"><div class="ttl">'+esc(s.name)+'</div>'
-        +'<div class="lt-run"><span>'+(fut?LTL("Starts in ","Mulai dalam ")+ltSpan(t,s.start):'<b class="mono">'+Math.abs(n)+'</b> '+LTL("days in total","hari total"))+'</span></div>'
+      return '<li class="mid lt-row"><div class="days t-info"><b>'+Math.abs(n)+'</b><span>'+(fut?LTL("days to go","hari lagi"):LTL("days","hari"))+'</span></div><div class="grow"><div class="ttl">'+esc(s.name)+'</div>'
+        +'<div class="lt-run"><span>'+(fut?LTL("Starts in ","Mulai dalam ")+ltSpan(t,s.start):'<b class="mono">'+ltSpan(s.start,t)+'</b> '+LTL("so far","sampai hari ini"))+'</span></div>'
         +'<div class="meta">'+meta.join("")+'</div></div>'+acts(s)+'</li>';
     };
     if(up.length)h+='<h3 class="lt-h">📅 '+LTL("Days running","Hari berjalan")+'</h3>'+grouped(up,rowUp);
