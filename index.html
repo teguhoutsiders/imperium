@@ -1473,6 +1473,22 @@ label[hidden]{display:none!important}
 .lt-big>span+span b{font-size:18px}
 @media (max-width:760px){.lt-list>li.lt-row{grid-template-columns:76px minmax(0,1fr)}}
 .days.t-ok .lt-big b{color:var(--ok)}.days.t-warn .lt-big b{color:var(--warn)}.days.t-crit .lt-big b{color:var(--crit)}.days.t-info .lt-big b{color:var(--accent)}
+/* lead time: layered cards (section > group > items) */
+#sub-list{display:flex;flex-direction:column;gap:14px}
+.lt-sec{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.lt-sec-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 4px}
+.lt-sec-h h3{margin:0;font-size:16px;font-weight:700}
+.lt-sec>ul.lt-list{background:var(--inner);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.lt-g{margin:0;background:var(--inner);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.lt-g>summary{margin:0;border:0;border-radius:0;background:transparent;padding:10px 14px;border-bottom:1px solid transparent}
+.lt-g[open]>summary{border-bottom-color:var(--line)}
+.lt-g>ul.lt-list,.lt-sec ul.lt-list{margin:0}
+.lt-g>ul.lt-list{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+.lt-sec ul.lt-list>li{background:transparent}
+.lt-sec ul.lt-list>li+li{border-top:1px solid var(--line)}
+:root[data-vivid="on"] .lt-sec:nth-of-type(1){border-top:3px solid var(--v2)}
+:root[data-vivid="on"] .lt-sec:nth-of-type(2){border-top:3px solid var(--v4)}
+@media (max-width:760px){.lt-sec{padding:10px;border-radius:14px}}
 </style>
 
 <div class="shell">
@@ -3918,7 +3934,8 @@ window.I18N=(function(){
         +(st?'<div class="lt-run"><span><b class="mono">'+run+'</b> '+LTL("of ","dari ")+tot+LTL(" days used"," hari terpakai")+'</span><span class="mono">'+pct+'%</span></div><div class="lt-bar '+cls+'"><i style="width:'+pct+'%"></i></div>':'')
         +'<div class="meta">'+meta.join("")+'</div></div>'+acts(s)+'</li>';
     };
-    if(dn.length)h+='<h3 class="lt-h">⏳ '+LTL("Days left","Hari lagi")+'</h3>'+grouped(dn,rowDn);
+    const sec=(ic,t,list,row)=>'<section class="lt-sec"><header class="lt-sec-h"><h3>'+ic+' '+t+'</h3><span class="count">'+list.length+'</span></header>'+grouped(list,row)+'</section>';
+    if(dn.length)h+=sec("⏳",LTL("Days left","Hari lagi"),dn,rowDn);
     const rowUp=s=>{
       const n=-daysLeft(s.start),fut=n<0,t=today();
       const meta=['<span class="mono">'+LTL("Since ","Sejak ")+esc(fmtDate(s.start))+'</span>',s.note?'<span>'+esc(s.note)+'</span>':''];
@@ -3926,7 +3943,7 @@ window.I18N=(function(){
         +'<div class="lt-run"><span>'+(fut?LTL("Starts in ","Mulai dalam ")+ltSpan(t,s.start):'<b class="mono">'+ltSpan(s.start,t)+'</b> '+LTL("so far","sampai hari ini"))+'</span></div>'
         +'<div class="meta">'+meta.join("")+'</div></div>'+acts(s)+'</li>';
     };
-    if(up.length)h+='<h3 class="lt-h">📅 '+LTL("Days running","Hari berjalan")+'</h3>'+grouped(up,rowUp);
+    if(up.length)h+=sec("📅",LTL("Days running","Hari berjalan"),up,rowUp);
     el.innerHTML=h;
   }
 
