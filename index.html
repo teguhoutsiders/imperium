@@ -24,7 +24,7 @@
 #imp-net{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9000;padding:6px 10px;border-radius:8px;background:#3b2a12;color:#ffd590;font:600 12px/1.3 system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.3)}
 </style>
 <script src="imp-shim.js"></script>
-<script>(function(){try{var a=JSON.parse(localStorage.getItem("imp-icon-v1")||"null"),c=JSON.parse(localStorage.getItem("imp-cache-v1")||"null"),s=c&&c.appicon,o=(a&&s)?((+s.t||0)>(+a.t||0)?s:a):(a||s);if(!o||o.off||!o.i192)return;var b=location.href.replace(/[#?].*$/,"").replace(/[^\/]*$/,"");var m={name:"Imperium",short_name:"Imperium",description:"Buku catatan pribadi",id:b,start_url:b+"#overview",scope:b,display:"standalone",background_color:"#2a0f2e",theme_color:"#2a0f2e",orientation:"any",icons:[{src:o.i192,sizes:"192x192",type:"image/png"},{src:o.i512,sizes:"512x512",type:"image/png"},{src:o.m512,sizes:"512x512",type:"image/png",purpose:"maskable"}]};document.querySelector('link[rel="manifest"]').href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));document.querySelector('link[rel="icon"]').href=o.i192;document.querySelector('link[rel="apple-touch-icon"]').href=o.i180}catch(e){}})()</script>
+<script>(function(){try{var t=localStorage.getItem("imp-theme-bg")||"#2a0f2e";var mt=document.querySelector('meta[name="theme-color"]');if(mt)mt.content=t;document.documentElement.style.backgroundColor=t;var a=JSON.parse(localStorage.getItem("imp-icon-v1")||"null"),c=JSON.parse(localStorage.getItem("imp-cache-v1")||"null"),s=c&&c.appicon,o=(a&&s)?((+s.t||0)>(+a.t||0)?s:a):(a||s);if(o&&(o.off||!o.i192))o=null;var b=location.href.replace(/[#?].*$/,"").replace(/[^\/]*$/,"");var ic=o?[{src:o.i192,sizes:"192x192",type:"image/png"},{src:o.i512,sizes:"512x512",type:"image/png"},{src:o.m512,sizes:"512x512",type:"image/png",purpose:"maskable"}]:[{src:b+"icon-192-v2.png",sizes:"192x192",type:"image/png"},{src:b+"icon-512-v2.png",sizes:"512x512",type:"image/png"},{src:b+"icon-512-maskable-v2.png",sizes:"512x512",type:"image/png",purpose:"maskable"}];var m={name:"Imperium",short_name:"Imperium",description:"Buku catatan pribadi",id:b,start_url:b+"#overview",scope:b,display:"standalone",background_color:t,theme_color:t,orientation:"any",icons:ic};document.querySelector('link[rel="manifest"]').href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));if(o){document.querySelector('link[rel="icon"]').href=o.i192;document.querySelector('link[rel="apple-touch-icon"]').href=o.i180}}catch(e){}})()</script>
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@500;700;800&display=swap">
 <style>
@@ -6592,16 +6592,27 @@ document.addEventListener("click",function(e){
 
   /* ================= 5. app logo (home-screen icon) per device ================= */
   var IK="imp-icon-v1";
+  function themeBg(){try{var v=getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();return v||"#2a0f2e"}catch(_){return "#2a0f2e"}}
+  var lastMan="";
   function applyIcon(o){
     try{
-      var base=location.href.replace(/[#?].*$/,"").replace(/[^\/]*$/,"");
+      var base=location.href.replace(/[#?].*$/,"").replace(/[^\/]*$/,""),col=themeBg();
       var lm=document.querySelector('link[rel="manifest"]'),li=document.querySelector('link[rel="icon"]'),la=document.querySelector('link[rel="apple-touch-icon"]');
-      if(!o){if(lm)lm.href="manifest.webmanifest";if(li)li.href="favicon-v2.png";if(la)la.href="icon-180-v2.png";return}
-      var m={name:"Imperium",short_name:"Imperium",description:"Buku catatan pribadi",id:base,start_url:base+"#overview",scope:base,display:"standalone",background_color:"#2a0f2e",theme_color:"#2a0f2e",orientation:"any",
-        icons:[{src:o.i192,sizes:"192x192",type:"image/png"},{src:o.i512,sizes:"512x512",type:"image/png"},{src:o.m512,sizes:"512x512",type:"image/png",purpose:"maskable"}]};
-      if(lm)lm.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));
-      if(li)li.href=o.i192;if(la)la.href=o.i180;
+      var icons=o?[{src:o.i192,sizes:"192x192",type:"image/png"},{src:o.i512,sizes:"512x512",type:"image/png"},{src:o.m512,sizes:"512x512",type:"image/png",purpose:"maskable"}]
+        :[{src:base+"icon-192-v2.png",sizes:"192x192",type:"image/png"},{src:base+"icon-512-v2.png",sizes:"512x512",type:"image/png"},{src:base+"icon-512-maskable-v2.png",sizes:"512x512",type:"image/png",purpose:"maskable"}];
+      var m={name:"Imperium",short_name:"Imperium",description:"Buku catatan pribadi",id:base,start_url:base+"#overview",scope:base,display:"standalone",background_color:col,theme_color:col,orientation:"any",icons:icons};
+      var js=JSON.stringify(m);
+      if(lm&&js!==lastMan){lastMan=js;lm.href=URL.createObjectURL(new Blob([js],{type:"application/manifest+json"}))}
+      if(li)li.href=o?o.i192:"favicon-v2.png";if(la)la.href=o?o.i180:"icon-180-v2.png";
     }catch(_){}
+  }
+  /* status bar / browser bar colour follows the chosen theme */
+  function syncThemeColor(){
+    var c=themeBg();
+    var mt=document.querySelector('meta[name="theme-color"]');if(!mt){mt=document.createElement("meta");mt.name="theme-color";document.head.appendChild(mt)}
+    if(mt.content!==c)mt.content=c;
+    if(document.documentElement.style.backgroundColor!==c)document.documentElement.style.backgroundColor=c;
+    try{if(localStorage.getItem("imp-theme-bg")!==c){localStorage.setItem("imp-theme-bg",c);appliedT=-1;refreshIcon()}}catch(_){}
   }
   window.IMP_APPLY_ICON=applyIcon;
   function recode(url,size,type,q){return new Promise(function(res){var im=new Image();im.onload=function(){var c=document.createElement("canvas");c.width=c.height=size;var x=c.getContext("2d");x.imageSmoothingQuality="high";x.drawImage(im,0,0,size,size);res(c.toDataURL(type,q))};im.onerror=function(){res(url)};im.src=url})}
@@ -6669,7 +6680,7 @@ document.addEventListener("click",function(e){
   var queued=false;
   function pass(){queued=false;try{fitStats()}catch(e){}try{labelTables()}catch(e){}try{foldForms()}catch(e){}}
   function boot(){
-    buildCountdown();try{buildIconCard();refreshIcon();setInterval(refreshIcon,5000)}catch(e){}pass();
+    buildCountdown();try{buildIconCard();refreshIcon();syncThemeColor();setInterval(refreshIcon,5000);new MutationObserver(syncThemeColor).observe(document.documentElement,{attributes:true,attributeFilter:["style","class","data-mode","data-theme"]});if(window.matchMedia)matchMedia("(prefers-color-scheme: dark)").addEventListener("change",syncThemeColor)}catch(e){}pass();
     new MutationObserver(function(){if(!queued){queued=true;requestAnimationFrame(pass)}}).observe(document.body,{childList:true,subtree:true});
     /* language switch: repaint countdown labels */
     new MutationObserver(function(){paint();document.querySelectorAll(".fold-tg").forEach(function(b){var f=$(b.getAttribute("aria-controls"));if(f&&f.hidden&&FOLD[f.id]&&f.id.indexOf("ie-")!==0)b.textContent=isID()?FOLD[f.id].id:FOLD[f.id].en})}).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
