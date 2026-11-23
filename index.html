@@ -1354,6 +1354,19 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
 @media (max-width:760px){.lm-chip{width:100%;justify-content:flex-start;padding:6px 10px;border-color:var(--line);background:var(--surface)}.lm-ttl{flex-basis:100%;text-align:left}}
 /* Claude limit removed (2026-11-24) */
 #climit{display:none!important}
+/* routine recap squares: clearly visible, fill the row (2026-11-24) */
+.rc-cells i{background:color-mix(in srgb,var(--ink) 9%,transparent);border:1.5px solid color-mix(in srgb,var(--ink) 30%,transparent)}
+.rc-cells i.off{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.rc-cells i.on{background:var(--ok);border-color:color-mix(in srgb,var(--ok) 70%,#fff)}
+.rc-cells i.na{opacity:.45;border-style:dashed;background:transparent}
+.rc-cells i.cur{outline:2px solid var(--accent);outline-offset:1px}
+.ov-rc .rc-cells i{border-width:1.5px}
+@media (max-width:760px){
+  .rc-row{flex-wrap:wrap}
+  .rc-cells{order:3;width:100%;display:flex;gap:4px;flex-wrap:nowrap}
+  .rc-cells i,.rc-cells i[data-rc]{flex:1;width:auto;height:22px;min-width:0;border-radius:5px}
+}
+.rc-grp h4{flex-wrap:wrap;row-gap:2px}.rc-grp h4>span{white-space:nowrap}
 </style>
 
 <div class="shell">
@@ -4141,7 +4154,7 @@ window.I18N=(function(){
       const g=rs.filter(t=>t.rep===rep).sort((a,b)=>(a.created||0)-(b.created||0));if(!g.length)return;
       const keys=recapKeys(rep);
       const doneNowN=g.filter(doneNow).length;
-      html+='<div class="rc-grp"><h4><span>'+REP[rep]+' · '+RCLAB[rep]+'</span><span class="mono">'+doneNowN+' / '+g.length+' done now</span></h4>';
+      html+='<div class="rc-grp"><h4><span><span>'+REP[rep]+'</span> · <span>'+RCLAB[rep]+'</span></span><span class="mono">'+doneNowN+' / '+g.length+' done now</span></h4>';
       g.forEach(t=>{
         const log=new Set(t.log||[]);let on=0,tot=0;
         const cells=keys.map(k=>{
@@ -4152,7 +4165,7 @@ window.I18N=(function(){
           return '<i role="button" tabindex="0" data-rc="'+esc(t.id)+'|'+k+'" class="'+c+(isCur?" cur":"")+'" title="'+esc(keyLabel(rep,k))+(na?" · before this routine existed":d?" · done":" · not done")+'"></i>';
         }).join("");
         const rate=tot?Math.round(on/tot*100):0,st=streakOf(t);
-        html+='<div class="rc-row"><div class="rc-name">'+esc(t.title)+'<small class="mono">'+on+' of '+tot+(st?' · '+st+'-'+UNIT[rep]+' streak':'')+'</small></div><div class="rc-cells">'+cells+'</div><div class="rc-rate mono '+(rate>=80?"t-ok":rate>=50?"t-warn":"t-crit")+'">'+(tot?rate+'%':'–')+'</div></div>';
+        html+='<div class="rc-row"><div class="rc-name">'+esc(t.title)+'<small class="mono">'+(document.documentElement.lang==="id"?on+' dari '+tot+(st?' · streak '+st+' '+({day:"hari",week:"minggu",month:"bulan"}[UNIT[rep]]||UNIT[rep]):''):on+' of '+tot+(st?' · '+st+'-'+UNIT[rep]+' streak':''))+'</small></div><div class="rc-cells">'+cells+'</div><div class="rc-rate mono '+(rate>=80?"t-ok":rate>=50?"t-warn":"t-crit")+'">'+(tot?rate+'%':'–')+'</div></div>';
       });
       html+='</div>';
     });
