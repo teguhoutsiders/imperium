@@ -1404,6 +1404,23 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
   table.bg-tbl.mstack td.bg-barc .bar i{display:block;height:100%;border-radius:99px}
   table.bg-tbl.mstack td:nth-child(3),table.bg-tbl.mstack td:nth-child(4){white-space:nowrap}
 }
+/* files list on mobile: tidy rows (2026-11-24) */
+@media (max-width:760px){
+  #tab-files .fbar{display:flex;flex-direction:column;gap:10px}
+  #tab-files .factions{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px;width:100%}
+  #tab-files .factions #file-search{grid-column:1/-1;width:100%}
+  #tab-files .factions .vsw{grid-column:1}
+  #tab-files .factions>button{width:100%;padding-left:10px;padding-right:10px;white-space:nowrap}
+  #file-list ul.list>li.mid{display:grid;grid-template-columns:52px minmax(0,1fr);column-gap:12px;row-gap:4px;align-items:center;padding:12px 14px}
+  #file-list ul.list>li.mid>.ftile{grid-row:1/3;width:52px;height:52px;align-self:start}
+  #file-list ul.list>li.mid>.grow{grid-column:2;min-width:0}
+  #file-list ul.list>li.mid .ttl,#file-list ul.list>li.mid .linkbtn{display:block;font-size:15px;font-weight:600;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;text-align:left}
+  #file-list ul.list>li.mid .meta{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;margin-top:2px}
+  #file-list ul.list>li.mid>.row-actions{grid-column:2;display:flex;flex-wrap:nowrap;gap:2px;justify-content:flex-start;margin-left:-8px}
+  #file-list ul.list>li.mid>.row-actions button{padding:4px 8px;font-size:13px;min-height:30px}
+  #file-list ul.list>li.mid:has(.fold)>.row-actions{grid-row:1/3;grid-column:3;margin:0}
+  #file-list ul.list>li.mid:has(.fold){grid-template-columns:52px minmax(0,1fr) auto}
+}
 </style>
 
 <div class="shell">
@@ -3116,7 +3133,7 @@ window.I18N=(function(){
   function folderRow(f){
     if(fileEdit===f.id)return editRow(f);
     const nF=byKind("file").filter(x=>x.folder===f.id).length,nS=folders().filter(x=>x.parent===f.id).length;
-    const info=(nS?nS+" folder"+(nS>1?"s":"")+" · ":"")+nF+" file"+(nF===1?"":"s");
+    const ID=document.documentElement.lang==="id",info=(nS?nS+" folder"+(nS>1&&!ID?"s":"")+" · ":"")+nF+(ID?" berkas":" file"+(nF===1?"":"s"));
     return '<li class="mid rowlink" data-row="folder:'+esc(f.id)+'"><span class="ftile fold" aria-hidden="true">'+FOLDER_SVG+'</span><div class="grow"><button type="button" class="linkbtn" data-folder="'+esc(f.id)+'">'+esc(f.name)+'</button><div class="meta"><span>'+info+'</span>'+(fileQuery?'<span>in '+esc(pathLabel(f.parent))+'</span>':'')+'</div></div><div class="row-actions"><button class="ghost" data-fedit="'+esc(f.id)+'">Edit</button>'+(!nF&&!nS?'<button class="ghost danger" data-del="'+esc(f.id)+'">Delete</button>':'')+'</div></li>';
   }
   function fileRow(f){
