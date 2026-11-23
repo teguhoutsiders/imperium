@@ -1434,6 +1434,19 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
   #file-list[data-view="lg"] .ftile{height:180px}
 }
 }
+/* lead time */
+.lt-run{display:flex;justify-content:space-between;gap:10px;font-size:13px;margin-top:4px;color:var(--muted)}
+.lt-run b{color:var(--ink);font-size:15px}
+.lt-bar{height:6px;border-radius:99px;background:color-mix(in srgb,var(--ink) 12%,transparent);overflow:hidden;margin:6px 0 4px}
+.lt-bar i{display:block;height:100%;border-radius:99px;background:var(--ok)}
+.lt-bar.t-warn i{background:var(--warn)}.lt-bar.t-crit i{background:var(--crit)}
+@media (max-width:760px){
+  .lt-list>li.lt-row{display:grid;grid-template-columns:64px minmax(0,1fr);column-gap:12px;row-gap:4px;align-items:start}
+  .lt-list>li.lt-row>.days{grid-row:1/3}
+  .lt-list>li.lt-row>.row-actions{grid-column:2;justify-content:flex-start;margin-left:-8px}
+}
+.lt-run{flex-wrap:wrap;row-gap:0}.lt-run>span{white-space:nowrap}
+.lt-run.lt-miss>span{white-space:normal;font-style:italic}
 </style>
 
 <div class="shell">
@@ -1447,11 +1460,11 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
       <div class="ngrp" data-ng="train"><button type="button" class="ng-btn" data-ngb="train" aria-expanded="false" aria-controls="ns-train"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 9 12 4 2 9l10 5 10-5z"/><path d="M6 11.2V16c3.5 2.6 8.5 2.6 12 0v-4.8"/><path d="M22 9v6"/></svg><span class="ni">Pelatihan</span><span class="count" data-gc="train" hidden></span><svg class="ng-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
         <div class="nsub" id="ns-train" data-sg="train" hidden><a href="#english" data-tab="english"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/><path d="M9 7h7M9 11h5"/></svg><span class="ni">Basic English</span></a><a href="#ielts" data-tab="ielts"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 13.9 7 22l5-3 5 3-1.5-8.1"/></svg><span class="ni">IELTS</span></a></div></div>
       <div class="ngrp" data-ng="plan"><button type="button" class="ng-btn" data-ngb="plan" aria-expanded="false" aria-controls="ns-plan"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M9 15.5l2 2 4-4"/></svg><span class="ni">Planner</span><span class="count" data-gc="plan" hidden></span><svg class="ng-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
-        <div class="nsub" id="ns-plan" data-sg="plan" hidden><a href="#tugas" data-tab="tugas"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 11 3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span class="ni">Tasks</span><span class="count" id="c-tugas">0</span></a><a href="#calendar" data-tab="calendar"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2h5"/></svg><span class="ni">Stopwatch &amp; Calendar</span></a></div></div>
+        <div class="nsub" id="ns-plan" data-sg="plan" hidden><a href="#tugas" data-tab="tugas"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 11 3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span class="ni">Tasks</span><span class="count" id="c-tugas">0</span></a><a href="#masa-aktif" data-tab="masa-aktif"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4L21 8"/><path d="M21 3v5h-5"/><path d="M12 8v4l2.5 1.5"/></svg><span class="ni">Lead time</span><span class="count" id="c-masa">0</span></a><a href="#calendar" data-tab="calendar"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2h5"/></svg><span class="ni">Stopwatch &amp; Calendar</span></a></div></div>
       <div class="ngrp" data-ng="goals"><button type="button" class="ng-btn" data-ngb="goals" aria-expanded="false" aria-controls="ns-goals"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="1.6"/></svg><span class="ni">Goals</span><span class="count" data-gc="goals" hidden></span><svg class="ng-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
         <div class="nsub" id="ns-goals" data-sg="goals" hidden><a href="#proyek" data-tab="proyek"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg><span class="ni">Projects</span><span class="count" id="c-proyek">0</span></a><a href="#dreams" data-tab="dreams"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5-4.8-4.6 6.6-.9z"/></svg><span class="ni">Dreams</span><span class="count" id="c-dreams">0</span></a></div></div>
       <div class="ngrp" data-ng="money"><button type="button" class="ng-btn" data-ngb="money" aria-expanded="false" aria-controls="ns-money"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3v3a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V5"/></svg><span class="ni">Finance</span><span class="count" data-gc="money" hidden></span><svg class="ng-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
-        <div class="nsub" id="ns-money" data-sg="money" hidden><a href="#keuangan" data-tab="keuangan"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-6M22 20H2"/></svg><span class="ni">Assets &amp; debts</span></a><a href="#masa-aktif" data-tab="masa-aktif"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4L21 8"/><path d="M21 3v5h-5"/><path d="M12 8v4l2.5 1.5"/></svg><span class="ni">Renewals</span><span class="count" id="c-masa">0</span></a><a href="#budget" data-tab="budget"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg><span class="ni">Budget</span></a></div></div>
+        <div class="nsub" id="ns-money" data-sg="money" hidden><a href="#keuangan" data-tab="keuangan"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-6M22 20H2"/></svg><span class="ni">Assets &amp; debts</span></a><a href="#budget" data-tab="budget"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg><span class="ni">Budget</span></a></div></div>
       <div class="ngrp" data-ng="lib"><button type="button" class="ng-btn" data-ngb="lib" aria-expanded="false" aria-controls="ns-lib"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="m16.5 4.6 3.4-.9 3.1 15.5-3.4.9z"/></svg><span class="ni">Library</span><span class="count" data-gc="lib" hidden></span><svg class="ng-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
         <div class="nsub" id="ns-lib" data-sg="lib" hidden><a href="#notes" data-tab="notes"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><span class="ni">Notes</span><span class="count" id="c-notes">0</span></a><div class="nfsub" id="nav-nf" hidden></div><div class="nfsub" id="nav-nd" hidden></div><a href="#files" data-tab="files"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H9l2 3h7.5A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/></svg><span class="ni">Files</span><span class="count" id="c-files">0</span></a><span class="count" id="c-tautan" hidden>0</span></div></div>
       <div class="sep" role="presentation"></div>
@@ -1668,21 +1681,24 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
   <section class="panel" id="tab-masa-aktif" hidden>
     <div class="split"><div class="lcol">
     <form class="entry" id="f-sub" autocomplete="off">
-      <p class="formtitle" id="ft-sub">New renewal</p>
+      <p class="formtitle" id="ft-sub">New lead time</p>
       <label class="wide">Name
-        <input id="sub-name" required maxlength="150" placeholder="e.g. Mobile data, Netflix, vehicle registration">
+        <input id="sub-name" required maxlength="150" placeholder="e.g. PO spare part, Perpanjang SIM, Order ban">
       </label>
-      <label>Ends on
+      <label>Start date
+        <input id="sub-start" type="date" required>
+      </label>
+      <label>Due date
         <input id="sub-end" type="date" required>
       </label>
-      <label>Renews
+      <label hidden>Renews
         <select id="sub-cycle"><option value="month">Monthly</option><option value="year">Yearly</option><option value="once">One-time</option></select>
       </label>
-      <label>Cost (Rp)
+      <label hidden>Cost (Rp)
         <input id="sub-cost" inputmode="numeric" placeholder="Optional">
       </label>
       <label class="wide">Notes
-        <input id="sub-note" maxlength="300" placeholder="Optional, e.g. paid via mobile banking">
+        <input id="sub-note" maxlength="300" placeholder="Optional, e.g. vendor, PIC, nomor PO">
       </label>
       <div class="actions">
         <button type="button" class="ghost" id="sub-cancel" hidden>Cancel</button>
@@ -2041,6 +2057,7 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
 /* Language switch: English / Bahasa Indonesia. Translates visible text, placeholders and labels in place. */
 window.I18N=(function(){
   var D={
+  "Lead time":"Lead time","New lead time":"Lead time baru","Edit lead time":"Ubah lead time","e.g. PO spare part, Perpanjang SIM, Order ban":"mis. PO spare part, Perpanjang SIM, Order ban","Optional, e.g. vendor, PIC, nomor PO":"Opsional, mis. vendor, PIC, nomor PO","+ New lead time":"+ Lead time baru","Due within 7 days":"Due ≤ 7 hari",
   "⏱ Stopwatch":"⏱ Stopwatch","⏳ Countdown":"⏳ Hitung mundur","Hours":"Jam","Minutes":"Menit","Seconds":"Detik","+1 min":"+1 menit","1 min":"1 mnt","5 min":"5 mnt","10 min":"10 mnt","15 min":"15 mnt","25 min":"25 mnt","30 min":"30 mnt","45 min":"45 mnt","1 h":"1 jam","1.5 h":"1,5 jam","e.g. Makan, Bensin":"mis. Makan, Bensin","✳ Claude limit":"✳ Limit Claude","Not filled in yet · tap to fill in":"Belum diisi · ketuk untuk mengisi","Open Claude usage page ↗":"Buka halaman Usage Claude ↗","+ New task":"+ Tugas baru","+ New project":"+ Proyek baru","+ New dream":"+ Impian baru","+ New renewal":"+ Masa aktif baru","+ New link":"+ Tautan baru","+ New note":"+ Catatan baru","+ New finance entry":"+ Entri keuangan baru","Restart":"Ulangi","Time’s up — session saved.":"Waktu habis — sesi tersimpan.","Couldn’t save the session.":"Gagal menyimpan sesi.",
   "Budget month":"Bulan anggaran","Copy last month":"Salin dari bulan lalu","Next month":"Bulan depan","Expense types":"Tipe pengeluaran","Icon":"Ikon","Add type":"Tambah tipe","Expense type":"Tipe pengeluaran","No type":"Tanpa tipe","These types also appear when you record an outgoing transaction in Assets & debts, so spending is counted against the budget.":"Tipe ini juga muncul saat mencatat transaksi keluar di Aset & utang, jadi pengeluaran langsung dihitung terhadap anggaran.","Total budget":"Total anggaran","Spent":"Terpakai","Remaining":"Sisa","Over budget":"Melebihi anggaran","Type":"Tipe","Budget (Rp)":"Anggaran (Rp)","Untyped spending":"Pengeluaran tanpa tipe","Remove type":"Hapus tipe","Spending is taken from outgoing transactions in Assets & debts for this month.":"Pengeluaran diambil dari transaksi keluar di Aset & utang pada bulan ini.","No expense types yet. Add one on the left.":"Belum ada tipe pengeluaran. Tambahkan di sebelah kiri.","Copied from last month.":"Disalin dari bulan lalu.","Last month has no budget.":"Bulan lalu belum ada anggaran.","Saved":"Tersimpan","Claude limit":"Limit Claude","Color variety":"Variasi warna","Colorful":"Warna-warni","Single accent":"Satu warna aksen","5-hour":"5 jam","Weekly":"Mingguan","Set Claude limit":"Atur limit Claude","Used (%)":"Terpakai (%)","Resets at":"Reset pada","resets in":"reset dalam","reset":"sudah reset","Tap to fill in":"Ketuk untuk mengisi","Copy the numbers from Claude Settings › Usage. A page can't read your Claude usage by itself.":"Salin angkanya dari Pengaturan Claude › Penggunaan. Halaman ini tidak bisa membaca pemakaian Claude sendiri.",
   "Paste a link (https://…)":"Tempel link (https://…)","Name (optional)":"Nama (opsional)","Remove link":"Hapus link","Paste a link above and give it a name. It is also saved in Library › Links.":"Tempel link di atas lalu beri nama. Link juga tersimpan di Library › Tautan.","Interface style":"Gaya tampilan","Card, menu and button style":"Gaya kartu, menu, dan tombol","Applies to cards, inner cards, buttons and the sidebar. Saved to your account.":"Berlaku untuk kartu, kartu dalam, tombol, dan sidebar. Tersimpan di akun Anda.","Typing effect":"Efek mengetik","Effect":"Efek","Try typing here…":"Coba ketik di sini…","Adds a small effect each time you type in any text box. Saved to your account.":"Menambah efek kecil setiap kali Anda mengetik di kotak teks mana pun. Tersimpan di akun Anda.","Animation":"Animasi","Motion":"Gerakan","Lively":"Hidup","Subtle":"Halus","Off":"Mati","Movement when you open a menu, switch pages or press buttons. On a phone, swipe left or right to move between menus.":"Gerakan saat membuka menu, pindah halaman, atau menekan tombol. Di HP, geser kiri atau kanan untuk pindah menu.","Flat":"Datar","Glow":"Cahaya","Pop":"Letup","Sparks":"Percikan","Confetti":"Konfeti","Emoji burst":"Ledakan emoji","Power mode":"Mode power","Ripple":"Riak","Typewriter sound":"Suara mesin ketik","Rainbow":"Pelangi","Paper":"Kertas","Dark red":"Merah gelap","Deep teal":"Teal gelap","Indigo night":"Malam indigo","Bronze":"Perunggu","Dark green":"Hijau gelap","Navy night":"Biru malam","Gradient level":"Tingkat degradasi","Strong":"Kuat","Medium":"Sedang","Background, sidebar, cards and inner cards use steps of the same color. Strong makes the steps clearer.":"Latar, sidebar, kartu, dan kartu dalam memakai tingkatan dari warna yang sama. Kuat membuat tingkatannya lebih jelas.","Add link":"Tambah link","Tap a square to mark that day, week or month as done or not done.":"Ketuk kotak untuk menandai hari, minggu, atau bulan itu sudah atau belum dikerjakan.","List":"Daftar","Small cards":"Kartu kecil","Large cards":"Kartu besar","View":"Tampilan","No links yet. Tap Add link, paste the address and give it a name.":"Belum ada link. Ketuk Tambah link, tempel alamatnya, lalu beri nama.","Coming up":"Akan datang","Daily routines":"Rutinitas harian","Weekly routines":"Rutinitas mingguan","Monthly routines":"Rutinitas bulanan",
@@ -2203,7 +2220,7 @@ window.I18N=(function(){
 
   /* ---------- tabs ---------- */
   const TABS=["overview","english","ielts","tugas","calendar","proyek","dreams","files","notes","masa-aktif","keuangan","budget","pengaturan"];
-  const GROUPS={train:["english","ielts"],plan:["tugas","calendar"],goals:["proyek","dreams"],money:["keuangan","masa-aktif","budget"],lib:["notes","files"]};
+  const GROUPS={train:["english","ielts"],plan:["tugas","masa-aktif","calendar"],goals:["proyek","dreams"],money:["keuangan","budget"],lib:["notes","files"]};
   const groupOf=t=>Object.keys(GROUPS).find(g=>GROUPS[g].includes(t))||null;
   function syncGroupCounts(){
     document.querySelectorAll("[data-gc]").forEach(el=>{
@@ -3482,13 +3499,14 @@ window.I18N=(function(){
     let rb="";
     if(ss.length){
       const soon=ss.filter(x=>daysLeft(x.end)<=7).length;
-      rb='<div class="kpis">'+kpi("Tracked",ss.length)+kpi("Ending within 7 days",'<span class="'+(soon?'neg':'')+'">'+soon+'</span>')+'</div><div>'+ss.map(x=>{
+      rb='<div class="kpis">'+kpi("Tracked",ss.length)+kpi("Due within 7 days",'<span class="'+(soon?'neg':'')+'">'+soon+'</span>')+'</div><div>'+ss.map(x=>{
         const d=daysLeft(x.end),cls=d<=3?"t-crit":d<=7?"t-warn":"t-ok";
-        const lab=d<0?Math.abs(d)+" days overdue":d===0?"Ends today":d+" days left";
-        return '<div class="ov-row"><div class="grow"><div class="ttl">'+esc(x.name)+'</div><div class="meta"><span class="mono">Ends '+esc(fmtDate(x.end))+'</span></div></div><span class="mono '+cls+'" style="font-weight:600;white-space:nowrap">'+lab+'</span></div>';
+        const ID=document.documentElement.lang==="id",st=x.start||(x.created>9e11?ymd(new Date(x.created)):""),run=st?Math.max(0,-daysLeft(st)):0,tot=st?Math.max(0,daysLeft(x.end)-daysLeft(st)):0;
+        const lab=d<0?Math.abs(d)+(ID?" hari terlambat":" days overdue"):d===0?(ID?"Due hari ini":"Due today"):d+(ID?" hari lagi":" days left");
+        return '<div class="ov-row"><div class="grow"><div class="ttl">'+esc(x.name)+'</div><div class="meta"><span class="mono">'+(st?"Lead time "+run+' / '+tot+(ID?" hari":" days")+' · ':'')+'Due '+esc(fmtDate(x.end))+'</span></div></div><span class="mono '+cls+'" style="font-weight:600;white-space:nowrap">'+lab+'</span></div>';
       }).join("")+'</div>';
     }else rb='<p class="hint">Nothing tracked yet.</p>';
-    html+=card("ren","Renewals","masa-aktif",rb);
+    html+=card("ren","Lead time","masa-aktif",rb);
 
     /* links */
     const ol=byKind("link").sort((a,b)=>(a.created||0)-(b.created||0));
@@ -3776,22 +3794,27 @@ window.I18N=(function(){
   }
 
   /* ---------- MASA AKTIF ---------- */
-  const SL=["New renewal","Edit renewal","Add"];
+  const SL=["New lead time","Edit lead time","Add"];
+  const LTL=(en,id)=>document.documentElement.lang==="id"?id:en;
+  const ltStart=s=>s.start||(s.created>9e11?ymd(new Date(s.created)):"");
+  const ltReset=()=>{$("f-sub").reset();$("sub-start").value=today()};
   const CYC={month:"Monthly",year:"Yearly",once:"One-time"};
   $("f-sub").addEventListener("submit",async e=>{
     e.preventDefault();
-    const name=$("sub-name").value.trim(),end=$("sub-end").value;if(!name||!end)return;
+    const name=$("sub-name").value.trim(),end=$("sub-end").value,start=$("sub-start").value||today();if(!name||!end)return;
+    if(start>end){$("sub-end").setCustomValidity(LTL("Due date must be on or after the start date","Due date harus sama atau setelah tanggal mulai"));$("sub-end").reportValidity();setTimeout(()=>$("sub-end").setCustomValidity(""),2500);return}
     const c=parseAmt($("sub-cost").value);
-    const ok=await save("sub",editing.sub,{name,end,cycle:$("sub-cycle").value,cost:isNaN(c)?0:c,note:$("sub-note").value.trim()});
-    if(ok){$("f-sub").reset();setEditing("sub",null,SL)}
+    const ok=await save("sub",editing.sub,{name,start,end,cycle:$("sub-cycle").value,cost:isNaN(c)?0:c,note:$("sub-note").value.trim()});
+    if(ok){ltReset();setEditing("sub",null,SL)}
   });
-  $("sub-cancel").onclick=()=>{$("f-sub").reset();setEditing("sub",null,SL)};
+  $("sub-cancel").onclick=()=>{ltReset();setEditing("sub",null,SL)};
+  $("sub-start").value=today();
   $("sub-list").addEventListener("click",e=>{
     const r=e.target.closest("button[data-renew]");
     if(r){const s=items.find(i=>i.id===r.dataset.renew);if(s&&s.end)patch(s.id,{end:addCycle(s.end,s.cycle)});return}
     const b=e.target.closest("button[data-edit]");if(!b)return;
     const s=items.find(i=>i.id===b.dataset.edit);if(!s)return;
-    $("sub-name").value=s.name||"";$("sub-end").value=s.end||"";$("sub-cycle").value=s.cycle||"month";$("sub-cost").value=fmtIn(s.cost);$("sub-note").value=s.note||"";
+    $("sub-name").value=s.name||"";$("sub-start").value=ltStart(s)||today();$("sub-end").value=s.end||"";$("sub-cycle").value=s.cycle||"month";$("sub-cost").value=fmtIn(s.cost);$("sub-note").value=s.note||"";
     setEditing("sub",s.id,SL);$("sub-name").focus();
   });
   function renderSubs(){
@@ -3799,20 +3822,20 @@ window.I18N=(function(){
     const soon=ss.filter(s=>daysLeft(s.end)<=7).length;
     const c=$("c-masa");c.textContent=soon||ss.length;c.classList.toggle("alert",soon>0);
     const el=$("sub-list");
-    if(!ready){el.innerHTML='<div class="empty">Loading renewals…</div>';return}
-    if(!ss.length){el.innerHTML='<div class="empty">Nothing to count down yet. Add a subscription or anything that expires (data plan, app, vehicle registration, license) with its end date.</div>';return}
-    const monthly=ss.filter(s=>s.cycle==="month").reduce((a,s)=>a+(+s.cost||0),0)+ss.filter(s=>s.cycle==="year").reduce((a,s)=>a+(+s.cost||0)/12,0);
-    el.innerHTML=(monthly?'<p class="hint">Estimated subscription cost: <span class="mono">'+rp(monthly)+'</span> per month</p>':'')
-      +'<ul class="list">'+ss.map(s=>{
-      const d=daysLeft(s.end);
+    if(!ready){el.innerHTML='<div class="empty">Loading…</div>';return}
+    if(!ss.length){el.innerHTML='<div class="empty">'+LTL("Nothing tracked yet. Add an item with its start date and due date to see how long is left and how long it has been running.","Belum ada yang dipantau. Tambahkan item dengan tanggal mulai dan due date untuk melihat sisa waktu dan lead time yang sudah berjalan.")+'</div>';return}
+    el.innerHTML='<ul class="list lt-list">'+ss.map(s=>{
+      const st=ltStart(s),d=daysLeft(s.end),run=st?Math.max(0,-daysLeft(st)):0,tot=st?Math.max(0,daysLeft(s.end)-daysLeft(st)):0;
+      const pct=tot?Math.min(100,Math.round(run/tot*100)):(d<=0?100:0);
       const cls=d<0?"t-crit":d<=3?"t-crit":d<=7?"t-warn":"t-ok";
       const num=d<0?Math.abs(d):d;
-      const lab=d<0?"days overdue":d===0?"today":"days left";
-      const meta=['<span class="mono">Ends '+esc(fmtDate(s.end))+'</span>','<span>'+CYC[s.cycle||"month"]+'</span>'];
-      if(s.cost)meta.push('<span class="mono">'+rp(s.cost)+'</span>');
+      const lab=d<0?LTL("days overdue","hari terlambat"):d===0?LTL("due today","due hari ini"):LTL("days left","hari lagi");
+      const meta=[st?'<span class="mono">'+LTL("Start ","Mulai ")+esc(fmtDate(st))+'</span>':'','<span class="mono">Due '+esc(fmtDate(s.end))+'</span>'];
       if(s.note)meta.push('<span>'+esc(s.note)+'</span>');
-      const renew=s.cycle!=="once"?'<button class="soft" data-renew="'+esc(s.id)+'" title="Move the end date forward one period">Renew</button>':'';
-      return '<li class="mid"><div class="days '+cls+'"><b>'+(d===0?"0":num)+'</b><span>'+lab+'</span></div><div class="grow"><div class="ttl">'+esc(s.name)+'</div><div class="meta">'+meta.join("")+'</div></div><div class="row-actions">'+renew+'<button class="ghost" data-edit="'+esc(s.id)+'">Edit</button><button class="ghost danger" data-del="'+esc(s.id)+'">Delete</button></div></li>';
+      return '<li class="mid lt-row"><div class="days '+cls+'"><b>'+num+'</b><span>'+lab+'</span></div><div class="grow"><div class="ttl">'+esc(s.name)+'</div>'
+        +(st?'<div class="lt-run"><span><b class="mono">'+run+'</b> '+LTL("days running","hari berjalan")+'</span><span class="mono">'+LTL("of ","dari ")+tot+LTL(" days lead time"," hari lead time")+'</span></div>'
+        +'<div class="lt-bar '+cls+'"><i style="width:'+pct+'%"></i></div>':'<div class="lt-run lt-miss"><span>'+LTL("Start date not set — tap Edit to add it.","Tanggal mulai belum diisi — ketuk Ubah untuk mengisi.")+'</span></div>')
+        +'<div class="meta">'+meta.join("")+'</div></div><div class="row-actions"><button class="ghost" data-edit="'+esc(s.id)+'">Edit</button><button class="ghost danger" data-del="'+esc(s.id)+'">Delete</button></div></li>';
     }).join("")+'</ul>';
   }
 
