@@ -1367,6 +1367,18 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
   .rc-cells i,.rc-cells i[data-rc]{flex:1;width:auto;height:22px;min-width:0;border-radius:5px}
 }
 .rc-grp h4{flex-wrap:wrap;row-gap:2px}.rc-grp h4>span{white-space:nowrap}
+/* budget emoji picker */
+.bt-icon-btn{font-size:22px;line-height:1;width:52px;height:42px;padding:0;display:grid;place-items:center;border-radius:10px;background:var(--inner);border:1px solid var(--line)}
+.bt-i-btn{border:0;background:transparent;padding:2px;font-size:18px;width:30px;border-radius:6px;cursor:pointer}
+.bt-i-btn:hover{background:var(--sunk)}
+.bt-pick{position:fixed;z-index:400;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.4);display:flex;flex-direction:column;overflow:hidden}
+.bt-pick[hidden]{display:none}
+.bt-pick-h{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line)}
+.bt-pick-b{overflow:auto;padding:6px 10px 12px}
+.bt-pg>span{display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:8px 0 4px}
+.bt-pg>div{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:2px}
+.bt-pg button{font-size:22px;line-height:1;height:38px;padding:0;border:0;background:transparent;border-radius:8px;box-shadow:none}
+.bt-pg button:hover,.bt-pg button:focus-visible{background:var(--sunk);transform:scale(1.12)}
 </style>
 
 <div class="shell">
@@ -1974,7 +1986,7 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
 /* Language switch: English / Bahasa Indonesia. Translates visible text, placeholders and labels in place. */
 window.I18N=(function(){
   var D={
-  "⏱ Stopwatch":"⏱ Stopwatch","⏳ Countdown":"⏳ Hitung mundur","Hours":"Jam","Minutes":"Menit","Seconds":"Detik","+1 min":"+1 menit","1 min":"1 mnt","5 min":"5 mnt","10 min":"10 mnt","15 min":"15 mnt","25 min":"25 mnt","30 min":"30 mnt","45 min":"45 mnt","1 h":"1 jam","1.5 h":"1,5 jam","✳ Claude limit":"✳ Limit Claude","Not filled in yet · tap to fill in":"Belum diisi · ketuk untuk mengisi","Open Claude usage page ↗":"Buka halaman Usage Claude ↗","+ New task":"+ Tugas baru","+ New project":"+ Proyek baru","+ New dream":"+ Impian baru","+ New renewal":"+ Masa aktif baru","+ New link":"+ Tautan baru","+ New note":"+ Catatan baru","+ New finance entry":"+ Entri keuangan baru","Restart":"Ulangi","Time’s up — session saved.":"Waktu habis — sesi tersimpan.","Couldn’t save the session.":"Gagal menyimpan sesi.",
+  "⏱ Stopwatch":"⏱ Stopwatch","⏳ Countdown":"⏳ Hitung mundur","Hours":"Jam","Minutes":"Menit","Seconds":"Detik","+1 min":"+1 menit","1 min":"1 mnt","5 min":"5 mnt","10 min":"10 mnt","15 min":"15 mnt","25 min":"25 mnt","30 min":"30 mnt","45 min":"45 mnt","1 h":"1 jam","1.5 h":"1,5 jam","e.g. Makan, Bensin":"mis. Makan, Bensin","✳ Claude limit":"✳ Limit Claude","Not filled in yet · tap to fill in":"Belum diisi · ketuk untuk mengisi","Open Claude usage page ↗":"Buka halaman Usage Claude ↗","+ New task":"+ Tugas baru","+ New project":"+ Proyek baru","+ New dream":"+ Impian baru","+ New renewal":"+ Masa aktif baru","+ New link":"+ Tautan baru","+ New note":"+ Catatan baru","+ New finance entry":"+ Entri keuangan baru","Restart":"Ulangi","Time’s up — session saved.":"Waktu habis — sesi tersimpan.","Couldn’t save the session.":"Gagal menyimpan sesi.",
   "Budget month":"Bulan anggaran","Copy last month":"Salin dari bulan lalu","Next month":"Bulan depan","Expense types":"Tipe pengeluaran","Icon":"Ikon","Add type":"Tambah tipe","Expense type":"Tipe pengeluaran","No type":"Tanpa tipe","These types also appear when you record an outgoing transaction in Assets & debts, so spending is counted against the budget.":"Tipe ini juga muncul saat mencatat transaksi keluar di Aset & utang, jadi pengeluaran langsung dihitung terhadap anggaran.","Total budget":"Total anggaran","Spent":"Terpakai","Remaining":"Sisa","Over budget":"Melebihi anggaran","Type":"Tipe","Budget (Rp)":"Anggaran (Rp)","Untyped spending":"Pengeluaran tanpa tipe","Remove type":"Hapus tipe","Spending is taken from outgoing transactions in Assets & debts for this month.":"Pengeluaran diambil dari transaksi keluar di Aset & utang pada bulan ini.","No expense types yet. Add one on the left.":"Belum ada tipe pengeluaran. Tambahkan di sebelah kiri.","Copied from last month.":"Disalin dari bulan lalu.","Last month has no budget.":"Bulan lalu belum ada anggaran.","Saved":"Tersimpan","Claude limit":"Limit Claude","Color variety":"Variasi warna","Colorful":"Warna-warni","Single accent":"Satu warna aksen","5-hour":"5 jam","Weekly":"Mingguan","Set Claude limit":"Atur limit Claude","Used (%)":"Terpakai (%)","Resets at":"Reset pada","resets in":"reset dalam","reset":"sudah reset","Tap to fill in":"Ketuk untuk mengisi","Copy the numbers from Claude Settings › Usage. A page can't read your Claude usage by itself.":"Salin angkanya dari Pengaturan Claude › Penggunaan. Halaman ini tidak bisa membaca pemakaian Claude sendiri.",
   "Paste a link (https://…)":"Tempel link (https://…)","Name (optional)":"Nama (opsional)","Remove link":"Hapus link","Paste a link above and give it a name. It is also saved in Library › Links.":"Tempel link di atas lalu beri nama. Link juga tersimpan di Library › Tautan.","Interface style":"Gaya tampilan","Card, menu and button style":"Gaya kartu, menu, dan tombol","Applies to cards, inner cards, buttons and the sidebar. Saved to your account.":"Berlaku untuk kartu, kartu dalam, tombol, dan sidebar. Tersimpan di akun Anda.","Typing effect":"Efek mengetik","Effect":"Efek","Try typing here…":"Coba ketik di sini…","Adds a small effect each time you type in any text box. Saved to your account.":"Menambah efek kecil setiap kali Anda mengetik di kotak teks mana pun. Tersimpan di akun Anda.","Animation":"Animasi","Motion":"Gerakan","Lively":"Hidup","Subtle":"Halus","Off":"Mati","Movement when you open a menu, switch pages or press buttons. On a phone, swipe left or right to move between menus.":"Gerakan saat membuka menu, pindah halaman, atau menekan tombol. Di HP, geser kiri atau kanan untuk pindah menu.","Flat":"Datar","Glow":"Cahaya","Pop":"Letup","Sparks":"Percikan","Confetti":"Konfeti","Emoji burst":"Ledakan emoji","Power mode":"Mode power","Ripple":"Riak","Typewriter sound":"Suara mesin ketik","Rainbow":"Pelangi","Paper":"Kertas","Dark red":"Merah gelap","Deep teal":"Teal gelap","Indigo night":"Malam indigo","Bronze":"Perunggu","Dark green":"Hijau gelap","Navy night":"Biru malam","Gradient level":"Tingkat degradasi","Strong":"Kuat","Medium":"Sedang","Background, sidebar, cards and inner cards use steps of the same color. Strong makes the steps clearer.":"Latar, sidebar, kartu, dan kartu dalam memakai tingkatan dari warna yang sama. Kuat membuat tingkatannya lebih jelas.","Add link":"Tambah link","Tap a square to mark that day, week or month as done or not done.":"Ketuk kotak untuk menandai hari, minggu, atau bulan itu sudah atau belum dikerjakan.","List":"Daftar","Small cards":"Kartu kecil","Large cards":"Kartu besar","View":"Tampilan","No links yet. Tap Add link, paste the address and give it a name.":"Belum ada link. Ketuk Tambah link, tempel alamatnya, lalu beri nama.","Coming up":"Akan datang","Daily routines":"Rutinitas harian","Weekly routines":"Rutinitas mingguan","Monthly routines":"Rutinitas bulanan",
   "Personal notebook":"Buku catatan pribadi","Overview":"Ringkasan","Agent AI":"Agen AI","Tasks":"Tugas","Stopwatch & Calendar":"Stopwatch & Kalender","Stopwatch":"Stopwatch","Calendar":"Kalender","Projects":"Proyek","Dreams":"Impian","Renewals":"Masa Aktif","Links":"Tautan","Files":"Berkas","Notes":"Catatan","Finance":"Keuangan","Settings":"Pengaturan","Shortcuts":"Pintasan","Connecting…":"Menghubungkan…","Auto-saved":"Tersimpan otomatis","Main menu":"Menu utama","Sections":"Bagian","Open menu":"Buka menu","Not connected":"Tidak terhubung","Not connected yet":"Belum terhubung","Disconnected":"Terputus",
@@ -3465,7 +3477,36 @@ window.I18N=(function(){
   });
 
   /* ---------- BUDGET (anggaran bulanan per tipe pengeluaran) ---------- */
-  const BT_ICONS=["🍔","🛒","⚡","📶","⛽","🏠","💊","🎓","🍼","👕","🎮","🎁","✈️","❤️","🔧","🚗","📦","💼","🧾","💰"];
+  const BT_GROUPS=[
+    ["Makanan","🍔 🍕 🍜 🍚 🍛 🍗 🥩 🐟 🍳 🥗 🍞 🥐 🍰 🍩 🍪 🍫 🍦 🍎 🍌 🥤 ☕ 🍵 🧃 🥛 🍺 🧋 🍱 🍢"],
+    ["Belanja & rumah","🛒 🛍️ 🧺 🧴 🧼 🧻 🪥 🧹 🪣 🛋️ 🛏️ 🪑 🚿 🧯 🔑 🏠 🏡 🏘️ 🧱 🪚 🔨 🔧 🪛 💡 🔌 🔋 ⚡ 💧 🔥 🗑️"],
+    ["Transport","⛽ 🚗 🏍️ 🛵 🚲 🚌 🚕 🚚 🚛 ✈️ 🚢 🚆 🛞 🅿️ 🛣️ 🧭"],
+    ["Komunikasi & kerja","📶 📱 💻 🖥️ 🖨️ 📡 📺 🎧 📷 💼 📁 📝 ✏️ 📚 🎓 🏫 🧑‍💻 ⛏️ 🦺 ⚙️"],
+    ["Kesehatan & diri","💊 🏥 🩺 🦷 👓 💉 🩹 🧘 🏋️ ⚽ 🏸 🏊 💇 💅 👕 👖 👗 👟 👜 ⌚ 💍 🧥"],
+    ["Keluarga & sosial","👨‍👩‍👧 👶 🍼 🧸 🎒 ❤️ 💝 🎁 🎂 🎉 💐 🕌 ⛪ 🤲 🙏 🐈 🐕 🐔 🥚 🌱 🌴"],
+    ["Hiburan","🎮 🎬 🎵 🎤 🎸 📖 🎨 🎣 🏕️ 🏖️ 🎟️ 🎯 🎲 🧩 🍿 📸 🌙"],
+    ["Uang & tagihan","💰 💵 💳 🏦 🧾 📈 📉 💹 🪙 💸 🏷️ 📦 📌 ⭐ ✅ ❗"]];
+  const BT_ICONS=[].concat(...BT_GROUPS.map(g=>g[1].split(" ")));
+  let btPickFor=null;
+  function btPicker(){
+    let pk=document.getElementById("bt-pick");if(pk)return pk;
+    pk=document.createElement("div");pk.id="bt-pick";pk.className="bt-pick";pk.hidden=true;pk.setAttribute("role","dialog");pk.setAttribute("aria-label","Pilih emoji");
+    pk.innerHTML='<div class="bt-pick-h"><b>Pilih emoji</b><button type="button" class="ghost" data-pkx aria-label="Tutup">×</button></div><div class="bt-pick-b">'+BT_GROUPS.map(g=>'<div class="bt-pg"><span>'+g[0]+'</span><div>'+g[1].split(" ").map(i=>'<button type="button" data-pk="'+i+'">'+i+'</button>').join("")+'</div></div>').join("")+'</div>';
+    document.body.appendChild(pk);
+    pk.addEventListener("click",async e=>{
+      if(e.target.closest("[data-pkx]")){pk.hidden=true;return}
+      const b=e.target.closest("[data-pk]");if(!b)return;const ic=b.dataset.pk;pk.hidden=true;
+      if(btPickFor==="new"){$("bt-icon").value=ic;$("bt-icon-btn").textContent=ic}
+      else if(btPickFor){const list=btList().map(t=>t.id===btPickFor?Object.assign({},t,{i:ic}):t);await btSave(list)}
+    });
+    document.addEventListener("keydown",e=>{if(e.key==="Escape")pk.hidden=true});
+    document.addEventListener("click",e=>{if(!pk.hidden&&!pk.contains(e.target)&&!e.target.closest("[data-pkopen]"))pk.hidden=true},true);
+    return pk;
+  }
+  function btOpenPick(forId,anchor){const pk=btPicker();btPickFor=forId;pk.hidden=false;
+    const r=anchor.getBoundingClientRect(),w=Math.min(340,innerWidth-16);pk.style.width=w+"px";
+    pk.style.left=Math.max(8,Math.min(r.left,innerWidth-w-8))+"px";const top=r.bottom+6,h=Math.min(380,innerHeight*.6);
+    pk.style.top=(top+h>innerHeight?Math.max(8,r.top-h-6):top)+"px";pk.style.maxHeight=h+"px"}
   const BT_DEF=[["🍔","Makan"],["🛒","Belanja bulanan"],["⚡","Listrik & air"],["📶","Internet & pulsa"],["⛽","Transport & BBM"],["🏠","Cicilan & rumah"],["💊","Kesehatan"],["🎮","Hiburan"],["📦","Lain-lain"]];
   const nextMonth=()=>{const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+1);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")};
   const shiftMonth=(m,n)=>{let [y,mm]=m.split("-").map(Number);mm+=n;while(mm>12){mm-=12;y++}while(mm<1){mm+=12;y--}return y+"-"+String(mm).padStart(2,"0")};
@@ -3479,9 +3520,11 @@ window.I18N=(function(){
     IMP_BT_FILL();
     if(!$("bg-month"))return;
     if($("bg-month").value!==bgMonth)$("bg-month").value=bgMonth;
-    $("bt-icon").innerHTML||($("bt-icon").innerHTML=BT_ICONS.map(i=>'<option>'+i+'</option>').join(""));
+    if(!$("bt-icon-btn")){const sel=$("bt-icon"),inp=document.createElement("input");inp.type="hidden";inp.id="bt-icon";inp.value="📦";
+      const bb=document.createElement("button");bb.type="button";bb.id="bt-icon-btn";bb.className="bt-icon-btn";bb.setAttribute("data-pkopen","");bb.title="Pilih emoji";bb.textContent="📦";
+      bb.onclick=()=>btOpenPick("new",bb);sel.replaceWith(inp);inp.after(bb)}
     const types=btList();
-    $("bt-list").innerHTML=types.map(t=>'<li><span class="bt-i">'+esc(t.i)+'</span><span class="grow">'+esc(t.n)+'</span><button type="button" class="ghost danger" data-btdel="'+esc(t.id)+'" aria-label="Remove type" title="Remove type">×</button></li>').join("");
+    $("bt-list").innerHTML=types.map(t=>'<li><button type="button" class="bt-i bt-i-btn" data-pkopen data-btic="'+esc(t.id)+'" title="Ganti emoji" aria-label="Ganti emoji">'+esc(t.i)+'</button><span class="grow">'+esc(t.n)+'</span><button type="button" class="ghost danger" data-btdel="'+esc(t.id)+'" aria-label="Remove type" title="Remove type">×</button></li>').join("");
     if(!ready){$("bg-table").innerHTML='<div class="empty">Loading…</div>';return}
     const doc=bgDoc(bgMonth),lines=(doc&&doc.lines)||{};
     const out=byKind("fin").filter(f=>isTx(f)&&txDir(f)==="out"&&(f.date||"").slice(0,7)===bgMonth);
@@ -3512,8 +3555,8 @@ window.I18N=(function(){
     $("bg-table").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("[data-bgin]")){e.preventDefault();e.target.blur()}});
     $("f-btype").addEventListener("submit",async e=>{e.preventDefault();const n=$("bt-name").value.trim();if(!n)return;
       const list=btList().slice();list.push({id:"t"+Date.now().toString(36),i:$("bt-icon").value||"📦",n});
-      if(await btSave(list))$("bt-name").value=""});
-    $("bt-list").addEventListener("click",async e=>{const b=e.target.closest("[data-btdel]");if(!b)return;
+      if(await btSave(list)){$("bt-name").value="";$("bt-icon").value="📦";$("bt-icon-btn").textContent="📦"}});
+    $("bt-list").addEventListener("click",async e=>{const ic=e.target.closest("[data-btic]");if(ic){btOpenPick(ic.dataset.btic,ic);return}const b=e.target.closest("[data-btdel]");if(!b)return;
       if(!b.classList.contains("armed")){b.classList.add("armed");b.textContent="?";setTimeout(()=>{if(b.isConnected){b.classList.remove("armed");b.textContent="×"}},2500);return}
       await btSave(btList().filter(t=>t.id!==b.dataset.btdel))});
   }
