@@ -1309,6 +1309,20 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
 #imp-iconcard .ic-how ol{margin:6px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:13px}
 #imp-iconcard .ic-how summary{cursor:pointer;font-weight:600;font-size:13px}
 @media (max-width:760px){table.mstack tr{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))}}
+/* notes: on laptop, an open note form uses the full width (big writing area), list below */
+@media (min-width:900px){
+  #tab-notes .split:has(#f-note:not([hidden])){grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto!important;height:auto!important;max-height:none!important}
+  #tab-notes .split:has(#f-note:not([hidden]))>.lcol{position:static!important;max-height:none!important;height:auto!important;overflow:visible!important}
+  #tab-notes .split:has(#f-note:not([hidden]))>.rcol{height:auto!important;max-height:none!important;overflow:visible!important}
+  #f-note:not([hidden]){display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,360px);column-gap:22px;row-gap:12px;align-items:start;width:100%;max-width:none}
+  #f-note>*{grid-column:2;min-width:0}
+  #f-note>.formtitle{grid-column:1/-1;grid-row:1}
+  #f-note>label:has(#note-title){grid-column:1;grid-row:2}
+  #f-note>label:has(#note-body){grid-column:1;grid-row:3/span 6;display:flex;flex-direction:column}
+  #f-note #note-body{min-height:max(320px,calc(100vh - 360px));resize:vertical;font-size:15px;line-height:1.6}
+  #f-note>#note-img-wrap{grid-row:2/span 2}
+  #f-note>.actions{align-self:end}
+}
 </style>
 
 <div class="shell">
