@@ -2623,6 +2623,7 @@ window.I18N=(function(){
   }
   document.querySelector(".nav").addEventListener("click",e=>{
     const b=e.target.closest(".ng-btn");if(!b)return;
+    if(isMob()){const f=b.parentNode.querySelector(".nsub>a[data-tab]");if(f){location.hash=f.dataset.tab;return}}
     openGroup(b.getAttribute("aria-expanded")==="true"?null:b.dataset.ngb);
   });
   function showTab(){
@@ -3956,7 +3957,7 @@ window.I18N=(function(){
     if(act.length){
       pb+='<div>'+act.map(p=>{
         const spent=costs.filter(c=>c.proj===p.id).reduce((s,c)=>s+(+c.amount||0),0),bud=+p.budget||0;
-        const line=bud?'<span class="mono'+(spent>bud?' neg':'')+'">'+rp(spent)+' of '+rp(bud)+'</span>':(spent?'<span class="mono">'+rp(spent)+' spent</span>':'');
+        const line=bud?'<span class="mono'+(spent>bud?' neg':'')+'"><span class="spent">'+rp(spent)+'</span> of '+rp(bud)+'</span>':(spent?'<span class="mono spent">'+rp(spent)+' spent</span>':'');
         return '<div class="ov-row"><div class="grow"><div class="ttl">'+esc(p.name)+'</div><div class="meta"><span class="mono">'+(p.progress||0)+'%</span>'+line+'</div><div class="bar"><i style="width:'+(p.progress||0)+'%"></i></div></div></div>';
       }).join("")+'</div>';
     }else pb+='<p class="hint">No projects in progress.</p>';
@@ -4089,15 +4090,15 @@ window.I18N=(function(){
     out.forEach(f=>{const a=+f.amount||0;if(f.cat&&types.some(t=>t.id===f.cat))spentBy[f.cat]=(spentBy[f.cat]||0)+a;else untyped+=a});
     const totB=types.reduce((s,t)=>s+(+lines[t.id]||0),0),totS=out.reduce((s,f)=>s+(+f.amount||0),0),rem=totB-totS;
     const [y,mm]=bgMonth.split("-");
-    $("bg-sum").innerHTML='<div class="stat"><div class="k">Total budget</div><div class="v">'+rp(totB)+'</div><div class="s">'+BLN[+mm-1]+' '+y+'</div></div><div class="stat"><div class="k">Spent</div><div class="v">'+rp(totS)+'</div></div><div class="stat net"><div class="k">Remaining</div><div class="v'+(rem<0?' neg':'')+'">'+(rem<0?"−":"")+rp(Math.abs(rem))+'</div></div>';
+    $("bg-sum").innerHTML='<div class="stat"><div class="k">Total budget</div><div class="v">'+rp(totB)+'</div><div class="s">'+BLN[+mm-1]+' '+y+'</div></div><div class="stat"><div class="k">Spent</div><div class="v neg">'+rp(totS)+'</div></div><div class="stat net"><div class="k">Remaining</div><div class="v'+(rem<0?' neg':'')+'">'+(rem<0?"−":"")+rp(Math.abs(rem))+'</div></div>';
     if(!types.length){$("bg-table").innerHTML='<div class="empty">No expense types yet. Add one in Category settings.</div>';return}
     const keep=document.activeElement&&document.activeElement.dataset&&document.activeElement.dataset.bgin;
     let rows=types.map(t=>{
       const b=+lines[t.id]||0,s=spentBy[t.id]||0,p=b?Math.min(100,Math.round(s/b*100)):(s?100:0),over=b&&s>b;
-      return '<tr><td><span class="bt-i">'+esc(t.i)+'</span> <span class="catn">'+esc(t.n)+'</span></td><td class="r"><input class="bg-in mono" inputmode="numeric" data-bgin="'+esc(t.id)+'" value="'+(b?fmtIn(b):"")+'" placeholder="0" aria-label="Budget (Rp)"></td><td class="r mono">'+rp(s)+'</td><td class="r mono'+(over?' neg':'')+'">'+(b?(b-s<0?"−":"")+rp(Math.abs(b-s)):"–")+'</td><td class="bg-barc"><div class="bar'+(over?' over':' ok')+'"><i style="width:'+p+'%"></i></div></td></tr>';
+      return '<tr><td><span class="bt-i">'+esc(t.i)+'</span> <span class="catn">'+esc(t.n)+'</span></td><td class="r"><input class="bg-in mono" inputmode="numeric" data-bgin="'+esc(t.id)+'" value="'+(b?fmtIn(b):"")+'" placeholder="0" aria-label="Budget (Rp)"></td><td class="r mono spent">'+rp(s)+'</td><td class="r mono'+(over?' neg':'')+'">'+(b?(b-s<0?"−":"")+rp(Math.abs(b-s)):"–")+'</td><td class="bg-barc"><div class="bar'+(over?' over':' ok')+'"><i style="width:'+p+'%"></i></div></td></tr>';
     }).join("");
     if(untyped)rows+='<tr class="bg-untyped"><td>Untyped spending</td><td></td><td class="r mono">'+rp(untyped)+'</td><td></td><td></td></tr>';
-    $("bg-table").innerHTML='<div class="ptbl-wrap"><table class="ptbl bg-tbl"><thead><tr><th>Type</th><th class="r">Budget (Rp)</th><th class="r">Spent</th><th class="r">Remaining</th><th></th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><td>Total</td><td class="r mono">'+rp(totB)+'</td><td class="r mono">'+rp(totS)+'</td><td class="r mono'+(rem<0?' neg':'')+'">'+(rem<0?"−":"")+rp(Math.abs(rem))+'</td><td></td></tr></tfoot></table></div><p class="hint" id="bg-msg">Spending is taken from expense records in Record for this month.</p>';
+    $("bg-table").innerHTML='<div class="ptbl-wrap"><table class="ptbl bg-tbl"><thead><tr><th>Type</th><th class="r">Budget (Rp)</th><th class="r">Spent</th><th class="r">Remaining</th><th></th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><td>Total</td><td class="r mono">'+rp(totB)+'</td><td class="r mono spent">'+rp(totS)+'</td><td class="r mono'+(rem<0?' neg':'')+'">'+(rem<0?"−":"")+rp(Math.abs(rem))+'</td><td></td></tr></tfoot></table></div><p class="hint" id="bg-msg">Spending is taken from expense records in Record for this month.</p>';
     if(keep){const x=document.querySelector('[data-bgin="'+keep+'"]');if(x){x.focus();try{x.setSelectionRange(x.value.length,x.value.length)}catch(_){}}}
   }
   if($("bg-month")){
@@ -4288,7 +4289,7 @@ window.I18N=(function(){
         +'<td class="mono nw'+(late?' neg':'')+'">'+(done?(p.doneOn?esc(fmtDate(p.doneOn)):(p.due?esc(fmtDate(p.due)):'—')):(p.due?esc(fmtDate(p.due)):'—'))+'</td>'
         +'<td class="mono nw">'+(mine.length?(done?mine.length:open+' / '+mine.length):'—')+'</td>'
         +'<td class="r amt">'+(bud?money(bud):'—')+'</td>'
-        +'<td class="r amt">'+(spent?money(spent):'—')+'</td>'
+        +'<td class="r amt spent">'+(spent?money(spent):'—')+'</td>'
         +'<td class="r amt'+(bud&&rest<0?' neg':'')+'">'+(bud?money(rest,rest<0):'—')+'</td>'
         +'<td>'+photos+'</td>'
         +'<td>'+rowActs(p.id)+'</td></tr>';
@@ -7381,8 +7382,9 @@ window.ENGLISH_CEPAT = {
   },{passive:true});
 
   /* ---------- HP: geser kiri/kanan untuk pindah menu ---------- */
-  function order(){return Array.prototype.map.call(document.querySelectorAll(".nav a[data-tab]"),function(a){return a.dataset.tab})}
-  function cur(){var h=(location.hash||"").slice(1);if(h==="stopwatch")h="calendar";var o=order();return o.indexOf(h)>=0?h:"overview"}
+  function order(){var a=document.querySelector('.nav .nsub a[data-tab="'+cur()+'"]');var sc=a?a.parentNode:document;return Array.prototype.map.call(sc.querySelectorAll(a?"a[data-tab]":".nav a[data-tab]"),function(x){return x.dataset.tab})}
+  function inSub(){return !!document.querySelector('.nav .nsub a[data-tab="'+cur()+'"]')}
+  function cur(){var h=(location.hash||"").slice(1);if(h==="stopwatch")h="calendar";return document.querySelector('.nav a[data-tab="'+h+'"]')?h:"overview"}
   function scrollX(el){for(;el&&el!==document.body;el=el.parentElement){if(el.scrollWidth>el.clientWidth+4){var o=getComputedStyle(el).overflowX;if(o==="auto"||o==="scroll")return true}}return false}
   var tst=null;
   document.addEventListener("touchstart",function(e){
@@ -7398,7 +7400,7 @@ window.ENGLISH_CEPAT = {
     var side=document.getElementById("side"),open=side&&side.classList.contains("open");
     var mobile=matchMedia("(max-width:760px)").matches;
     if(open||!document.getElementById("scrim").hidden){document.getElementById("scrim").click();return}
-    if(s.side)return;
+    if(s.side||!inSub())return;
     var o=order(),i=o.indexOf(cur()),j=i+(dx<0?1:-1);
     if(j<0)return;
     if(j>=o.length)return;
@@ -7409,7 +7411,7 @@ window.ENGLISH_CEPAT = {
   /* penanda posisi menu (HP) */
   var tEl=null,tTm=0;
   function toast(){
-    if(!matchMedia("(max-width:760px)").matches)return;
+    if(!matchMedia("(max-width:760px)").matches||!inSub())return;
     if(!tEl){tEl=document.createElement("div");tEl.className="fx-toast";tEl.setAttribute("aria-hidden","true");document.body.appendChild(tEl)}
     var o=order(),i=o.indexOf(cur()),a=document.querySelector('.nav a[data-tab="'+cur()+'"] .ni');
     tEl.innerHTML='<span></span><span class="fx-dots">'+o.map(function(_,k){return "<i"+(k===i?' class="on"':"")+"></i>"}).join("")+"</span>";
@@ -7781,7 +7783,7 @@ document.addEventListener("click",function(e){
   function isMinus(c){return c==="−"||c==="-"||c==="–"}
   function cls(sign,el){
     if(sign)return isMinus(sign)?"neg":"pos";
-    if(el.closest&&el.closest(".neg"))return "neg";
+    if(el.closest&&el.closest(".neg,.spent"))return "neg";
     return "pos";
   }
   function proc(tn){
