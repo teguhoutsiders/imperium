@@ -347,6 +347,77 @@
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",addSetCard);else addSetCard();
 
+  /* ---------- pindahkan berkas lama dari Google Drive (Apps Script) ke Supabase Storage ----------
+     Berkas disimpan dengan ID Drive yang sama, jadi catatan yang sudah ada langsung tersambung. */
+  function driveIds(){
+    var out=new Set();
+    function walk(v){
+      if(typeof v==="string"){if(/^[\w-]{25,80}$/.test(v)&&/[A-Z]/.test(v)&&/\d/.test(v))out.add(v);return}
+      if(Array.isArray(v)){v.forEach(walk);return}
+      if(v&&typeof v==="object")Object.keys(v).forEach(function(k){walk(v[k])});
+    }
+    cache.forEach(function(d){walk(d)});
+    return Array.from(out);
+  }
+  async function gasCall(url,key,a,payload){
+    var res=await origFetch(url,{method:"POST",body:JSON.stringify(Object.assign({k:key,a:a},payload||{})),redirect:"follow",cache:"no-store"});
+    var j=await res.json();
+    if(!j||!j.ok){var e=new Error((j&&(j.msg||j.err))||"gagal");e.code=j&&j.err;throw e}
+    return j;
+  }
+  function addMigCard(){
+    var host=document.getElementById("tab-pengaturan");if(!host||document.getElementById("imp-mig"))return;
+    var c=document.createElement("div");c.className="setcard";c.id="imp-mig";
+    c.innerHTML='<h3 class="set-h">Pindahkan berkas dari Google Drive</h3>'
+      +'<p class="hint">Sekali saja: ambil foto & berkas lama dari folder Drive "Imperium Files" lewat web app Apps Script lama, lalu simpan ke Supabase. Berkas yang sudah ada di Supabase dilewati.</p>'
+      +'<label class="hint" style="display:block;margin:8px 0 4px">Alamat web app Apps Script (berakhiran /exec)</label>'
+      +'<input id="imp-mig-url" type="url" inputmode="url" placeholder="https://script.google.com/macros/s/…/exec" style="width:100%;padding:9px 10px;border-radius:9px;border:1px solid rgba(127,127,127,.35);background:transparent;color:inherit;font:inherit">'
+      +'<label class="hint" style="display:block;margin:8px 0 4px">Kunci akses lama</label>'
+      +'<input id="imp-mig-key" type="password" style="width:100%;padding:9px 10px;border-radius:9px;border:1px solid rgba(127,127,127,.35);background:transparent;color:inherit;font:inherit">'
+      +'<div class="actions" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button type="button" class="soft" id="imp-mig-go">Mulai pindahkan</button></div>'
+      +'<p class="hint" id="imp-mig-st" role="status"></p>';
+    var anchor=document.getElementById("imp-conn");
+    host.insertBefore(c,anchor?anchor.nextSibling:(host.querySelector("footer")||null));
+    var st=document.getElementById("imp-mig-st"),btn=document.getElementById("imp-mig-go");
+    var oldUrl=lsGet("imp-mig-url");if(oldUrl)document.getElementById("imp-mig-url").value=oldUrl;
+    btn.onclick=async function(){
+      var url=document.getElementById("imp-mig-url").value.trim(),key=document.getElementById("imp-mig-key").value;
+      if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(url)){st.textContent="Alamat harus berbentuk https://script.google.com/macros/s/…/exec";return}
+      if(!key){st.textContent="Isi kunci akses lama.";return}
+      btn.disabled=true;
+      try{
+        st.textContent="Memeriksa Apps Script…";
+        await gasCall(url,key,"ping");
+        lsSet("imp-mig-url",url);
+        if(!sb)await lib();
+        var have=new Set(),off=0;
+        for(;;){var l=await sb.storage.from(BUCKET).list(uid,{limit:1000,offset:off});if(l.error)throw mapErr(l.error);(l.data||[]).forEach(function(o){have.add(o.name)});if(!l.data||l.data.length<1000)break;off+=1000}
+        var ids=driveIds().filter(function(id){return !have.has(id)});
+        if(!ids.length){st.textContent="Tidak ada berkas yang perlu dipindahkan. Semua sudah ada di Supabase.";btn.disabled=false;return}
+        var ok=0,miss=0,fail=0,bytes=0;
+        for(var i=0;i<ids.length;i++){
+          st.textContent="Memindahkan "+(i+1)+" dari "+ids.length+"… ("+ok+" berhasil)";
+          var j;
+          try{j=await gasCall(url,key,"bget",{id:ids[i]})}catch(e){if(e.code==="auth"||e.code==="locked")throw e;miss++;continue}
+          try{
+            var bin=atob(j.b64),u8=new Uint8Array(bin.length);for(var k=0;k<bin.length;k++)u8[k]=bin.charCodeAt(k);
+            var blob=new Blob([u8],{type:j.type||"application/octet-stream"});
+            var r=await sb.storage.from(BUCKET).upload(path(ids[i]),blob,{contentType:blob.type,upsert:true,cacheControl:"31536000"});
+            if(r.error)throw r.error;
+            await cachePut(ids[i],blob);ok++;bytes+=blob.size;
+          }catch(e){fail++;console.error("Imperium pindah berkas",ids[i],e)}
+        }
+        st.textContent="Selesai: "+ok+" berkas dipindahkan ("+(Math.round(bytes/1048576*10)/10)+" MB)."
+          +(fail?" "+fail+" gagal diunggah, tekan Mulai lagi untuk mencoba ulang.":"")
+          +(miss?" "+miss+" ID bukan berkas Drive atau sudah tidak ada (wajar).":"")
+          +" Muat ulang halaman untuk melihat foto.";
+      }catch(e){
+        st.textContent=e.code==="auth"?"Kunci akses lama salah.":e.code==="locked"?"Apps Script terkunci karena salah kunci. Buka Spreadsheet › Imperium › Buka kunci.":e.code==="nokey"?"Kunci belum diatur di Spreadsheet lama.":"Gagal: "+(e.message||e);
+      }finally{btn.disabled=false}
+    };
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",addMigCard);else addMigCard();
+
   /* ---------- aplikasi di layar utama (PWA) ---------- */
   if("serviceWorker" in navigator&&location.protocol==="https:")window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})});
 })();
