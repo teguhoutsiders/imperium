@@ -1109,13 +1109,13 @@ details.ie-acc>summary .ie-sub{font-weight:400}
 
 /* ===== Aset & utang: muat 1 layar di laptop ===== */
 @media (min-width:1100px) and (min-height:600px){
-  .main:has(>#tab-keuangan:not([hidden])){padding-bottom:16px}
-  .main:has(>#tab-keuangan:not([hidden]))>footer{display:none}
-  #tab-keuangan:not([hidden]){flex:1;min-height:0;gap:12px}
-  #tab-keuangan .ledger .stat{padding:9px 12px}
-  #tab-keuangan>.split{flex:1;min-height:0;grid-template-rows:minmax(0,1fr);align-items:stretch}
-  #tab-keuangan>.split>.lcol,#tab-keuangan>.split>.rcol{position:static;max-height:none;height:100%;min-height:0;overflow:auto;scrollbar-width:thin;padding:2px 6px 2px 2px}
-  #tab-keuangan .liabs{columns:2 300px}
+  .main:has(>:is(#tab-aset,#tab-hutang,#tab-record,#tab-akun):not([hidden])){padding-bottom:16px}
+  .main:has(>:is(#tab-aset,#tab-hutang,#tab-record,#tab-akun):not([hidden]))>footer{display:none}
+  :is(#tab-aset,#tab-hutang,#tab-record,#tab-akun):not([hidden]){flex:1;min-height:0;gap:12px}
+  :is(#tab-aset,#tab-hutang,#tab-record,#tab-akun) .ledger .stat{padding:9px 12px}
+  :is(#tab-aset,#tab-hutang,#tab-record,#tab-akun)>.split{flex:1;min-height:0;grid-template-rows:minmax(0,1fr);align-items:stretch}
+  :is(#tab-aset,#tab-hutang,#tab-record,#tab-akun)>.split>.lcol,:is(#tab-aset,#tab-hutang,#tab-record,#tab-akun)>.split>.rcol{position:static;max-height:none;height:100%;min-height:0;overflow:auto;scrollbar-width:thin;padding:2px 6px 2px 2px}
+  :is(#tab-aset,#tab-hutang,#tab-record,#tab-akun) .liabs{columns:2 300px}
 }
 
 /* ===== Impian: daftar / kartu kecil / kartu besar ===== */
@@ -1166,7 +1166,11 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
 :root[data-vivid="on"] .nav a[data-tab="calendar"] .ic{color:var(--v7)}
 :root[data-vivid="on"] .nav a[data-tab="proyek"] .ic{color:var(--v4)}
 :root[data-vivid="on"] .nav a[data-tab="dreams"] .ic{color:var(--v2)}
-:root[data-vivid="on"] .nav a[data-tab="keuangan"] .ic{color:var(--v3)}
+:root[data-vivid="on"] .nav a[data-tab="akun"] .ic{color:var(--v3)}
+:root[data-vivid="on"] .nav a[data-tab="record"] .ic{color:var(--v2)}
+:root[data-vivid="on"] .nav a[data-tab="aset"] .ic{color:var(--v4)}
+:root[data-vivid="on"] .nav a[data-tab="hutang"] .ic{color:var(--v1)}
+:root[data-vivid="on"] .nav a[data-tab="kategori"] .ic{color:var(--v6)}
 :root[data-vivid="on"] .nav a[data-tab="masa-aktif"] .ic{color:var(--v1)}
 :root[data-vivid="on"] .nav a[data-tab="budget"] .ic{color:var(--v5)}
 :root[data-vivid="on"] .nav a[data-tab="notes"] .ic{color:var(--v6)}
@@ -1316,7 +1320,7 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
   .split:not(:has(>.lcol>form:not([hidden])))>.lcol:not(:has(>:not(button,form)))>.fold-tg{margin:0}
 }
 @media (min-width:1100px) and (min-height:600px){
-  #tab-keuangan>.split:not(:has(>.lcol>form:not([hidden]))){grid-template-rows:auto minmax(0,1fr)!important}
+  :is(#tab-aset,#tab-hutang,#tab-record,#tab-akun)>.split:not(:has(>.lcol>form:not([hidden]))){grid-template-rows:auto minmax(0,1fr)!important}
 }
 /* liability card numbers: keep "Rp" with the amount */
 .liab .nums .amt{white-space:nowrap}
@@ -1489,6 +1493,36 @@ label[hidden]{display:none!important}
 :root[data-vivid="on"] .lt-sec:nth-of-type(1){border-top:3px solid var(--v2)}
 :root[data-vivid="on"] .lt-sec:nth-of-type(2){border-top:3px solid var(--v4)}
 @media (max-width:760px){.lt-sec{padding:10px;border-radius:14px}}
+
+/* ===== Keuangan v-Nov24: Account, Record, Aset, Hutang, Kategori, urutan menu ===== */
+.acct-ic{display:grid;place-items:center;width:40px;height:40px;border-radius:10px;background:var(--inner);border:1px solid var(--line);font-size:20px;flex:none}
+.acct-ledger{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.rec-ledger{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.rec-top{margin-bottom:0}
+.rec-top .bg-acts{flex-wrap:wrap}
+.rec-top .bg-acts button{white-space:nowrap}
+.rec-filter{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.rec-filter select{max-width:240px;min-width:0}
+ul.list>li.rec-day{background:var(--sunk);padding-block:6px;display:flex;align-items:center;gap:10px}
+.rec-day .hint{font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.rec-day .mono{margin-left:auto;font-size:12px}
+.cat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+.cat-grid .bt-list{max-height:none}
+.ct-name{background:none;border:0;padding:2px 4px;color:inherit;font:inherit;text-align:left;cursor:text;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ct-name:hover{background:var(--surface);border-radius:6px}
+.ct-in{min-width:0;padding:4px 8px;font-size:14px}
+.ct-use{font-size:12px;color:var(--muted);white-space:nowrap}
+.bg-types{margin-top:14px}
+.bg-chips{display:flex;flex-wrap:wrap;gap:6px}
+.bg-link{display:inline-block;text-decoration:none}
+.mo-grp{margin:10px 0 14px}
+.mo-grp h4{margin:0 0 6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.mo-row{display:flex;align-items:center;gap:8px;padding:5px 8px;margin-bottom:4px;border-radius:10px;background:var(--inner);border:1px solid var(--line)}
+.mo-row .mo-n{width:70px;flex:none;padding:5px 6px}
+.mo-row .mo-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mo-row button{padding:4px 10px;line-height:1.1}
+@media (max-width:900px){.cat-grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:760px){.rec-ledger{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rec-ledger .stat.net{grid-column:1/-1}}
 </style>
 
 <div class="shell">
@@ -1506,7 +1540,7 @@ label[hidden]{display:none!important}
       <div class="ngrp" data-ng="goals"><button type="button" class="ng-btn" data-ngb="goals" aria-expanded="false" aria-controls="ns-goals"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="1.6"/></svg><span class="ni">Goals</span><span class="count" data-gc="goals" hidden></span><svg class="ng-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
         <div class="nsub" id="ns-goals" data-sg="goals" hidden><a href="#proyek" data-tab="proyek"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg><span class="ni">Projects</span><span class="count" id="c-proyek">0</span></a><a href="#dreams" data-tab="dreams"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5-4.8-4.6 6.6-.9z"/></svg><span class="ni">Dreams</span><span class="count" id="c-dreams">0</span></a></div></div>
       <div class="ngrp" data-ng="money"><button type="button" class="ng-btn" data-ngb="money" aria-expanded="false" aria-controls="ns-money"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3v3a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V5"/></svg><span class="ni">Finance</span><span class="count" data-gc="money" hidden></span><svg class="ng-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
-        <div class="nsub" id="ns-money" data-sg="money" hidden><a href="#keuangan" data-tab="keuangan"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-6M22 20H2"/></svg><span class="ni">Assets &amp; debts</span></a><a href="#budget" data-tab="budget"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg><span class="ni">Budget</span></a></div></div>
+        <div class="nsub" id="ns-money" data-sg="money" hidden><a href="#akun" data-tab="akun"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="19" height="13" rx="2.5"/><path d="M2.5 10.5h19M6.5 15h4"/></svg><span class="ni">Account</span></a><a href="#record" data-tab="record"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg><span class="ni">Record</span></a><a href="#aset" data-tab="aset"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-6M22 20H2"/></svg><span class="ni">Assets</span></a><a href="#hutang" data-tab="hutang"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12m0 0-5-5m5 5 5-5M5 20.5h14"/></svg><span class="ni">Debts</span></a><a href="#budget" data-tab="budget"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg><span class="ni">Budget</span></a><a href="#kategori" data-tab="kategori"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg><span class="ni">Category</span></a></div></div>
       <div class="ngrp" data-ng="lib"><button type="button" class="ng-btn" data-ngb="lib" aria-expanded="false" aria-controls="ns-lib"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="m16.5 4.6 3.4-.9 3.1 15.5-3.4.9z"/></svg><span class="ni">Library</span><span class="count" data-gc="lib" hidden></span><svg class="ng-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
         <div class="nsub" id="ns-lib" data-sg="lib" hidden><a href="#notes" data-tab="notes"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><span class="ni">Notes</span><span class="count" id="c-notes">0</span></a><div class="nfsub" id="nav-nf" hidden></div><div class="nfsub" id="nav-nd" hidden></div><a href="#files" data-tab="files"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H9l2 3h7.5A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/></svg><span class="ni">Files</span><span class="count" id="c-files">0</span></a><span class="count" id="c-tautan" hidden>0</span></div></div>
       <div class="sep" role="presentation"></div>
@@ -1859,45 +1893,133 @@ label[hidden]{display:none!important}
   </section>
 
   <!-- KEUANGAN -->
-  <section class="panel" id="tab-keuangan" hidden>
-    <div class="ledger" id="ledger"></div>
+  <!-- ACCOUNT -->
+  <section class="panel" id="tab-akun" hidden>
+    <div class="ledger acct-ledger" id="acct-sum"></div>
     <div class="split wide-l"><div class="lcol">
-    <form class="entry" id="f-fin" autocomplete="off">
-      <p class="formtitle" id="ft-fin">New finance entry</p>
-      <label>Type
-        <select id="fin-type">
-          <option value="aset">Asset</option>
-          <option value="liabilitas">Liability (debt or installment)</option>
-          <option value="transaksi">Transaction</option>
-        </select>
+    <form class="entry" id="f-acct" autocomplete="off">
+      <p class="formtitle" id="ft-acct">New account</p>
+      <label>Account name
+        <input id="acct-name" required maxlength="80" placeholder="e.g. BCA, Cash wallet, DANA">
       </label>
-      <label id="lb-dir" hidden>Direction
-        <select id="fin-dir"><option value="out">Out</option><option value="in">In</option></select>
+      <label>Account type
+        <select id="acct-type"><option value="cash">Cash</option><option value="bank">Bank</option><option value="ewallet">E-wallet</option><option value="savings">Savings</option><option value="card">Credit card</option><option value="other">Other</option></select>
       </label>
-      <label id="lb-fcat" hidden>Expense type
-        <select id="fin-cat"><option value="">No type</option></select>
-      </label>
-      <label>Name
-        <input id="fin-name" required maxlength="150" placeholder="e.g. Savings, Motorbike, Salary, Groceries">
-      </label>
-      <label><span id="fin-amt-lab">Amount (Rp)</span>
-        <input id="fin-amt" required inputmode="numeric" placeholder="1.500.000">
-      </label>
-      <label><span id="fin-date-lab">Date</span>
-        <input id="fin-date" type="date">
-      </label>
-      <label id="lb-inst" hidden>Monthly installment (Rp)
-        <input id="fin-inst" inputmode="numeric" placeholder="Optional">
-      </label>
-      <label id="lb-dueday" hidden>Due day of month
-        <input id="fin-dueday" type="number" min="1" max="31" placeholder="e.g. 25">
+      <label>Opening balance (Rp)
+        <input id="acct-open" inputmode="numeric" placeholder="0">
       </label>
       <label class="wide">Description
-        <input id="fin-note" maxlength="300" placeholder="Optional">
+        <input id="acct-note" maxlength="200" placeholder="Optional">
+      </label>
+      <p class="hint wide">Deleting an account keeps its records, but they become “No account”.</p>
+      <div class="actions">
+        <button type="button" class="ghost" id="acct-cancel" hidden>Cancel</button>
+        <button class="primary" id="acct-submit">Add account</button>
+      </div>
+    </form>
+    </div><div class="rcol">
+    <div class="fin-cols" id="acct-list"></div>
+    </div></div>
+  </section>
+
+  <!-- RECORD -->
+  <section class="panel" id="tab-record" hidden>
+    <div class="bg-top rec-top">
+      <label class="bg-month">Month<input type="month" id="rec-month"></label>
+      <div class="bg-acts"><button type="button" class="ghost" id="rec-prev">Previous</button><button type="button" class="soft" id="rec-now">This month</button><button type="button" class="ghost" id="rec-nextm">Next</button><button type="button" class="ghost" id="rec-all">All time</button></div>
+    </div>
+    <div class="ledger rec-ledger" id="rec-sum"></div>
+    <div class="split wide-l"><div class="lcol">
+    <form class="entry" id="f-rec" autocomplete="off">
+      <p class="formtitle" id="ft-rec">New record</p>
+      <label>Type
+        <select id="rec-type"><option value="in">Income</option><option value="out" selected>Expense</option><option value="tr">Transfer</option></select>
+      </label>
+      <label>Date
+        <input id="rec-date" type="date">
+      </label>
+      <label id="lb-racct"><span id="rec-acct-lab">Account</span>
+        <select id="rec-acct"></select>
+      </label>
+      <label id="lb-rto" hidden>To account
+        <select id="rec-to"></select>
+      </label>
+      <label id="lb-rcat">Category
+        <select id="rec-cat"></select>
+      </label>
+      <label>Amount (Rp)
+        <input id="rec-amt" required inputmode="numeric" placeholder="50.000">
+      </label>
+      <label class="wide">Description
+        <input id="rec-name" maxlength="150" placeholder="Optional, e.g. Lunch, Salary November">
+      </label>
+      <p class="hint wide">A transfer moves money between your accounts. It does not count as income or expense.</p>
+      <div class="actions">
+        <button type="button" class="ghost" id="rec-cancel" hidden>Cancel</button>
+        <button class="primary" id="rec-submit">Add record</button>
+      </div>
+    </form>
+    </div><div class="rcol">
+    <div class="rec-filter"><div class="filters" id="rec-types" role="group" aria-label="Filter records"></div><select id="rec-facct" aria-label="Filter by account"></select></div>
+    <div class="fin-cols" id="rec-list"></div>
+    </div></div>
+  </section>
+
+  <!-- ASSETS -->
+  <section class="panel" id="tab-aset" hidden>
+    <div class="ledger" id="aset-sum"></div>
+    <div class="split wide-l"><div class="lcol">
+    <form class="entry" id="f-aset" autocomplete="off">
+      <p class="formtitle" id="ft-aset">New asset</p>
+      <label>Name
+        <input id="aset-name" required maxlength="150" placeholder="e.g. Savings, Motorbike, Gold">
+      </label>
+      <label>Value (Rp)
+        <input id="aset-amt" required inputmode="numeric" placeholder="1.500.000">
+      </label>
+      <label>Date
+        <input id="aset-date" type="date">
+      </label>
+      <label class="wide">Description
+        <input id="aset-note" maxlength="300" placeholder="Optional">
       </label>
       <div class="actions">
-        <button type="button" class="ghost" id="fin-cancel" hidden>Cancel</button>
-        <button class="primary" id="fin-submit">Add entry</button>
+        <button type="button" class="ghost" id="aset-cancel" hidden>Cancel</button>
+        <button class="primary" id="aset-submit">Add asset</button>
+      </div>
+    </form>
+    </div><div class="rcol">
+    <div class="fin-cols" id="aset-list"></div>
+    </div></div>
+  </section>
+
+  <!-- DEBTS -->
+  <section class="panel" id="tab-hutang" hidden>
+    <div class="ledger" id="debt-sum"></div>
+    <div class="split wide-l"><div class="lcol">
+    <form class="entry" id="f-debt" autocomplete="off">
+      <p class="formtitle" id="ft-debt">New debt</p>
+      <label>Name
+        <input id="debt-name" required maxlength="150" placeholder="e.g. Motorbike loan, Credit card">
+      </label>
+      <label>Starting debt (Rp)
+        <input id="debt-amt" required inputmode="numeric" placeholder="25.000.000">
+      </label>
+      <label>Debt start date
+        <input id="debt-date" type="date">
+      </label>
+      <label>Monthly installment (Rp)
+        <input id="debt-inst" inputmode="numeric" placeholder="Optional">
+      </label>
+      <label>Due day of month
+        <input id="debt-dueday" type="number" min="1" max="31" placeholder="e.g. 25">
+      </label>
+      <label class="wide">Description
+        <input id="debt-note" maxlength="300" placeholder="Optional">
+      </label>
+      <div class="actions">
+        <button type="button" class="ghost" id="debt-cancel" hidden>Cancel</button>
+        <button class="primary" id="debt-submit">Add debt</button>
       </div>
     </form>
     <form class="entry calc" id="f-calc" autocomplete="off">
@@ -1924,7 +2046,7 @@ label[hidden]{display:none!important}
       <div class="wide calc-out" id="calc-out" aria-live="polite"></div>
     </form>
     </div><div class="rcol">
-    <div class="fin-cols" id="fin-list"></div>
+    <div class="fin-cols" id="debt-list"></div>
     </div></div>
   </section>
 
@@ -1935,22 +2057,45 @@ label[hidden]{display:none!important}
       <div class="bg-acts"><button type="button" class="soft" id="bg-copy">Copy last month</button><button type="button" class="ghost" id="bg-next">Next month</button></div>
     </div>
     <div class="ledger bg-ledger" id="bg-sum"></div>
-    <div class="split always"><div class="lcol">
-      <form class="entry" id="f-btype" autocomplete="off">
-        <p class="formtitle">Expense types</p>
-        <label>Icon<select id="bt-icon"></select></label>
-        <label>Name<input id="bt-name" maxlength="60" placeholder="e.g. Makan, Bensin" required></label>
-        <div class="actions"><button class="primary" type="submit">Add type</button></div>
-        <ul class="bt-list" id="bt-list"></ul>
-        <p class="hint wide">These types also appear when you record an outgoing transaction in Assets &amp; debts, so spending is counted against the budget.</p>
+    <div id="bg-table"></div>
+    <div class="setcard bg-types">
+      <h3 class="set-h">Expense types</h3>
+      <div class="bg-chips" id="bg-chips"></div>
+      <p class="hint">Expense types are now managed in Category settings. Spending in a type counts against its budget.</p>
+      <div class="actions"><button type="button" class="soft" id="bg-go-cat">Manage categories</button></div>
+    </div>
+  </section>
+
+  <!-- CATEGORY SETTINGS -->
+  <section class="panel" id="tab-kategori" hidden>
+    <div class="cat-grid">
+      <form class="entry" id="f-cat-inc" autocomplete="off">
+        <p class="formtitle">Income category</p>
+        <label>Icon<input type="hidden" id="ct-ic-inc" value="📦"><button type="button" id="ct-ib-inc" class="bt-icon-btn" data-pkopen title="Choose emoji">📦</button></label>
+        <label>Name<input id="ct-name-inc" maxlength="60" placeholder="e.g. Salary, Bonus" required></label>
+        <div class="actions"><button class="primary" type="submit">Add category</button></div>
+        <ul class="bt-list" id="ct-list-inc"></ul>
+        <p class="hint wide">Used when you add an income record.</p>
       </form>
-    </div><div class="rcol">
-      <div id="bg-table"></div>
-    </div></div>
+      <form class="entry" id="f-cat-exp" autocomplete="off">
+        <p class="formtitle">Expense category</p>
+        <label>Icon<input type="hidden" id="ct-ic-exp" value="📦"><button type="button" id="ct-ib-exp" class="bt-icon-btn" data-pkopen title="Choose emoji">📦</button></label>
+        <label>Name<input id="ct-name-exp" maxlength="60" placeholder="e.g. Makan, Bensin" required></label>
+        <div class="actions"><button class="primary" type="submit">Add category</button></div>
+        <ul class="bt-list" id="ct-list-exp"></ul>
+        <p class="hint wide">Used when you add an expense record. The same types also set your monthly budget in Budget.</p>
+      </form>
+    </div>
   </section>
 
   <!-- PENGATURAN -->
   <section class="panel" id="tab-pengaturan" hidden>
+    <div class="setcard" id="menu-card">
+      <h3 class="set-h">Menu order</h3>
+      <p class="hint">Pick the row number for each submenu. It applies to the sidebar right away and is saved to your account.</p>
+      <div id="menu-ord"></div>
+      <div class="actions"><button type="button" class="ghost" id="menu-reset">Reset to default order</button></div>
+    </div>
     <div class="setcard">
       <h3 class="set-h">Theme</h3>
       <div class="set-row">
@@ -2147,6 +2292,8 @@ window.I18N=(function(){
   "Imperium Group":"Imperium Group","Link (opens when you click the row)":"Link (terbuka saat baris diklik)","e.g. drive.google.com/… or a project website":"mis. drive.google.com/… atau situs proyek","Link":"Link","Photos (optional, multiple allowed)":"Foto (opsional, bisa lebih dari satu)","Existing photos are kept. The photos you choose will be added.":"Foto yang sudah ada tetap disimpan. Foto yang Anda pilih akan ditambahkan.","Active projects":"Proyek aktif","Finished projects":"Proyek selesai","No active projects. Add one with + New project.":"Belum ada proyek aktif. Tambahkan lewat + Proyek baru.","Add photos":"Tambah foto","Add photo":"Tambah foto","Project photos":"Foto proyek","No photos yet.":"Belum ada foto.","No notes.":"Tanpa catatan.","Costs":"Biaya","No costs logged yet.":"Belum ada biaya yang dicatat.","Show details":"Lihat detail","Target":"Target","Total":"Total","Photos added.":"Foto ditambahkan.","Finished":"Selesai pada","Planner":"Agenda","Goals":"Target","Library":"Arsip","Assets, debts & cash flow":"Aset, utang & arus kas","Assets & debts":"Aset & utang",
   "Debt payoff calculator":"Kalkulator pelunasan utang","Enter a debt and the monthly installment to see how long it takes to pay off.":"Isi jumlah utang dan cicilan per bulan untuk melihat berapa lama sampai lunas.","Use a liability":"Ambil dari kewajiban","Type the numbers myself":"Isi angka sendiri","Debt (Rp)":"Utang (Rp)","Installment / month (Rp)":"Cicilan / bulan (Rp)","Interest / year (%)":"Bunga / tahun (%)","Interest type":"Jenis bunga","Flat (on starting debt)":"Flat (dari utang awal)","Effective (on remaining debt)":"Efektif (dari sisa utang)","First payment month":"Bulan cicilan pertama","Simulate":"Simulasikan","Open the payoff calculator with this debt":"Buka kalkulator pelunasan dengan utang ini","Kantor Nyenyo":"Kantor Nyenyo","Chat Nyenyo":"Chat Nyenyo"
   };
+  var NEWD={"New account": "Account baru", "Edit account": "Ubah account", "Add account": "Tambah account", "Account name": "Nama account", "Account type": "Tipe account", "e.g. BCA, Cash wallet, DANA": "mis. BCA, Dompet tunai, DANA", "Opening balance (Rp)": "Saldo awal (Rp)", "Total balance": "Total saldo", "Balance": "Saldo", "Deleting an account keeps its records, but they become “No account”.": "Menghapus account tidak menghapus record-nya, tetapi record itu jadi “Tanpa account”.", "No accounts yet. Add your cash, bank accounts and e-wallets so each record can say where the money moved.": "Belum ada account. Tambahkan dompet tunai, rekening bank, dan e-wallet supaya tiap record tahu uangnya lewat mana.", "View records": "Lihat record", "Cash": "Tunai", "Savings": "Tabungan", "Credit card": "Kartu kredit", "Other": "Lainnya", "New record": "Record baru", "Edit record": "Ubah record", "Add record": "Tambah record", "Month": "Bulan", "Previous": "Sebelumnya", "Next": "Berikutnya", "This month": "Bulan ini", "All time": "Semua waktu", "From account": "Dari account", "To account": "Ke account", "No account": "Tanpa account", "Select account": "Pilih account", "No category": "Tanpa kategori", "All accounts": "Semua account", "Filter records": "Saring record", "Filter by account": "Saring menurut account", "Optional, e.g. Lunch, Salary November": "Opsional, mis. Makan siang, Gaji November", "A transfer moves money between your accounts. It does not count as income or expense.": "Transfer memindahkan uang antar account. Tidak dihitung sebagai income atau expense.", "No records yet. Add your first income, expense or transfer.": "Belum ada record. Tambahkan income, expense, atau transfer pertama Anda.", "No records match these filters.": "Tidak ada record yang cocok dengan saringan ini.", "Amount must be a number greater than 0, e.g. 50.000.": "Jumlah harus angka lebih dari 0, mis. 50.000.", "Choose both accounts for a transfer.": "Pilih kedua account untuk transfer.", "Choose two different accounts.": "Pilih dua account yang berbeda.", "New asset": "Aset baru", "Edit asset": "Ubah aset", "Add asset": "Tambah aset", "Value (Rp)": "Nilai (Rp)", "e.g. Savings, Motorbike, Gold": "mis. Tabungan, Motor, Emas", "No assets yet. Add savings, vehicles, gold or anything you own.": "Belum ada aset. Tambahkan tabungan, kendaraan, emas, atau apa pun yang Anda miliki.", "New debt": "Hutang baru", "Edit debt": "Ubah hutang", "Add debt": "Tambah hutang", "e.g. Motorbike loan, Credit card": "mis. Kredit motor, Kartu kredit", "Debts": "Hutang", "Remaining debt": "Sisa hutang", "Monthly installments": "Cicilan per bulan", "No debts yet. Add a loan or installment to track what is left to pay.": "Belum ada hutang. Tambahkan pinjaman atau cicilan untuk memantau sisa yang harus dibayar.", "Expense types are now managed in Category settings. Spending in a type counts against its budget.": "Tipe pengeluaran sekarang dikelola di pengaturan Category. Pengeluaran pada satu tipe dihitung terhadap anggarannya.", "Manage categories": "Kelola kategori", "No expense types yet. Add one in Category settings.": "Belum ada tipe pengeluaran. Tambahkan di pengaturan Category.", "No expense types yet.": "Belum ada tipe pengeluaran.", "Spending is taken from expense records in Record for this month.": "Pengeluaran diambil dari record expense bulan ini di menu Record.", "Income category": "Kategori income", "Expense category": "Kategori expense", "Add category": "Tambah kategori", "e.g. Salary, Bonus": "mis. Gaji, Bonus", "Used when you add an income record.": "Dipakai saat menambah record income.", "Used when you add an expense record. The same types also set your monthly budget in Budget.": "Dipakai saat menambah record expense. Tipe yang sama juga dipakai untuk anggaran bulanan di menu Anggaran.", "Choose emoji": "Pilih emoji", "Change emoji": "Ganti emoji", "Rename": "Ganti nama", "Remove category": "Hapus kategori", "No categories yet.": "Belum ada kategori.", "Menu order": "Urutan menu", "Pick the row number for each submenu. It applies to the sidebar right away and is saved to your account.": "Pilih nomor baris untuk tiap submenu. Langsung berlaku di sidebar dan tersimpan di akun Anda.", "Reset to default order": "Kembalikan urutan awal", "Row number": "Nomor baris", "Move up": "Naik", "Move down": "Turun", "Net worth": "Kekayaan bersih", "this month": "bulan ini", "+ New record": "+ Record baru", "+ New account": "+ Account baru", "+ New asset": "+ Aset baru", "+ New debt": "+ Hutang baru"};
+  Object.keys(NEWD).forEach(function(k){if(!Object.prototype.hasOwnProperty.call(D,k))D[k]=NEWD[k]});
   /* Indonesian text used by the 3D office view, shown in English when English is chosen */
   var E={"Dalam":"Inside","Luar":"Outside","Putar":"Rotate","Menghubungkan":"Connecting","Geser untuk memutar, cubit atau scroll untuk zoom":"Drag to rotate, pinch or scroll to zoom"};
   var MS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],MI=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
@@ -2156,7 +2303,7 @@ window.I18N=(function(){
   var PRE=[["Updated ","Diperbarui "],["Saved ","Disimpan "],["Ends ","Berakhir "],["Started ","Dimulai "],["Target ","Target "],["Achieved ","Tercapai "],["Overdue · ","Terlambat · "],["Today · ","Hari ini · "],["Week of ","Minggu "],["Last export: ","Ekspor terakhir: "],["Storage used: ","Penyimpanan terpakai: "],["Uploading photo ","Mengunggah foto "],["Uploading ","Mengunggah "],["Payment history · ","Riwayat pembayaran · "],["Cost history · ","Riwayat biaya · "],["Transaction history · ","Riwayat transaksi · "],["Session history · ","Riwayat sesi · "],["Assets · ","Aset · "],["Paid off ~","Lunas ~"],["Liabilities · remaining ","Kewajiban · sisa "],["Due on day ","Jatuh tempo tanggal "],["Show all ","Tampilkan semua "],["Remove shortcut ","Hapus pintasan "],["Open ","Buka "],["Not uploaded: ","Tidak terunggah: "],["Showing the first ","Menampilkan "],["Packing photos and files: ","Mengemas foto dan berkas: "],["Restoring photos and files: ","Memulihkan foto dan berkas: "],["Restoring entries: ","Memulihkan entri: "],["Full backup saved (","Cadangan penuh tersimpan ("]];
   var SUB=[[/ days left/g," hari lagi"],[/ days overdue/g," hari terlambat"],[/ payments left/g," pembayaran lagi"],[/ tasks open/g," tugas terbuka"],[/ done now/g," selesai sekarang"],[/ per month/g," per bulan"],[/ this month/g," bulan ini"],[/ in total/g," total"],[/(\d+)-day streak/g,"streak $1 hari"],[/(\d+)-week streak/g,"streak $1 minggu"],[/(\d+)-month streak/g,"streak $1 bulan"],[/^(\d+) of (\d+)/,"$1 dari $2"],[/ of (\d+) pages\. Download the file to see the rest\./,"  dari $1 halaman. Unduh berkas untuk melihat sisanya."],[/ \(shared with photos and logos elsewhere in Imperium\)\./," (dibagi dengan foto dan logo di bagian lain Imperium)."],[/\(full backup /g,"(cadangan penuh "],[/ (transactions|payments|costs)$/,function(m,w){return " "+({transactions:"transaksi",payments:"pembayaran",costs:"biaya"})[w]}],[new RegExp("\\b("+ML.join("|")+")\\b","g"),function(m){return MLI[ML.indexOf(m)]}],[/\bMonday\b|\bTuesday\b|\bWednesday\b|\bThursday\b|\bFriday\b|\bSaturday\b|\bSunday\b/g,function(m){return D[m]}]];
   var lang="en",SRC=new WeakMap(),OUT=new WeakMap(),ASRC=new WeakMap(),busy=false;
-  var SKIP="script,style,textarea,#tab-ielts,#tab-english,#fx-layer,.ttl,.note-body,.pn,.proj h3,.pnotes,.rc-name,.app .t,a.lnk,.fv-body,#kt-tags,#kt-log,.ftile,.crumb,.cover,#nav-nf .ttl,#nf-bar .ttl,.nfpill,.nd-user,#note-folder option:not([value=\"\"])";
+  var SKIP=".acn,.catn,.mo-grp,.ct-name,script,style,textarea,#tab-ielts,#tab-english,#fx-layer,.ttl,.note-body,.pn,.proj h3,.pnotes,.rc-name,.app .t,a.lnk,.fv-body,#kt-tags,#kt-log,.ftile,.crumb,.cover,#nav-nf .ttl,#nf-bar .ttl,.nfpill,.nd-user,#note-folder option:not([value=\"\"])";
   var ATTR=["placeholder","aria-label","title","alt"];
   function dates(s){
     s=s.replace(new RegExp("\\b(\\d{1,2}) "+SK.slice(2)+"(?= \\d{4}|\\b)","g"),function(m,d,mm){return d+" "+mon(mm)});
@@ -2264,12 +2411,12 @@ window.I18N=(function(){
   let col=null, items=[], ready=false, taskFilter="aktif";
   let assets=null, ent=null, entBusy=false, lbItem=null, lbAsset=null, linkBusy=false;
   const expanded=new Set();
-  const editing={task:null,proj:null,sub:null,link:null,fin:null,dream:null,note:null};
+  const editing={task:null,proj:null,sub:null,link:null,aset:null,debt:null,acct:null,rec:null,dream:null,note:null};
   let downloads=null;
 
   /* ---------- tabs ---------- */
-  const TABS=["overview","english","ielts","tugas","calendar","proyek","dreams","files","notes","masa-aktif","keuangan","budget","pengaturan"];
-  const GROUPS={train:["english","ielts"],plan:["tugas","masa-aktif","calendar"],goals:["proyek","dreams"],money:["keuangan","budget"],lib:["notes","files"]};
+  const TABS=["overview","english","ielts","tugas","calendar","proyek","dreams","files","notes","masa-aktif","akun","record","aset","hutang","budget","kategori","pengaturan"];
+  const GROUPS={train:["english","ielts"],plan:["tugas","masa-aktif","calendar"],goals:["proyek","dreams"],money:["akun","record","aset","hutang","budget","kategori"],lib:["notes","files"]};
   const groupOf=t=>Object.keys(GROUPS).find(g=>GROUPS[g].includes(t))||null;
   function syncGroupCounts(){
     document.querySelectorAll("[data-gc]").forEach(el=>{
@@ -2296,7 +2443,7 @@ window.I18N=(function(){
     openGroup(b.getAttribute("aria-expanded")==="true"?null:b.dataset.ngb);
   });
   function showTab(){
-    let h=(location.hash||"").slice(1);if(h==="stopwatch")h="calendar";const t=TABS.includes(h)?h:"overview";
+    let h=(location.hash||"").slice(1);if(h==="stopwatch")h="calendar";if(h==="keuangan")h="aset";const t=TABS.includes(h)?h:"overview";
     const g=groupOf(t);
     TABS.forEach(n=>{$("tab-"+n).hidden=n!==t;document.querySelector('[data-tab="'+n+'"]').setAttribute("aria-current",n===t?"page":"false")});
     document.querySelectorAll(".ng-btn").forEach(b=>b.classList.toggle("on",b.dataset.ngb===g));
@@ -2398,7 +2545,7 @@ window.I18N=(function(){
   document.addEventListener("click",e=>{
     const ev=e.target.closest("button[data-ev]");if(ev)openLb(ev.dataset.p,ev.dataset.ev);
   });
-  ["fin-amt","fin-inst","ent-amt","proj-budget","sub-cost"].forEach(i=>{const el=$(i);el.addEventListener("blur",()=>{const n=parseAmt(el.value);if(!isNaN(n))el.value=n.toLocaleString("id-ID")})});
+  ["aset-amt","debt-amt","debt-inst","rec-amt","acct-open","ent-amt","proj-budget","sub-cost"].forEach(i=>{const el=$(i);el.addEventListener("blur",()=>{const n=parseAmt(el.value);if(!isNaN(n))el.value=n.toLocaleString("id-ID")})});
   const fmtIn=n=>n?Number(n).toLocaleString("id-ID"):"";
   const openH=new Set();
   function hist(key,label,inner){return '<details class="hist" data-h="'+esc(key)+'"'+(openH.has(key)?' open':'')+'><summary>'+label+'</summary>'+inner+'</details>'}
@@ -2420,7 +2567,7 @@ window.I18N=(function(){
     $(kind+"-cancel").hidden=!id;
     if(id)f.scrollIntoView({behavior:smooth(),block:"start"});
   }
-  ["task","proj","dream","sub","link","fin","note"].forEach(k=>{
+  ["task","proj","dream","sub","link","aset","debt","acct","rec","note"].forEach(k=>{
     const f=$("f-"+k),b=document.createElement("button");
     b.type="button";b.id="tg-"+k;b.className="soft";b.style.alignSelf="flex-start";
     b.dataset.lab="+ "+$("ft-"+k).textContent;b.setAttribute("aria-controls","f-"+k);
@@ -3188,7 +3335,7 @@ window.I18N=(function(){
     const op=e.target.closest("[data-open]");if(op){openFile(op.dataset.open);return}
     const fo=e.target.closest("[data-folder]");
     if(fo){curFolder=fo.dataset.folder;fileEdit=null;fileQuery="";$("file-search").value="";renderFiles();return}
-    const v=e.target.closest("[data-view]");if(v){openLb(null,v.dataset.view,false);return}
+    const v=e.target.closest("button[data-view]");if(v){openLb(null,v.dataset.view,false);return}
     const d=e.target.closest("[data-dl]");if(d){downloadFile(d.dataset.dl);return}
     const ed=e.target.closest("[data-fedit]");if(ed){fileEdit=ed.dataset.fedit;renderFiles();const i=$("fe-name");if(i)i.focus();return}
     if(e.target.closest("[data-fcancel]")){fileEdit=null;renderFiles();return}
@@ -3241,7 +3388,7 @@ window.I18N=(function(){
 
 
   /* ---------- BACKUP ---------- */
-  const KINDS=["ielts","task","project","pcost","dream","sub","link","fin","pay","file","folder","prefs","meta","sw","note","nfolder"];
+  const KINDS=["ielts","task","project","pcost","dream","sub","link","fin","pay","file","folder","prefs","meta","sw","note","nfolder","btypes","budget","itypes","acct","menu"];
   const TYPE_EXT={"image/jpeg":"jpg","image/png":"png","image/webp":"webp","image/gif":"gif","image/svg+xml":"svg","application/pdf":"pdf","video/mp4":"mp4","video/webm":"webm","text/plain":"txt","text/csv":"csv","text/markdown":"md","application/json":"json"};
   let pendingRestore=null,bkBusy=false;
   function loadLib(src,glob){
@@ -3289,7 +3436,9 @@ window.I18N=(function(){
     add("Liabilities",[["Name","Start date","Total debt (Rp)","Paid (Rp)","Remaining (Rp)","Monthly (Rp)","Due day","Notes"]].concat(liabs.map(l=>{const st=liabStats(l);return [l.name||"",l.date||"",+l.amount||0,st.paid,st.rest,+l.installment||0,l.dueDay||"",l.note||""]})));
     const lname=id=>(liabs.find(l=>l.id===id)||{}).name||"";
     add("Installments",[["Liability","Date","Amount (Rp)","Description","Photos"]].concat(byKind("pay").slice().sort(byDateDesc).map(p=>[lname(p.liab),p.date||"",+p.amount||0,p.note||"",(p.evidence||[]).length])));
-    add("Transactions",[["Date","Name","Direction","Amount (Rp)","Notes"]].concat(fs.filter(isTx).sort(byDateDesc).map(f=>[f.date||"",f.name||"",txDir(f)==="in"?"In":"Out",+f.amount||0,f.note||""])));
+    add("Accounts",[["Name","Type","Opening balance (Rp)","Balance (Rp)","Notes"]].concat(accts().map(a=>[a.name||"",acctType(a.atype)[1],+a.opening||0,acctBal(a,fs),a.note||""])));
+    {const an=id=>(acctById(id)||{}).name||"",cn=f=>{const c=fcat(txDir(f)==="in"?"inc":"exp",f.cat);return c?c.n:""};
+    add("Records",[["Date","Type","Description","Category","Account","To account","Amount (Rp)","Notes"]].concat(fs.filter(isRec).sort(byDateDesc).map(f=>isTr(f)?[f.date||"","Transfer",f.name||"","",an(f.from),an(f.to),+f.amount||0,f.note||""]:[f.date||"",txDir(f)==="in"?"Income":"Expense",f.name||"",cn(f),an(f.acct),"",+f.amount||0,f.note||""])))}
     add("Stopwatch",[["Date","Name","Duration (min)","Laps"]].concat(byKind("sw").slice().sort(byDateDesc).map(x=>[x.date||"",x.name||"",Math.round((+x.ms||0)/6e3)/10,x.laps||0])));
     add("Files",[["Name","Folder","Type","Size (KB)","Uploaded"]].concat(byKind("file").map(f=>[f.name||"",pathLabel(f.folder),f.type||"",Math.round((f.size||0)/1024),f.created?ymd(new Date(f.created)):""])));
   }
@@ -3541,7 +3690,7 @@ window.I18N=(function(){
       }).join("")+'</div>';
     }else if(liabs.length)fb+='<p class="hint">All installments are paid for this month.</p>';
     else if(!fs.length)fb+='<p class="hint">No finance entries yet.</p>';
-    html+=card("fin","Finance","keuangan",fb);
+    html+=card("fin","Finance","record",fb);
 
     /* lead time */
     const ID=document.documentElement.lang==="id";
@@ -3623,14 +3772,14 @@ window.I18N=(function(){
     pk.addEventListener("click",async e=>{
       if(e.target.closest("[data-pkx]")){pk.hidden=true;return}
       const b=e.target.closest("[data-pk]");if(!b)return;const ic=b.dataset.pk;pk.hidden=true;
-      if(btPickFor==="new"){$("bt-icon").value=ic;$("bt-icon-btn").textContent=ic}
-      else if(btPickFor){const list=btList().map(t=>t.id===btPickFor?Object.assign({},t,{i:ic}):t);await btSave(list)}
+      if(btPickFor&&btPickFor.id==="new"){$("ct-ic-"+btPickFor.set).value=ic;$("ct-ib-"+btPickFor.set).textContent=ic}
+      else if(btPickFor){const pf=btPickFor;const list=catList(pf.set).map(t=>t.id===pf.id?Object.assign({},t,{i:ic}):t);await catSave(pf.set,list)}
     });
     document.addEventListener("keydown",e=>{if(e.key==="Escape")pk.hidden=true});
     document.addEventListener("click",e=>{if(!pk.hidden&&!pk.contains(e.target)&&!e.target.closest("[data-pkopen]"))pk.hidden=true},true);
     return pk;
   }
-  function btOpenPick(forId,anchor){const pk=btPicker();btPickFor=forId;pk.hidden=false;
+  function btOpenPick(forId,anchor,set){const pk=btPicker();btPickFor={id:forId,set:set||"exp"};pk.hidden=false;
     const r=anchor.getBoundingClientRect(),w=Math.min(340,innerWidth-16);pk.style.width=w+"px";
     pk.style.left=Math.max(8,Math.min(r.left,innerWidth-w-8))+"px";const top=r.bottom+6,h=Math.min(380,innerHeight*.6);
     pk.style.top=(top+h>innerHeight?Math.max(8,r.top-h-6):top)+"px";pk.style.maxHeight=h+"px"}
@@ -3638,20 +3787,14 @@ window.I18N=(function(){
   const nextMonth=()=>{const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+1);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")};
   const shiftMonth=(m,n)=>{let [y,mm]=m.split("-").map(Number);mm+=n;while(mm>12){mm-=12;y++}while(mm<1){mm+=12;y--}return y+"-"+String(mm).padStart(2,"0")};
   let bgMonth=nextMonth();
-  function btList(){const d=items.find(i=>i.id==="btypes");if(d&&Array.isArray(d.list))return d.list;return BT_DEF.map((x,i)=>({id:"t"+i,i:x[0],n:x[1]}))}
-  window.IMP_BT_NAME=id=>{const t=btList().find(x=>x.id===id);return t?t.i+" "+t.n:"?"};
-  window.IMP_BT_FILL=()=>{const s=$("fin-cat");if(!s)return;const v=s.value;s.innerHTML='<option value="">No type</option>'+btList().map(t=>'<option value="'+esc(t.id)+'">'+esc(t.i+" "+t.n)+'</option>').join("");s.value=v};
-  async function btSave(list){return save("btypes","btypes",{list})}
+  function btList(){return catList("exp")}
+  async function btSave(list){return catSave("exp",list)}
   function bgDoc(m){return items.find(i=>i.id==="budget-"+m)}
   function renderBudget(){
-    IMP_BT_FILL();
     if(!$("bg-month"))return;
     if($("bg-month").value!==bgMonth)$("bg-month").value=bgMonth;
-    if(!$("bt-icon-btn")){const sel=$("bt-icon"),inp=document.createElement("input");inp.type="hidden";inp.id="bt-icon";inp.value="📦";
-      const bb=document.createElement("button");bb.type="button";bb.id="bt-icon-btn";bb.className="bt-icon-btn";bb.setAttribute("data-pkopen","");bb.title="Pilih emoji";bb.textContent="📦";
-      bb.onclick=()=>btOpenPick("new",bb);sel.replaceWith(inp);inp.after(bb)}
     const types=btList();
-    $("bt-list").innerHTML=types.map(t=>'<li><button type="button" class="bt-i bt-i-btn" data-pkopen data-btic="'+esc(t.id)+'" title="Ganti emoji" aria-label="Ganti emoji">'+esc(t.i)+'</button><span class="grow">'+esc(t.n)+'</span><button type="button" class="ghost danger" data-btdel="'+esc(t.id)+'" aria-label="Remove type" title="Remove type">×</button></li>').join("");
+    $("bg-chips").innerHTML=types.length?types.map(t=>'<span class="pill p-mute"><span class="bt-i">'+esc(t.i)+'</span> <span class="catn">'+esc(t.n)+'</span></span>').join(""):'<span class="hint">No expense types yet.</span>';
     if(!ready){$("bg-table").innerHTML='<div class="empty">Loading…</div>';return}
     const doc=bgDoc(bgMonth),lines=(doc&&doc.lines)||{};
     const out=byKind("fin").filter(f=>isTx(f)&&txDir(f)==="out"&&(f.date||"").slice(0,7)===bgMonth);
@@ -3660,14 +3803,14 @@ window.I18N=(function(){
     const totB=types.reduce((s,t)=>s+(+lines[t.id]||0),0),totS=out.reduce((s,f)=>s+(+f.amount||0),0),rem=totB-totS;
     const [y,mm]=bgMonth.split("-");
     $("bg-sum").innerHTML='<div class="stat"><div class="k">Total budget</div><div class="v">'+rp(totB)+'</div><div class="s">'+BLN[+mm-1]+' '+y+'</div></div><div class="stat"><div class="k">Spent</div><div class="v">'+rp(totS)+'</div></div><div class="stat net"><div class="k">Remaining</div><div class="v'+(rem<0?' neg':'')+'">'+(rem<0?"−":"")+rp(Math.abs(rem))+'</div></div>';
-    if(!types.length){$("bg-table").innerHTML='<div class="empty">No expense types yet. Add one on the left.</div>';return}
+    if(!types.length){$("bg-table").innerHTML='<div class="empty">No expense types yet. Add one in Category settings.</div>';return}
     const keep=document.activeElement&&document.activeElement.dataset&&document.activeElement.dataset.bgin;
     let rows=types.map(t=>{
       const b=+lines[t.id]||0,s=spentBy[t.id]||0,p=b?Math.min(100,Math.round(s/b*100)):(s?100:0),over=b&&s>b;
-      return '<tr><td><span class="bt-i">'+esc(t.i)+'</span> '+esc(t.n)+'</td><td class="r"><input class="bg-in mono" inputmode="numeric" data-bgin="'+esc(t.id)+'" value="'+(b?fmtIn(b):"")+'" placeholder="0" aria-label="Budget (Rp)"></td><td class="r mono">'+rp(s)+'</td><td class="r mono'+(over?' neg':'')+'">'+(b?(b-s<0?"−":"")+rp(Math.abs(b-s)):"–")+'</td><td class="bg-barc"><div class="bar'+(over?' over':' ok')+'"><i style="width:'+p+'%"></i></div></td></tr>';
+      return '<tr><td><span class="bt-i">'+esc(t.i)+'</span> <span class="catn">'+esc(t.n)+'</span></td><td class="r"><input class="bg-in mono" inputmode="numeric" data-bgin="'+esc(t.id)+'" value="'+(b?fmtIn(b):"")+'" placeholder="0" aria-label="Budget (Rp)"></td><td class="r mono">'+rp(s)+'</td><td class="r mono'+(over?' neg':'')+'">'+(b?(b-s<0?"−":"")+rp(Math.abs(b-s)):"–")+'</td><td class="bg-barc"><div class="bar'+(over?' over':' ok')+'"><i style="width:'+p+'%"></i></div></td></tr>';
     }).join("");
     if(untyped)rows+='<tr class="bg-untyped"><td>Untyped spending</td><td></td><td class="r mono">'+rp(untyped)+'</td><td></td><td></td></tr>';
-    $("bg-table").innerHTML='<div class="ptbl-wrap"><table class="ptbl bg-tbl"><thead><tr><th>Type</th><th class="r">Budget (Rp)</th><th class="r">Spent</th><th class="r">Remaining</th><th></th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><td>Total</td><td class="r mono">'+rp(totB)+'</td><td class="r mono">'+rp(totS)+'</td><td class="r mono'+(rem<0?' neg':'')+'">'+(rem<0?"−":"")+rp(Math.abs(rem))+'</td><td></td></tr></tfoot></table></div><p class="hint" id="bg-msg">Spending is taken from outgoing transactions in Assets &amp; debts for this month.</p>';
+    $("bg-table").innerHTML='<div class="ptbl-wrap"><table class="ptbl bg-tbl"><thead><tr><th>Type</th><th class="r">Budget (Rp)</th><th class="r">Spent</th><th class="r">Remaining</th><th></th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><td>Total</td><td class="r mono">'+rp(totB)+'</td><td class="r mono">'+rp(totS)+'</td><td class="r mono'+(rem<0?' neg':'')+'">'+(rem<0?"−":"")+rp(Math.abs(rem))+'</td><td></td></tr></tfoot></table></div><p class="hint" id="bg-msg">Spending is taken from expense records in Record for this month.</p>';
     if(keep){const x=document.querySelector('[data-bgin="'+keep+'"]');if(x){x.focus();try{x.setSelectionRange(x.value.length,x.value.length)}catch(_){}}}
   }
   if($("bg-month")){
@@ -3680,13 +3823,40 @@ window.I18N=(function(){
       if(isNaN(v)||!v)delete lines[x.dataset.bgin];else lines[x.dataset.bgin]=v;
       await save("budget","budget-"+bgMonth,{month:bgMonth,lines})});
     $("bg-table").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("[data-bgin]")){e.preventDefault();e.target.blur()}});
-    $("f-btype").addEventListener("submit",async e=>{e.preventDefault();const n=$("bt-name").value.trim();if(!n)return;
-      const list=btList().slice();list.push({id:"t"+Date.now().toString(36),i:$("bt-icon").value||"📦",n});
-      if(await btSave(list)){$("bt-name").value="";$("bt-icon").value="📦";$("bt-icon-btn").textContent="📦"}});
-    $("bt-list").addEventListener("click",async e=>{const ic=e.target.closest("[data-btic]");if(ic){btOpenPick(ic.dataset.btic,ic);return}const b=e.target.closest("[data-btdel]");if(!b)return;
-      if(!b.classList.contains("armed")){b.classList.add("armed");b.textContent="?";setTimeout(()=>{if(b.isConnected){b.classList.remove("armed");b.textContent="×"}},2500);return}
-      await btSave(btList().filter(t=>t.id!==b.dataset.btdel))});
   }
+  if($("bg-go-cat"))$("bg-go-cat").onclick=()=>{location.hash="kategori"};
+  /* ---------- PENGATURAN KATEGORI (income & expense) ---------- */
+  ["exp","inc"].forEach(set=>{
+    const f=$("f-cat-"+set),ul=$("ct-list-"+set),ib=$("ct-ib-"+set);
+    if(!f||!ul||!ib)return;
+    ib.onclick=()=>btOpenPick("new",ib,set);
+    f.addEventListener("submit",async e=>{
+      e.preventDefault();const n=$("ct-name-"+set).value.trim();if(!n)return;
+      const list=catList(set).slice();
+      list.push({id:CAT[set].pfx+Date.now().toString(36),i:$("ct-ic-"+set).value||"📦",n});
+      if(await catSave(set,list)){$("ct-name-"+set).value="";$("ct-ic-"+set).value="📦";ib.textContent="📦"}
+    });
+    ul.addEventListener("click",async e=>{
+      const ic=e.target.closest("[data-ctic]");if(ic){btOpenPick(ic.dataset.ctic,ic,set);return}
+      const rn=e.target.closest("[data-ctren]");
+      if(rn){ctEdit=set+":"+rn.dataset.ctren;renderCategories();const x=ul.querySelector("[data-ctin]");if(x){x.focus();x.select()}return}
+      const b=e.target.closest("[data-ctdel]");if(!b)return;
+      if(!b.classList.contains("armed")){b.classList.add("armed");b.textContent="?";setTimeout(()=>{if(b.isConnected){b.classList.remove("armed");b.textContent="×"}},2500);return}
+      await catSave(set,catList(set).filter(t=>t.id!==b.dataset.ctdel));
+    });
+    ul.addEventListener("keydown",e=>{
+      const x=e.target.closest&&e.target.closest("[data-ctin]");if(!x)return;
+      if(e.key==="Enter"){e.preventDefault();x.blur()}
+      else if(e.key==="Escape"){x.dataset.cancel="1";x.blur()}
+    });
+    ul.addEventListener("focusout",async e=>{
+      const x=e.target.closest&&e.target.closest("[data-ctin]");if(!x)return;
+      const id=x.dataset.ctin,n=x.value.trim(),cancel=x.dataset.cancel==="1";ctEdit=null;
+      const cur=catList(set).find(t=>t.id===id);
+      if(!cancel&&n&&cur&&cur.n!==n)await catSave(set,catList(set).map(t=>t.id===id?Object.assign({},t,{n}):t));
+      else renderCategories();
+    });
+  });
 
   /* ---------- LIMIT CLAUDE (diisi sendiri; halaman tidak bisa membaca pemakaian Claude) ---------- */
   let limOpen=false;
@@ -4005,32 +4175,204 @@ window.I18N=(function(){
     }).join("");
   }
 
-  /* ---------- FINANCE ---------- */
-  const FL=["New finance entry","Edit finance entry","Add entry"];
+  /* ---------- FINANCE (Account, Record, Aset, Hutang, Kategori) ---------- */
+  const TT=(en,id)=>document.documentElement.lang==="id"?id:en;
   const isTx=f=>f.type==="transaksi"||f.type==="pemasukan";
+  const isTr=f=>f.type==="transfer";
+  const isRec=f=>isTx(f)||isTr(f);
   const txDir=f=>f.type==="pemasukan"?"in":(f.dir||"out");
-  function syncFinType(){
-    const t=$("fin-type").value,L=t==="liabilitas",T=t==="transaksi";
-    $("lb-inst").hidden=!L;$("lb-dueday").hidden=!L;$("lb-dir").hidden=!T;$("lb-fcat").hidden=!(T&&$("fin-dir").value==="out");
-    $("fin-amt-lab").textContent=L?"Starting debt (Rp)":"Amount (Rp)";
-    $("fin-date-lab").textContent=L?"Debt start date":"Date";
+  const ACCT_TYPES=[["cash","Cash","💵"],["bank","Bank","🏦"],["ewallet","E-wallet","📱"],["savings","Savings","🐷"],["card","Credit card","💳"],["other","Other","📦"]];
+  const acctType=k=>ACCT_TYPES.find(x=>x[0]===k)||ACCT_TYPES[5];
+  const accts=()=>byKind("acct").slice().sort((a,b)=>(a.created||0)-(b.created||0));
+  const acctById=id=>id?byKind("acct").find(a=>a.id===id):null;
+  const monthNow=()=>today().slice(0,7);
+  const signRp=n=>(n<0?"−":"")+rp(Math.abs(n));
+  function acctBal(a,fs){
+    let b=+a.opening||0;
+    fs.forEach(f=>{
+      const m=+f.amount||0;
+      if(isTx(f)){if(f.acct===a.id)b+=txDir(f)==="in"?m:-m}
+      else if(isTr(f)){if(f.from===a.id)b-=m;if(f.to===a.id)b+=m}
+    });
+    return b;
   }
-  $("fin-type").addEventListener("change",syncFinType);$("fin-dir").addEventListener("change",syncFinType);
-  $("f-fin").addEventListener("submit",async e=>{
+  /* kategori: expense (doc "btypes", dipakai juga oleh Anggaran) dan income (doc "itypes") */
+  const IT_DEF=[["💼","Gaji"],["🎁","Bonus"],["🏪","Usaha"],["📈","Investasi"],["💰","Pemasukan lain"]];
+  const CAT={exp:{doc:"btypes",pfx:"t",def:BT_DEF},inc:{doc:"itypes",pfx:"i",def:IT_DEF}};
+  function catList(set){const c=CAT[set],d=items.find(i=>i.id===c.doc);if(d&&Array.isArray(d.list))return d.list;return c.def.map((x,i)=>({id:c.pfx+i,i:x[0],n:x[1]}))}
+  function catSave(set,list){const c=CAT[set];return save(c.doc,c.doc,{list})}
+  const fcat=(set,id)=>id?catList(set).find(t=>t.id===id):null;
+
+  /* ----- Account ----- */
+  const ACL=["New account","Edit account","Add account"];
+  $("f-acct").addEventListener("submit",async e=>{
     e.preventDefault();
-    const type=$("fin-type").value,name=$("fin-name").value.trim(),amount=parseAmt($("fin-amt").value);
-    if(!name)return; if(isNaN(amount)){notice("Amount must be a number, e.g. 1.500.000.");return}
-    const data={type,name,amount,date:$("fin-date").value||today(),note:$("fin-note").value.trim()};
-    if(type==="liabilitas"){
-      const inst=parseAmt($("fin-inst").value);data.installment=isNaN(inst)?0:inst;
-      const dd=parseInt($("fin-dueday").value,10);data.dueDay=dd>=1&&dd<=31?dd:0;
-    }
-    if(type==="transaksi"){data.dir=$("fin-dir").value;data.cat=data.dir==="out"?$("fin-cat").value:""}
-    const ok=await save("fin",editing.fin,data);
-    if(ok){$("f-fin").reset();syncFinType();setEditing("fin",null,FL)}
+    const name=$("acct-name").value.trim();if(!name)return;
+    const open=parseAmt($("acct-open").value);
+    const data={name,atype:$("acct-type").value,opening:isNaN(open)?0:open,note:$("acct-note").value.trim()};
+    if(await save("acct",editing.acct,data)){$("f-acct").reset();setEditing("acct",null,ACL)}
   });
-  $("fin-cancel").onclick=()=>{$("f-fin").reset();syncFinType();setEditing("fin",null,FL)};
-  $("fin-list").addEventListener("click",e=>{
+  $("acct-cancel").onclick=()=>{$("f-acct").reset();setEditing("acct",null,ACL)};
+  $("acct-list").addEventListener("click",e=>{
+    const v=e.target.closest("button[data-acct-rec]");
+    if(v){recAcct=v.dataset.acctRec;recType="all";recMonth="";location.hash="record";renderRecords();return}
+    const b=e.target.closest("button[data-edit]");if(!b)return;
+    const a=items.find(i=>i.id===b.dataset.edit);if(!a)return;
+    $("acct-name").value=a.name||"";$("acct-type").value=acctType(a.atype)[0];$("acct-open").value=fmtIn(a.opening);$("acct-note").value=a.note||"";
+    setEditing("acct",a.id,ACL);$("acct-name").focus();
+  });
+  function renderAccounts(){
+    const el=$("acct-list");if(!el)return;
+    const fs=byKind("fin"),as=accts(),ym=monthNow();
+    const tot=as.reduce((s,a)=>s+acctBal(a,fs),0);
+    $("acct-sum").innerHTML='<div class="stat net"><div class="k">Total balance</div><div class="v'+(tot<0?' neg':'')+'">'+signRp(tot)+'</div></div><div class="stat"><div class="k">Accounts</div><div class="v">'+as.length+'</div></div>';
+    if(!ready){el.innerHTML='<div class="empty">Loading finance…</div>';return}
+    if(!as.length){el.innerHTML='<div class="empty">No accounts yet. Add your cash, bank accounts and e-wallets so each record can say where the money moved.</div>';return}
+    el.innerHTML='<div class="group"><h4>Accounts · <span class="mono">'+rp(tot)+'</span></h4><ul class="list">'+as.map(a=>{
+      const b=acctBal(a,fs),t=acctType(a.atype);
+      let mi=0,mo=0;
+      fs.forEach(f=>{if(!isTx(f)||f.acct!==a.id||(f.date||"").slice(0,7)!==ym)return;if(txDir(f)==="in")mi+=+f.amount||0;else mo+=+f.amount||0});
+      return '<li><span class="acct-ic" aria-hidden="true">'+t[2]+'</span><div class="grow"><div class="ttl">'+esc(a.name)+'</div><div class="meta"><span>'+t[1]+'</span>'+(a.note?'<span>'+esc(a.note)+'</span>':'')+'<span class="mono">+'+rp(mi)+' · −'+rp(mo)+'</span><span>this month</span></div></div><span class="amt'+(b<0?' neg':'')+'">'+signRp(b)+'</span><div class="row-actions"><button class="ghost" data-acct-rec="'+esc(a.id)+'">View records</button><button class="ghost" data-edit="'+esc(a.id)+'">Edit</button><button class="ghost danger" data-del="'+esc(a.id)+'">Delete</button></div></li>';
+    }).join("")+'</ul></div>';
+  }
+
+  /* ----- Record (income / expense / transfer) ----- */
+  const RCL=["New record","Edit record","Add record"];
+  let recMonth=monthNow(),recType="all",recAcct="all";
+  function fillRecSelects(){
+    const t=$("rec-type").value,tr=t==="tr";
+    const aOpts=accts().map(a=>'<option value="'+esc(a.id)+'">'+esc(a.name+" · "+acctType(a.atype)[1])+'</option>').join("");
+    const keep={a:$("rec-acct").value,t:$("rec-to").value,c:$("rec-cat").value};
+    $("rec-acct").innerHTML='<option value="">'+(tr?"Select account":"No account")+'</option>'+aOpts;
+    $("rec-to").innerHTML='<option value="">Select account</option>'+aOpts;
+    $("rec-cat").innerHTML='<option value="">No category</option>'+catList(t==="in"?"inc":"exp").map(c=>'<option value="'+esc(c.id)+'">'+esc(c.i+" "+c.n)+'</option>').join("");
+    [["rec-acct",keep.a],["rec-to",keep.t],["rec-cat",keep.c]].forEach(p=>{if(p[1]&&$(p[0]).querySelector('option[value="'+CSS.escape(p[1])+'"]'))$(p[0]).value=p[1]});
+  }
+  function syncRecType(){
+    fillRecSelects();
+    const tr=$("rec-type").value==="tr";
+    $("lb-rto").hidden=!tr;$("lb-rcat").hidden=tr;
+    $("rec-acct-lab").textContent=tr?"From account":"Account";
+  }
+  window.IMP_BT_FILL=()=>{const a=document.activeElement&&document.activeElement.id;if(a==="rec-acct"||a==="rec-to"||a==="rec-cat"||a==="rec-type")return;if($("rec-cat"))fillRecSelects()};
+  function resetRecForm(){$("f-rec").reset();$("rec-date").value=today();syncRecType()}
+  $("rec-type").addEventListener("change",syncRecType);
+  $("f-rec").addEventListener("submit",async e=>{
+    e.preventDefault();
+    const t=$("rec-type").value,amount=parseAmt($("rec-amt").value);
+    if(!(amount>0)){notice("Amount must be a number greater than 0, e.g. 50.000.");return}
+    const prev=editing.rec?items.find(i=>i.id===editing.rec):null;
+    const name=$("rec-name").value.trim(),date=$("rec-date").value||today();
+    let data;
+    if(t==="tr"){
+      const from=$("rec-acct").value,to=$("rec-to").value;
+      if(!from||!to){notice("Choose both accounts for a transfer.");return}
+      if(from===to){notice("Choose two different accounts.");return}
+      data={type:"transfer",name,amount,date,from,to,note:prev&&prev.note||""};
+    }else data={type:"transaksi",dir:t,name,amount,date,acct:$("rec-acct").value,cat:$("rec-cat").value,note:prev&&prev.note||""};
+    notice("");
+    if(await save("fin",editing.rec,data)){resetRecForm();setEditing("rec",null,RCL)}
+  });
+  $("rec-cancel").onclick=()=>{resetRecForm();setEditing("rec",null,RCL)};
+  $("rec-list").addEventListener("click",e=>{
+    const b=e.target.closest("button[data-edit]");if(!b)return;
+    const f=items.find(i=>i.id===b.dataset.edit);if(!f)return;
+    $("rec-type").value=isTr(f)?"tr":txDir(f);syncRecType();
+    $("rec-date").value=f.date||today();
+    if(isTr(f)){$("rec-acct").value=f.from||"";$("rec-to").value=f.to||""}
+    else{$("rec-acct").value=f.acct||"";$("rec-cat").value=f.cat||""}
+    $("rec-amt").value=fmtIn(f.amount)||"0";$("rec-name").value=f.name||"";
+    setEditing("rec",f.id,RCL);$("rec-amt").focus();
+  });
+  $("rec-month").addEventListener("change",e=>{recMonth=e.target.value;renderRecords()});
+  $("rec-prev").onclick=()=>{recMonth=shiftMonth(recMonth||monthNow(),-1);renderRecords()};
+  $("rec-nextm").onclick=()=>{recMonth=shiftMonth(recMonth||monthNow(),1);renderRecords()};
+  $("rec-now").onclick=()=>{recMonth=monthNow();renderRecords()};
+  $("rec-all").onclick=()=>{recMonth="";renderRecords()};
+  $("rec-types").addEventListener("click",e=>{const b=e.target.closest("[data-rt]");if(!b)return;recType=b.dataset.rt;renderRecords()});
+  $("rec-facct").addEventListener("change",e=>{recAcct=e.target.value;renderRecords()});
+  const recAcctOk=f=>recAcct==="all"?true:recAcct==="none"?(isTx(f)&&!f.acct):(isTx(f)?f.acct===recAcct:(f.from===recAcct||f.to===recAcct));
+  function recRow(f){
+    const tr=isTr(f),inn=!tr&&txDir(f)==="in",meta=[];
+    let title;
+    if(tr){
+      const fa=acctById(f.from),ta=acctById(f.to);
+      title=f.name||"Transfer";
+      meta.push('<span class="pill p-acc">Transfer</span>');
+      meta.push('<span class="acn">'+esc(fa?fa.name:"?")+' → '+esc(ta?ta.name:"?")+'</span>');
+    }else{
+      const c=fcat(inn?"inc":"exp",f.cat),a=acctById(f.acct);
+      title=f.name||(c?c.n:(inn?"Income":"Expense"));
+      if(c)meta.push('<span class="pill p-mute catn">'+esc(c.i+" "+c.n)+'</span>');
+      if(a)meta.push('<span class="acn">'+esc(a.name)+'</span>');
+    }
+    if(f.note)meta.push('<span>'+esc(f.note)+'</span>');
+    const amt=tr?'<span class="amt">'+rp(f.amount)+'</span>':'<span class="amt '+(inn?"pos":"neg")+'">'+(inn?"+":"−")+rp(f.amount)+'</span>';
+    return '<li><div class="grow"><div class="ttl">'+esc(title)+'</div><div class="meta">'+meta.join("")+'</div></div>'+amt+rowActs(f.id)+'</li>';
+  }
+  function renderRecords(){
+    const el=$("rec-list");if(!el)return;
+    if($("rec-month").value!==recMonth)$("rec-month").value=recMonth;
+    const as=accts();
+    const sel=$("rec-facct"),sig=as.map(a=>a.id+a.name).join("|");
+    if(sel.dataset.sig!==sig){
+      sel.dataset.sig=sig;
+      sel.innerHTML='<option value="all">All accounts</option>'+as.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.name)+'</option>').join("")+'<option value="none">No account</option>';
+    }
+    if(!Array.prototype.some.call(sel.options,o=>o.value===recAcct))recAcct="all";
+    sel.value=recAcct;
+    $("rec-types").innerHTML=[["all","All"],["in","Income"],["out","Expense"],["tr","Transfer"]].map(x=>'<button type="button" class="chip" data-rt="'+x[0]+'" aria-pressed="'+(recType===x[0])+'">'+x[1]+'</button>').join("");
+    const base=byKind("fin").filter(isRec).filter(f=>(!recMonth||(f.date||"").slice(0,7)===recMonth)&&recAcctOk(f));
+    const inc=base.filter(f=>isTx(f)&&txDir(f)==="in").reduce((s,f)=>s+(+f.amount||0),0);
+    const exp=base.filter(f=>isTx(f)&&txDir(f)==="out").reduce((s,f)=>s+(+f.amount||0),0);
+    const net=inc-exp,cnt=base.length;
+    $("rec-sum").innerHTML='<div class="stat"><div class="k">Income</div><div class="v pos">+'+rp(inc)+'</div></div><div class="stat"><div class="k">Expense</div><div class="v neg">−'+rp(exp)+'</div></div><div class="stat net"><div class="k">Total</div><div class="v'+(net<0?' neg':'')+'">'+(net>0?"+":"")+signRp(net)+'</div><div class="s">'+cnt+' '+TT(cnt===1?"record":"records","record")+'</div></div>';
+    if(!ready){el.innerHTML='<div class="empty">Loading finance…</div>';return}
+    const list=base.filter(f=>recType==="all"||(recType==="tr"?isTr(f):(isTx(f)&&txDir(f)===recType))).sort(byDateDesc);
+    if(!list.length){el.innerHTML='<div class="empty">'+(byKind("fin").some(isRec)?"No records match these filters.":"No records yet. Add your first income, expense or transfer.")+'</div>';return}
+    const LIM=60,show=expanded.has("rec")?list:list.slice(0,LIM);
+    let rows="",last="";
+    const day={};
+    list.forEach(f=>{const k=f.date||"";const d=day[k]||(day[k]={i:0,o:0});if(isTx(f)){if(txDir(f)==="in")d.i+=+f.amount||0;else d.o+=+f.amount||0}});
+    for(const f of show){
+      const k=f.date||"";
+      if(k!==last){last=k;const d=day[k];rows+='<li class="mid rec-day"><span class="hint">'+(k?esc(fmtDate(k)):"No date")+'</span><span class="mono">'+(d.i?'<span class="pos">+'+rp(d.i)+'</span> ':'')+(d.o?'<span class="neg">−'+rp(d.o)+'</span>':'')+'</span></li>'}
+      rows+=recRow(f);
+    }
+    const more=list.length>LIM?'<button class="ghost" data-more="rec">'+(expanded.has("rec")?"Show less":TT("Show all "+list.length+" records","Tampilkan semua "+list.length+" record"))+'</button>':"";
+    el.innerHTML='<div class="group"><ul class="list">'+rows+'</ul>'+more+'</div>';
+  }
+
+
+  /* ----- Aset ----- */
+  const ASSL=["New asset","Edit asset","Add asset"];
+  $("f-aset").addEventListener("submit",async e=>{
+    e.preventDefault();
+    const name=$("aset-name").value.trim(),amount=parseAmt($("aset-amt").value);
+    if(!name)return;if(isNaN(amount)){notice("Amount must be a number, e.g. 1.500.000.");return}
+    const data={type:"aset",name,amount,date:$("aset-date").value||today(),note:$("aset-note").value.trim()};
+    if(await save("fin",editing.aset,data)){$("f-aset").reset();setEditing("aset",null,ASSL)}
+  });
+  $("aset-cancel").onclick=()=>{$("f-aset").reset();setEditing("aset",null,ASSL)};
+  $("aset-list").addEventListener("click",e=>{
+    const b=e.target.closest("button[data-edit]");if(!b)return;
+    const f=items.find(i=>i.id===b.dataset.edit);if(!f)return;
+    $("aset-name").value=f.name||"";$("aset-amt").value=fmtIn(f.amount)||"0";$("aset-date").value=f.date||"";$("aset-note").value=f.note||"";
+    setEditing("aset",f.id,ASSL);$("aset-name").focus();
+  });
+
+  /* ----- Hutang ----- */
+  const DEBL=["New debt","Edit debt","Add debt"];
+  $("f-debt").addEventListener("submit",async e=>{
+    e.preventDefault();
+    const name=$("debt-name").value.trim(),amount=parseAmt($("debt-amt").value);
+    if(!name)return;if(isNaN(amount)){notice("Amount must be a number, e.g. 1.500.000.");return}
+    const inst=parseAmt($("debt-inst").value),dd=parseInt($("debt-dueday").value,10);
+    const data={type:"liabilitas",name,amount,date:$("debt-date").value||today(),note:$("debt-note").value.trim(),installment:isNaN(inst)?0:inst,dueDay:dd>=1&&dd<=31?dd:0};
+    if(await save("fin",editing.debt,data)){$("f-debt").reset();setEditing("debt",null,DEBL)}
+  });
+  $("debt-cancel").onclick=()=>{$("f-debt").reset();setEditing("debt",null,DEBL)};
+  $("debt-list").addEventListener("click",e=>{
     const sb=e.target.closest("button[data-sim]");
     if(sb){calcFromLiab(sb.dataset.sim,true);return}
     const pb=e.target.closest("button[data-pay]");
@@ -4038,10 +4380,9 @@ window.I18N=(function(){
     const b=e.target.closest("button[data-edit]");if(!b)return;
     const f=items.find(i=>i.id===b.dataset.edit);if(!f)return;
     if(f.kind==="pay"){openEnt("pay",f.liab,f);return}
-    $("fin-type").value=isTx(f)?"transaksi":f.type;$("fin-dir").value=isTx(f)?txDir(f):"out";
-    $("fin-name").value=f.name||"";$("fin-amt").value=fmtIn(f.amount)||"0";$("fin-date").value=f.date||"";$("fin-note").value=f.note||"";
-    $("fin-inst").value=fmtIn(f.installment);$("fin-dueday").value=f.dueDay||"";if(window.IMP_BT_FILL)IMP_BT_FILL();$("fin-cat").value=f.cat||"";
-    syncFinType();setEditing("fin",f.id,FL);$("fin-name").focus();
+    $("debt-name").value=f.name||"";$("debt-amt").value=fmtIn(f.amount)||"0";$("debt-date").value=f.date||"";$("debt-note").value=f.note||"";
+    $("debt-inst").value=fmtIn(f.installment);$("debt-dueday").value=f.dueDay||"";
+    setEditing("debt",f.id,DEBL);$("debt-name").focus();
   });
   function liabStats(l){
     const ps=items.filter(x=>x.kind==="pay"&&x.liab===l.id).sort(byDateDesc);
@@ -4071,51 +4412,51 @@ window.I18N=(function(){
       +'<div id="slot-'+esc(l.id)+'"></div>'
       +'<div class="card-foot">'+(ent&&ent.mode==="pay"&&ent.parent===l.id?'<span></span>':'<span class="preview"><button class="soft" data-pay="'+esc(l.id)+'">+ Log payment</button>'+(rest>0?'<button class="ghost" data-sim="'+esc(l.id)+'" title="Open the payoff calculator with this debt">Simulate</button>':'')+'</span>')+rowActs(l.id)+'</div></article>';
   }
-  function renderFinance(){
+  $("rec-date").value=today();syncRecType();
+  function renderAssets(){
+    const el=$("aset-list");if(!el)return;
+    const fs=byKind("fin"),as=fs.filter(f=>f.type==="aset"),liabs=fs.filter(f=>f.type==="liabilitas");
+    const A=as.reduce((s,f)=>s+(+f.amount||0),0),L=liabs.reduce((s,l)=>s+liabStats(l).rest,0),net=A-L;
+    $("aset-sum").innerHTML='<div class="stat"><div class="k">Total assets</div><div class="v">'+rp(A)+'</div></div><div class="stat net"><div class="k">Net worth</div><div class="v'+(net<0?' neg':'')+'">'+signRp(net)+'</div></div>';
+    if(!ready){el.innerHTML='<div class="empty">Loading finance…</div>';return}
+    if(!as.length){el.innerHTML='<div class="empty">No assets yet. Add savings, vehicles, gold or anything you own.</div>';return}
+    el.innerHTML='<div class="group"><h4>Assets · <span class="mono">'+rp(A)+'</span></h4><ul class="list">'+as.slice().sort((a,b)=>(b.amount||0)-(a.amount||0)).map(f=>'<li><div class="grow"><div class="ttl">'+esc(f.name)+'</div><div class="meta">'+(f.date?'<span class="mono">'+esc(fmtDate(f.date))+'</span>':'')+(f.note?'<span>'+esc(f.note)+'</span>':'')+'</div></div><span class="amt">'+rp(f.amount)+'</span>'+rowActs(f.id)+'</li>').join("")+'</ul></div>';
+  }
+  function renderDebts(){
     parkEnt("pay");
-    const fs=byKind("fin");
-    const liabs=fs.filter(f=>f.type==="liabilitas"),txs=fs.filter(isTx).sort(byDateDesc),as=fs.filter(f=>f.type==="aset");
-    const A=as.reduce((s,f)=>s+(+f.amount||0),0),L=liabs.reduce((s,l)=>s+liabStats(l).rest,0),ym=today().slice(0,7);
-    const txM=txs.filter(f=>(f.date||"").slice(0,7)===ym);
-    const inM=txM.filter(f=>txDir(f)==="in").reduce((s,f)=>s+(+f.amount||0),0);
-    const outM=txM.filter(f=>txDir(f)==="out").reduce((s,f)=>s+(+f.amount||0),0);
-    const flow=inM-outM;
+    const el=$("debt-list");if(!el)return;
+    const fs=byKind("fin"),liabs=fs.filter(f=>f.type==="liabilitas"),ym=today().slice(0,7);
+    const L=liabs.reduce((s,l)=>s+liabStats(l).rest,0);
+    const monthly=liabs.filter(l=>liabStats(l).rest>0).reduce((s,l)=>s+(+l.installment||0),0);
     const paidM=items.filter(x=>x.kind==="pay"&&(x.date||"").slice(0,7)===ym).reduce((s,p)=>s+(+p.amount||0),0);
-    const net=A-L;
-    $("ledger").innerHTML=
-      '<div class="stat"><div class="k">Total assets</div><div class="v">'+rp(A)+'</div></div>'+
-      '<div class="stat"><div class="k">Remaining liabilities</div><div class="v'+(L>0?' neg':'')+'">'+(L>0?"−":"")+rp(L)+'</div></div>'+
-      '<div class="stat net"><div class="k">Net worth</div><div class="v'+(net<0?' neg':'')+'">'+(net<0?"−":"")+rp(Math.abs(net))+'</div></div>'+
-      '<div class="stat"><div class="k">This month’s transactions</div><div class="v'+(flow<0?' neg':'')+'">'+(flow<0?"−":flow>0?"+":"")+rp(Math.abs(flow))+'</div><div class="s">+'+rp(inM)+' · −'+rp(outM)+'</div></div>'+
-      '<div class="stat"><div class="k">Installments paid this month</div><div class="v">'+rp(paidM)+'</div></div>';
-    const el=$("fin-list");
+    $("debt-sum").innerHTML='<div class="stat net"><div class="k">Remaining debt</div><div class="v'+(L>0?' neg':'')+'">'+(L>0?"−":"")+rp(L)+'</div></div><div class="stat"><div class="k">Monthly installments</div><div class="v">'+rp(monthly)+'</div></div><div class="stat"><div class="k">Installments paid this month</div><div class="v">'+rp(paidM)+'</div></div>';
     fillCalcLiabs(liabs);
     if(!ready){el.innerHTML='<div class="empty">Loading finance…</div>';return}
-    if(!fs.length){el.innerHTML='<div class="empty">No finance entries yet. Start with assets (savings, vehicles), liabilities (debts, installments), or transactions (salary in, spending out).</div>';return}
-    let html="";
-    if(as.length){
-      html+='<div class="group"><h4>Assets · <span class="mono">'+rp(A)+'</span></h4><ul class="list">'+as.sort((a,b)=>(b.amount||0)-(a.amount||0)).map(f=>'<li><div class="grow"><div class="ttl">'+esc(f.name)+'</div><div class="meta">'+(f.date?'<span class="mono">'+esc(fmtDate(f.date))+'</span>':'')+(f.note?'<span>'+esc(f.note)+'</span>':'')+'</div></div><span class="amt">'+rp(f.amount)+'</span>'+rowActs(f.id)+'</li>').join("")+'</ul></div>';
-    }
-    if(liabs.length){
-      html+='<div class="group"><h4>Liabilities · remaining <span class="mono neg">−'+rp(L)+'</span></h4><div class="liabs">'+liabs.sort((a,b)=>liabStats(b).rest-liabStats(a).rest).map(renderLiab).join("")+'</div></div>';
-    }
-    if(txs.length){
-      const show=expanded.has("tx")?txs:txs.slice(0,20);
-      let lastM="",rows="";
-      for(const f of show){
-        const m=(f.date||"").slice(0,7);
-        if(m!==lastM){lastM=m;const [y,mm]=m.split("-");rows+='<li class="mid" style="background:var(--sunk);padding-block:6px"><span class="hint" style="font-weight:600;letter-spacing:.06em;text-transform:uppercase">'+(mm?BLN[+mm-1]+" "+y:"No date")+'</span></li>'}
-        const inn=txDir(f)==="in";
-        rows+='<li><div class="grow"><div class="ttl">'+esc(f.name)+'</div><div class="meta"><span class="mono">'+esc(fmtDate(f.date))+'</span><span>'+(inn?"In":"Out")+'</span>'+(!inn&&f.cat&&window.IMP_BT_NAME?'<span class="pill p-mute">'+esc(IMP_BT_NAME(f.cat))+'</span>':'')+(f.note?'<span>'+esc(f.note)+'</span>':'')+'</div></div><span class="amt '+(inn?"pos":"neg")+'">'+(inn?"+":"−")+rp(f.amount)+'</span>'+rowActs(f.id)+'</li>';
-      }
-      const more=txs.length>20?'<button class="ghost" data-more="tx">'+(expanded.has("tx")?"Show less":"Show all "+txs.length+" transactions")+'</button>':"";
-      html+='<div class="group"><h4>Transactions</h4><p class="txsum"><span>This month: <span class="mono pos">+'+rp(inM)+'</span></span><span><span class="mono neg">−'+rp(outM)+'</span></span><span class="hint">'+txM.length+' this month · '+txs.length+' in total</span></p>'+hist("tx-hist","Transaction history · "+txs.length,'<ul class="list">'+rows+'</ul>'+more)+'</div>';
-    }
-    el.innerHTML=html;
+    if(!liabs.length){el.innerHTML='<div class="empty">No debts yet. Add a loan or installment to track what is left to pay.</div>';return}
+    el.innerHTML='<div class="group"><h4>Liabilities · remaining <span class="mono neg">−'+rp(L)+'</span></h4><div class="liabs">'+liabs.sort((a,b)=>liabStats(b).rest-liabStats(a).rest).map(renderLiab).join("")+'</div></div>';
     placeEnt("pay");
     fillCalcLiabs(liabs);
   }
-
+  let ctEdit=null;
+  function catUse(set,id){return byKind("fin").filter(f=>isTx(f)&&(set==="inc"?txDir(f)==="in":txDir(f)==="out")&&f.cat===id).length}
+  function renderCategories(){
+    if(ctEdit&&document.activeElement&&document.activeElement.matches&&document.activeElement.matches("[data-ctin]"))return;
+    ["exp","inc"].forEach(set=>{
+      const ul=$("ct-list-"+set);if(!ul)return;
+      const list=catList(set);
+      ul.innerHTML=list.length?list.map(t=>{
+        const n=catUse(set,t.id);
+        return '<li><button type="button" class="bt-i bt-i-btn" data-pkopen data-ctic="'+esc(t.id)+'" title="Change emoji" aria-label="Change emoji">'+esc(t.i)+'</button>'
+          +(ctEdit===set+":"+t.id?'<input class="ct-in grow" data-ctin="'+esc(t.id)+'" maxlength="60" value="'+esc(t.n)+'" aria-label="Name">':'<button type="button" class="ct-name grow" data-ctren="'+esc(t.id)+'" title="Rename">'+esc(t.n)+'</button>')
+          +(n?'<span class="ct-use">'+n+'×</span>':'')
+          +'<button type="button" class="ghost danger" data-ctdel="'+esc(t.id)+'" aria-label="Remove category" title="Remove category">×</button></li>';
+      }).join(""):'<li class="hint">No categories yet.</li>';
+    });
+  }
+  function renderFinance(){
+    renderAccounts();renderRecords();renderAssets();renderDebts();renderCategories();
+    window.IMP_BT_FILL();
+  }
 
 
   /* ---------- DEBT PAYOFF CALCULATOR ---------- */
@@ -4189,6 +4530,74 @@ window.I18N=(function(){
     addEventListener("hashchange",runCalc);
     runCalc();
   })();
+
+  /* ---------- URUTAN SUBMENU (Pengaturan › Urutan menu) ---------- */
+  const MENU_LS="imperium-menu";
+  const nsubOf=g=>document.querySelector('.nsub[data-sg="'+g+'"]');
+  const curOrder=g=>{const ns=nsubOf(g);return ns?Array.prototype.map.call(ns.querySelectorAll(":scope>a[data-tab]"),a=>a.dataset.tab):[]};
+  const DEF_ORDER={};Object.keys(GROUPS).forEach(g=>{DEF_ORDER[g]=curOrder(g)});
+  function cleanMenu(m){const o={};Object.keys(GROUPS).forEach(g=>{if(m&&Array.isArray(m[g]))o[g]=m[g].filter(t=>typeof t==="string")});return o}
+  let menuOrder={};
+  try{menuOrder=cleanMenu(JSON.parse(localStorage.getItem(MENU_LS)||"null"))}catch(_){menuOrder={}}
+  function effOrder(g){
+    const def=DEF_ORDER[g],sv=(menuOrder[g]||[]).filter(t=>def.includes(t));
+    def.forEach(t=>{if(!sv.includes(t))sv.push(t)});
+    return Array.from(new Set(sv));
+  }
+  function applyMenu(){
+    Object.keys(GROUPS).forEach(g=>{
+      const ns=nsubOf(g);if(!ns)return;
+      const want=effOrder(g);
+      if(curOrder(g).join()===want.join())return;
+      const units={},head=[];let cur=null;
+      Array.prototype.slice.call(ns.children).forEach(ch=>{
+        if(ch.matches("a[data-tab]")){cur=ch.dataset.tab;units[cur]=[ch]}
+        else if(cur)units[cur].push(ch);else head.push(ch);
+      });
+      const frag=document.createDocumentFragment();
+      head.forEach(n=>frag.appendChild(n));
+      want.forEach(t=>{(units[t]||[]).forEach(n=>frag.appendChild(n))});
+      ns.appendChild(frag);
+    });
+  }
+  async function saveMenu(){
+    try{localStorage.setItem(MENU_LS,JSON.stringify(menuOrder))}catch(_){}
+    if(col){try{await col.doc("menuorder").set({kind:"menu",orders:menuOrder,updated:Date.now()})}catch(e){handleWriteErr(e)}}
+  }
+  function syncMenuFromStore(){
+    const d=items.find(i=>i.id==="menuorder");if(!d||!d.orders)return;
+    const o=cleanMenu(d.orders);
+    if(JSON.stringify(o)!==JSON.stringify(menuOrder)){
+      menuOrder=o;try{localStorage.setItem(MENU_LS,JSON.stringify(menuOrder))}catch(_){}
+      applyMenu();renderMenuCard();
+    }
+  }
+  function moveTab(g,t,pos){
+    const arr=effOrder(g).filter(x=>x!==t);
+    arr.splice(Math.max(0,Math.min(arr.length,pos-1)),0,t);
+    menuOrder[g]=arr;applyMenu();renderMenuCard();saveMenu();
+  }
+  function renderMenuCard(){
+    const host=$("menu-ord");if(!host)return;
+    host.innerHTML=Array.prototype.map.call(document.querySelectorAll(".ngrp"),ng=>{
+      const g=ng.dataset.ng,tabs=curOrder(g);
+      return '<div class="mo-grp"><h4>'+esc(ng.querySelector(".ng-btn .ni").textContent)+'</h4>'+tabs.map((t,i)=>{
+        const nm=nsubOf(g).querySelector('a[data-tab="'+t+'"] .ni').textContent;
+        return '<div class="mo-row"><select class="mo-n" data-mo-g="'+g+'" data-mo-t="'+t+'" aria-label="Row number">'+tabs.map((_,k)=>'<option value="'+(k+1)+'"'+(k===i?' selected':'')+'>'+(k+1)+'</option>').join("")+'</select>'
+          +'<span class="mo-name">'+esc(nm)+'</span>'
+          +'<button type="button" class="ghost" data-mo-up="'+t+'" data-mo-g="'+g+'" aria-label="Move up"'+(i===0?' disabled':'')+'>↑</button>'
+          +'<button type="button" class="ghost" data-mo-dn="'+t+'" data-mo-g="'+g+'" aria-label="Move down"'+(i===tabs.length-1?' disabled':'')+'>↓</button></div>';
+      }).join("")+'</div>';
+    }).join("");
+  }
+  $("menu-card").addEventListener("change",e=>{const s=e.target.closest("select[data-mo-t]");if(s)moveTab(s.dataset.moG,s.dataset.moT,+s.value)});
+  $("menu-card").addEventListener("click",e=>{
+    const up=e.target.closest("[data-mo-up]");if(up){const g=up.dataset.moG,i=curOrder(g).indexOf(up.dataset.moUp);if(i>0)moveTab(g,up.dataset.moUp,i);return}
+    const dn=e.target.closest("[data-mo-dn]");if(dn){const g=dn.dataset.moG,o=curOrder(g),i=o.indexOf(dn.dataset.moDn);if(i>=0&&i<o.length-1)moveTab(g,dn.dataset.moDn,i+2);return}
+    if(e.target.closest("#menu-reset")){menuOrder={};applyMenu();renderMenuCard();saveMenu()}
+  });
+  addEventListener("hashchange",renderMenuCard);
+  applyMenu();renderMenuCard();
 
   /* ---------- TEMA ---------- */
   const MODES=[["system","Match device"],["light","Light"],["dark","Dark"],["krem","Cream"],["sagemist","Sage mist"],["dusk","Dusk"],["hutan","Forest night"],["senja","Warm dusk"]];
@@ -4534,6 +4943,7 @@ window.I18N=(function(){
       {const ie=items.find(i=>i.id==="ielts");window.IMP_IELTS_LAST=ie||null;if(ie&&window.IMP_IELTS_SYNC)window.IMP_IELTS_SYNC(ie)}
       ready=true;
       syncPrefsFromStore();
+      syncMenuFromStore();
       syncDraftsFromStore();
       if(!s.metadata.fromCache){clearTimeout(timer);setSync("Auto-saved");notice("")}
       setFormsEnabled(true);
@@ -6743,7 +7153,6 @@ document.addEventListener("click",function(e){
 
   /* ================= 3. every input form folded by default ================= */
   var FOLD={
-    "f-btype":{en:"+ Expense types",id:"+ Tipe pengeluaran"},
     "f-calc":{en:"+ Debt payoff calculator",id:"+ Kalkulator pelunasan utang"},
     "ie-logf":{en:"+ Catat sesi belajar",id:"+ Catat sesi belajar"},
     "ie-mockf":{en:"+ Catat skor practice test",id:"+ Catat skor practice test"}
