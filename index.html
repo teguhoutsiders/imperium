@@ -698,7 +698,7 @@ details.ie-acc>summary .ie-sub{font-weight:400}
   .main:has(>#tab-overview:not([hidden])){padding-bottom:18px}
   .main:has(>#tab-overview:not([hidden]))>footer{display:none}
   #tab-overview:not([hidden]){flex:1;min-height:0;gap:10px}
-  #tab-overview .ov{flex:1;min-height:0;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"today proj fin" "today ren links"}
+  #tab-overview .ov{flex:1;min-height:0;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);grid-template-rows:repeat(6,minmax(0,1fr));grid-template-areas:"today proj links" "today proj links" "today proj links" "today ren links" "fin ren links" "fin ren links"}
   #tab-overview .ovc{min-height:0;overflow:hidden}
   #tab-overview .ovc .ov-body{flex:1;overflow:auto;scrollbar-width:thin;margin-right:-6px;padding-right:6px}
   #tab-overview .ovc[data-a="today"]{grid-area:today}
@@ -1606,6 +1606,16 @@ ul.list>li.rec-day{background:var(--sunk);padding-block:6px;display:flex;align-i
 .fdrag-hint{margin-top:8px}
 @media (hover:none){.fdrag-hint{display:none}}
 @media (min-width:761px){:is(#acct-list,#aset-list) ul.list>li>.amt{min-width:150px;text-align:right}#rec-list ul.list>li>.amt{min-width:130px;text-align:right}}
+
+/* Ringkasan: Keuangan di bawah Hari ini, Tautan penuh dari atas ke bawah */
+#tab-overview .ovc[data-a="today"]{order:0}
+#tab-overview .ovc[data-a="fin"]{order:1}
+#tab-overview .ovc[data-a="proj"]{order:2}
+#tab-overview .ovc[data-a="ren"]{order:3}
+#tab-overview .ovc[data-a="links"]{order:4}
+@media (min-width:1100px) and (min-height:600px){
+  #tab-overview .ovc[data-a="fin"] .kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
 </style>
 
 <div class="shell">
