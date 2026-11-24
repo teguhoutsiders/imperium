@@ -1,79 +1,132 @@
-/* ==== Imperium · penghubung ke Google Spreadsheet (Apps Script) ====
+/* ==== Imperium · penghubung ke Supabase ====
    Menyediakan window.claude.use("db"|"user"|"assets"|"downloads") seperti di artifak Claude,
-   tapi datanya disimpan di Spreadsheet + Google Drive milik pemilik lewat web app Apps Script.
-   Alamat web app dan kunci akses TIDAK ditulis di kode: diisi sekali di tiap perangkat. */
+   tapi datanya disimpan di database + Storage Supabase milik pemilik.
+   URL project dan publishable key boleh ditulis di sini: tanpa login yang benar,
+   aturan keamanan (RLS) di Supabase tidak mengeluarkan data apa pun. */
 (function(){
   "use strict";
-  var LS_URL="imp-api-url",LS_KEY="imp-api-key",LS_CACHE="imp-cache-v1",LS_QUEUE="imp-queue-v1",LS_T="imp-sync-t";
+  var SB_URL="https://sdcjufdqpybvxvvccflb.supabase.co";
+  var SB_KEY="sb_publishable_tW8iVrAwFCHAgWKSTNo93Q_G0DQtQ38";
+  var SB_LIB="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+  var BUCKET="imperium";
+  var FREE_BYTES=1073741824; /* kuota Storage paket gratis: 1 GB */
+
+  var LS_CACHE="imp-cache-v1",LS_QUEUE="imp-queue-v1",LS_T="imp-sync-t",LS_UID="imp-sb-uid",LS_MARK="imp-backend";
   function lsGet(k){try{return localStorage.getItem(k)}catch(_){return null}}
   function lsSet(k,v){try{localStorage.setItem(k,v)}catch(_){}}
   function lsDel(k){try{localStorage.removeItem(k)}catch(_){}}
 
-  /* ---------- panggilan ke Apps Script ---------- */
-  var cfg={url:lsGet(LS_URL)||"",key:lsGet(LS_KEY)||""};
+  /* pertama kali pindah dari versi Spreadsheet: buang salinan & kunci lama di perangkat ini */
+  if(lsGet(LS_MARK)!=="supabase"){
+    ["imp-api-url","imp-api-key",LS_CACHE,LS_QUEUE,LS_T].forEach(lsDel);
+    try{caches.delete("imp-blobs")}catch(_){}
+    lsSet(LS_MARK,"supabase");
+  }
+
   function ApiErr(code,msg){var e=new Error(msg||code);e.code=code;return e}
-  async function call(a,payload,opt){
-    if(!cfg.url||!cfg.key)throw ApiErr("auth","Belum masuk");
-    var body=JSON.stringify(Object.assign({k:cfg.key,a:a},payload||{}));
-    var res;
-    try{res=await fetch(cfg.url,{method:"POST",body:body,redirect:"follow",cache:"no-store"})}
-    catch(e){throw ApiErr("network","Tidak bisa menghubungi Spreadsheet")}
-    if(!res.ok)throw ApiErr("network","HTTP "+res.status);
-    var j;try{j=await res.json()}catch(_){throw ApiErr("network","Jawaban tidak terbaca (cek alamat web app)")}
-    if(!j||!j.ok){
-      var c=(j&&j.err)||"server";
-      if((c==="auth"||c==="locked")&&!(opt&&opt.login))onAuthLost(c);
-      throw ApiErr(c,(j&&j.msg)||c);
+  function isNet(e){var m=String(e&&(e.message||e)||"");return !navigator.onLine||/failed to fetch|networkerror|load failed|network request|timeout|fetch/i.test(m)}
+  function mapErr(e){
+    if(!e)return ApiErr("server","Galat tidak dikenal");
+    if(e.code&&["network","auth","server","not_found"].indexOf(e.code)>=0)return e;
+    var st=+(e.status||e.statusCode||0),c=String(e.code||""),m=String(e.message||e.error||e);
+    if(st===401||c==="PGRST301"||c==="28000"||/jwt|not authenticated|belum masuk/i.test(m))return ApiErr("auth",m);
+    if(isNet(e))return ApiErr("network","Tidak bisa menghubungi Supabase");
+    return ApiErr("server",m);
+  }
+
+  /* ---------- pustaka & sesi Supabase ---------- */
+  var sb=null,libP=null,uid=lsGet(LS_UID)||"",email="",signingOut=false;
+  function lib(){
+    if(libP)return libP;
+    libP=new Promise(function(ok,no){
+      if(window.supabase&&window.supabase.createClient)return ok();
+      var s=document.createElement("script");s.src=SB_LIB;s.async=true;s.crossOrigin="anonymous";
+      s.onload=function(){ok()};
+      s.onerror=function(){libP=null;no(ApiErr("network","Pustaka Supabase tidak termuat"))};
+      (document.head||document.documentElement).appendChild(s);
+    }).then(function(){
+      sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:"imp-sb-auth"}});
+      sb.auth.onAuthStateChange(function(ev,session){
+        if(session&&session.user){email=session.user.email||"";setUid(session.user.id);showEmail()}
+        if(ev==="SIGNED_OUT"&&!signingOut)onAuthLost();
+      });
+      return sb;
+    });
+    return libP;
+  }
+  function setUid(id){
+    if(!id||id===uid)return;
+    if(uid){cache=new Map();queue=[];lastT=0;lsDel(LS_CACHE);lsDel(LS_QUEUE);lsDel(LS_T)}
+    uid=id;lsSet(LS_UID,id);
+  }
+  /* true = siap; false = perlu login */
+  async function ready(){
+    try{
+      await lib();
+      var r=await sb.auth.getSession(),s=r&&r.data&&r.data.session;
+      if(s&&s.user){email=s.user.email||"";setUid(s.user.id);return true}
+      return false;
+    }catch(e){
+      /* offline: tetap buka dengan data terakhir di perangkat ini */
+      if(isNet(e)&&uid)return true;
+      return false;
     }
-    return j;
   }
 
   /* ---------- layar masuk ---------- */
   var loginResolve=null,loginP=null;
   function needLogin(){if(!loginP)loginP=new Promise(function(r){loginResolve=r;showLogin()});return loginP}
-  function onAuthLost(code){
-    lsDel(LS_KEY);cfg.key="";
-    stopPoll();
-    loginP=null;needLogin().then(function(){startPoll(true)});
-    if(code==="locked")setTimeout(function(){var m=document.getElementById("imp-login-msg");if(m)m.textContent="Terlalu banyak percobaan salah. Akses dikunci sementara (±15 menit)."},50);
+  function onAuthLost(){
+    if(loginResolve)return; /* layar masuk sudah tampil */
+    stopPoll();stopRealtime();
+    loginP=null;needLogin().then(function(){startRealtime();startPoll(true)});
   }
   function showLogin(){
     var old=document.getElementById("imp-login");if(old)old.remove();
     var d=document.createElement("div");d.id="imp-login";
     d.innerHTML='<form id="imp-login-f" autocomplete="on">'
       +'<div class="il-logo">IMPERIUM</div><p class="il-sub">Buku catatan pribadi</p>'
-      +'<label>Alamat web app Apps Script<input id="imp-l-url" type="url" inputmode="url" placeholder="https://script.google.com/macros/s/…/exec" required></label>'
-      +'<label>Kunci akses<input id="imp-l-key" type="password" autocomplete="current-password" required></label>'
-      +'<label class="il-show"><input type="checkbox" id="imp-l-show"> Tampilkan kunci</label>'
+      +'<label>Email<input id="imp-l-mail" type="text" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" required></label>'
+      +'<label>Password<input id="imp-l-key" type="password" autocomplete="current-password" required></label>'
+      +'<label class="il-show"><input type="checkbox" id="imp-l-show"> Tampilkan password</label>'
       +'<button type="submit" id="imp-l-go">Masuk</button>'
       +'<p class="il-msg" id="imp-login-msg" role="status"></p>'
-      +'<p class="il-hint">Alamat dan kunci hanya disimpan di perangkat ini. Data Anda tetap di Google Spreadsheet & Drive milik Anda.</p></form>';
+      +'<p class="il-hint">Data Anda tersimpan di project Supabase milik Anda. Akun dibuat di Supabase › Authentication › Users.</p></form>';
     (document.body||document.documentElement).appendChild(d);
-    var u=document.getElementById("imp-l-url"),k=document.getElementById("imp-l-key");
-    u.value=cfg.url||"";(cfg.url?k:u).focus();
+    var u=document.getElementById("imp-l-mail"),k=document.getElementById("imp-l-key");
+    u.value=email||"";(email?k:u).focus();
     document.getElementById("imp-l-show").onchange=function(e){k.type=e.target.checked?"text":"password"};
     document.getElementById("imp-login-f").onsubmit=async function(e){
       e.preventDefault();
       var msg=document.getElementById("imp-login-msg"),btn=document.getElementById("imp-l-go");
-      var url=u.value.trim(),key=k.value;
-      if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(url)){msg.textContent="Alamat harus berbentuk https://script.google.com/macros/s/…/exec";return}
       btn.disabled=true;msg.textContent="Memeriksa…";
-      var keep={url:cfg.url,key:cfg.key};cfg.url=url;cfg.key=key;
       try{
-        await call("ping",{},{login:true});
-        lsSet(LS_URL,url);lsSet(LS_KEY,key);
-        if(keep.url&&keep.url!==url){lsDel(LS_CACHE);lsDel(LS_T);lsDel(LS_QUEUE);cache=new Map();lastT=0;queue=[]}
-        d.remove();var r=loginResolve;loginResolve=null;if(r)r();
+        await lib();
+        var r=await sb.auth.signInWithPassword({email:u.value.trim(),password:k.value});
+        if(r.error)throw r.error;
+        email=r.data.user.email||"";setUid(r.data.user.id);showEmail();
+        d.remove();var res=loginResolve;loginResolve=null;if(res)res();
       }catch(err){
-        cfg.url=keep.url;cfg.key=keep.key;btn.disabled=false;
-        msg.textContent=err.code==="auth"?"Kunci akses salah.":err.code==="locked"?"Terlalu banyak percobaan salah. Coba lagi ±15 menit lagi.":err.code==="nokey"?"Kunci belum diatur di Spreadsheet (menu Imperium › Atur kunci akses).":"Tidak bisa terhubung: "+err.message;
+        btn.disabled=false;
+        var m=String(err&&err.message||err);
+        msg.textContent=/invalid login|invalid credentials/i.test(m)?"Email atau password salah."
+          :/not confirmed/i.test(m)?"Akun belum dikonfirmasi. Di Supabase › Authentication › Users, konfirmasi akun ini."
+          :/rate|too many/i.test(m)?"Terlalu banyak percobaan. Tunggu beberapa menit."
+          :isNet(err)?"Tidak bisa terhubung. Periksa internet Anda."
+          :"Gagal masuk: "+m;
       }
     };
   }
-  window.IMP_LOGOUT=function(){lsDel(LS_KEY);lsDel(LS_CACHE);lsDel(LS_QUEUE);lsDel(LS_T);try{caches.delete("imp-blobs")}catch(_){}location.reload()};
+  window.IMP_LOGOUT=async function(){
+    signingOut=true;
+    try{await lib();await sb.auth.signOut()}catch(_){}
+    [LS_CACHE,LS_QUEUE,LS_T,LS_UID].forEach(lsDel);
+    try{caches.delete("imp-blobs")}catch(_){}
+    location.reload();
+  };
 
   /* ---------- database (koleksi dokumen) ---------- */
-  var cache=new Map(),lastT=+(lsGet(LS_T)||0),queue=[],subs=[],flushing=false,pollTimer=0,firstPull=true,errCbs=[];
+  var cache=new Map(),lastT=+(lsGet(LS_T)||0),queue=[],subs=[],flushing=false,pollTimer=0,firstPull=true,rtCh=null,rtOk=false;
   try{var c0=JSON.parse(lsGet(LS_CACHE)||"null");if(c0&&typeof c0==="object")Object.keys(c0).forEach(function(id){cache.set(id,c0[id])})}catch(_){}
   try{queue=JSON.parse(lsGet(LS_QUEUE)||"[]")||[]}catch(_){queue=[]}
   var saveT=0;function persist(){clearTimeout(saveT);saveT=setTimeout(function(){var o={};cache.forEach(function(v,k){o[k]=v});lsSet(LS_CACHE,JSON.stringify(o));lsSet(LS_QUEUE,JSON.stringify(queue));lsSet(LS_T,String(lastT))},250)}
@@ -85,13 +138,26 @@
   }
   function genId(){var s="abcdefghijklmnopqrstuvwxyz0123456789",o="";var a=new Uint8Array(20);crypto.getRandomValues(a);for(var i=0;i<20;i++)o+=s[a[i]%36];return o}
   function enqueue(op){queue.push(op);persist();emit(false);return flush()}
+
+  /* kirim antrean: maks 40 perubahan atau ±1,5 MB per panggilan */
+  function nextBatch(){var out=[],size=0;for(var i=0;i<queue.length&&out.length<40;i++){var n=JSON.stringify(queue[i]).length;if(out.length&&size+n>1.5e6)break;out.push(queue[i]);size+=n}return out}
+  var retryT=0;
   async function flush(){
     if(flushing)return flushing;
     flushing=(async function(){
       while(queue.length){
-        var ops=queue.slice(0,40);
-        try{await call("batch",{ops:ops})}
-        catch(e){if(e.code==="network"||e.code==="server"){setStatus("Offline · perubahan disimpan dan dikirim nanti");setTimeout(function(){flush()},8000)}throw e}
+        if(!sb)await lib();
+        var ops=nextBatch();
+        var r;
+        try{r=await sb.rpc("imp_batch",{ops:ops})}catch(e){r={error:e}}
+        if(r.error){
+          var e=mapErr(r.error);
+          if(e.code==="auth"){onAuthLost();throw e}
+          setStatus(e.code==="network"?"Offline · perubahan disimpan dan dikirim nanti":"Gagal menyimpan · dicoba lagi");
+          if(e.code==="server")console.error("Imperium imp_batch:",r.error);
+          clearTimeout(retryT);retryT=setTimeout(function(){flush().catch(function(){})},8000);
+          throw e;
+        }
         queue.splice(0,ops.length);persist();
       }
       setStatus("");
@@ -100,32 +166,65 @@
   }
   function DocRef(id){this.id=id}
   DocRef.prototype.set=function(data){var d=clone(data);cache.set(this.id,d);return enqueue({o:"set",id:this.id,d:d}).catch(softErr)};
-  DocRef.prototype.update=function(f){var cur=cache.get(this.id);if(!cur){var e=ApiErr("not_found","Dokumen tidak ada");return Promise.reject(e)}var n=Object.assign({},cur,clone(f));cache.set(this.id,n);return enqueue({o:"upd",id:this.id,f:clone(f)}).catch(softErr)};
+  DocRef.prototype.update=function(f){var cur=cache.get(this.id);if(!cur){return Promise.reject(ApiErr("not_found","Dokumen tidak ada"))}var n=Object.assign({},cur,clone(f));cache.set(this.id,n);return enqueue({o:"upd",id:this.id,f:clone(f)}).catch(softErr)};
   DocRef.prototype.delete=function(){cache.delete(this.id);return enqueue({o:"del",id:this.id}).catch(softErr)};
   DocRef.prototype.get=async function(){var d=cache.get(this.id);return {exists:!!d,id:this.id,data:function(){return clone(d)}}};
-  /* gagal jaringan = tetap tersimpan di antrean perangkat; gagal lain diteruskan ke aplikasi */
+  /* gagal jaringan/server = tetap tersimpan di antrean perangkat; gagal lain diteruskan ke aplikasi */
   function softErr(e){if(e&&(e.code==="network"||e.code==="server"))return;throw e}
-  var col={doc:function(id){return new DocRef(id||genId())},onSnapshot:function(cb,err){subs.push(cb);if(err)errCbs.push(err);if(cache.size)setTimeout(function(){emit(true)},0);startPoll(true);return function(){subs=subs.filter(function(x){return x!==cb})}}};
+  var col={doc:function(id){return new DocRef(id||genId())},onSnapshot:function(cb,err){subs.push(cb);if(cache.size)setTimeout(function(){emit(true)},0);startRealtime();startPoll(true);return function(){subs=subs.filter(function(x){return x!==cb})}}};
+
+  /* terapkan satu baris dari server ke salinan lokal; true jika ada perubahan */
+  function applyRow(r){
+    if(!r||!r.id)return false;
+    var t=Date.parse(r.updated)||0;if(t>lastT)lastT=t;
+    if(queue.some(function(q){return q.id===r.id}))return false; /* perubahan lokal belum terkirim menang */
+    if(r.deleted){if(cache.has(r.id)){cache.delete(r.id);return true}return false}
+    var s=JSON.stringify(r.data),o=cache.get(r.id);
+    if(!o||JSON.stringify(o)!==s){cache.set(r.id,r.data);return true}
+    return false;
+  }
+  var pulling=false;
   async function pull(){
-    if(document.hidden&&!firstPull)return;
+    if((document.hidden&&!firstPull)||pulling)return;
+    pulling=true;
     try{
-      var j=await call("pull",{since:lastT});
+      if(!sb)await lib();
+      if(!uid)return;
+      var full=!lastT,rows=[],from=0,PAGE=500;
+      for(;;){
+        var q=sb.from("docs").select("id,data,deleted,updated").eq("user_id",uid);
+        q=full?q.eq("deleted",false):q.gte("updated",new Date(lastT-3000).toISOString());
+        var r=await q.order("updated",{ascending:true}).order("id",{ascending:true}).range(from,from+PAGE-1);
+        if(r.error)throw r.error;
+        rows=rows.concat(r.data||[]);
+        if(!r.data||r.data.length<PAGE)break;
+        from+=PAGE;
+      }
       var ch=false;
-      (j.docs||[]).forEach(function(r){
-        if(queue.some(function(q){return q.id===r.id}))return; /* perubahan lokal belum terkirim menang */
-        if(r.x){if(cache.has(r.id)){cache.delete(r.id);ch=true}}
-        else{var s=JSON.stringify(r.d),o=cache.get(r.id);if(!o||JSON.stringify(o)!==s){cache.set(r.id,r.d);ch=true}}
-      });
-      if(j.full){var keep=new Set((j.docs||[]).filter(function(r){return !r.x}).map(function(r){return r.id}));cache.forEach(function(v,k){if(!keep.has(k)&&!queue.some(function(q){return q.id===k})){cache.delete(k);ch=true}})}
-      lastT=j.t||lastT;persist();
+      rows.forEach(function(r){if(applyRow(r))ch=true});
+      if(full){var keep=new Set(rows.map(function(r){return r.id}));cache.forEach(function(v,k){if(!keep.has(k)&&!queue.some(function(q){return q.id===k})){cache.delete(k);ch=true}});if(!lastT)lastT=1}
+      persist();
       if(ch||firstPull)emit(false);
       firstPull=false;setStatus("");
       if(queue.length)flush().catch(function(){});
-    }catch(e){
-      if(e.code==="network"){setStatus("Offline · menampilkan data terakhir");if(firstPull&&cache.size){firstPull=false;emit(true)}}
-    }
+    }catch(err){
+      var e=mapErr(err);
+      if(e.code==="auth")onAuthLost();
+      else if(e.code==="network"){setStatus("Offline · menampilkan data terakhir");if(firstPull&&cache.size){firstPull=false;emit(true)}}
+      else console.error("Imperium pull:",err);
+    }finally{pulling=false}
   }
-  function startPoll(now){stopPoll();if(now)pull();pollTimer=setInterval(pull,document.hidden?30000:5000)}
+  /* realtime: perubahan dari perangkat lain masuk seketika; polling hanya cadangan */
+  function startRealtime(){
+    if(rtCh||!sb||!uid)return;
+    rtCh=sb.channel("imp-docs-"+uid)
+      .on("postgres_changes",{event:"*",schema:"public",table:"docs",filter:"user_id=eq."+uid},function(p){
+        if(applyRow(p.new)){persist();emit(false)}else persist();
+      })
+      .subscribe(function(st){var was=rtOk;rtOk=st==="SUBSCRIBED";if(rtOk!==was&&pollTimer)startPoll(rtOk)});
+  }
+  function stopRealtime(){if(rtCh&&sb){try{sb.removeChannel(rtCh)}catch(_){}}rtCh=null;rtOk=false}
+  function startPoll(now){stopPoll();if(now)pull();pollTimer=setInterval(pull,document.hidden?60000:(rtOk?30000:5000))}
   function stopPoll(){clearInterval(pollTimer);pollTimer=0}
   document.addEventListener("visibilitychange",function(){if(!pollTimer)return;startPoll(!document.hidden)});
   window.addEventListener("online",function(){if(pollTimer){startPoll(true);flush().catch(function(){})}});
@@ -137,9 +236,8 @@
     stEl.textContent=t;stEl.hidden=!t;
   }
 
-  /* ---------- berkas (Google Drive) ---------- */
-  function toB64(blob){return new Promise(function(ok,no){var r=new FileReader();r.onload=function(){var s=String(r.result);ok(s.slice(s.indexOf(",")+1))};r.onerror=no;r.readAsDataURL(blob)})}
-  function fromB64(b64,type){var bin=atob(b64),n=bin.length,u=new Uint8Array(n);for(var i=0;i<n;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type:type||"application/octet-stream"})}
+  /* ---------- berkas (Supabase Storage) ---------- */
+  function path(id){return uid+"/"+id}
   var blobMem=new Map();
   async function cacheGet(id){
     if(blobMem.has(id))return blobMem.get(id);
@@ -150,22 +248,56 @@
   var inflight=new Map();
   function getBlob(id){
     if(inflight.has(id))return inflight.get(id);
-    var p=(async function(){var c=await cacheGet(id);if(c)return c;var j=await call("bget",{id:id});var b=fromB64(j.b64,j.type);await cachePut(id,b);return b})();
+    var p=(async function(){
+      var c=await cacheGet(id);if(c)return c;
+      if(!sb)await lib();
+      var r=await sb.storage.from(BUCKET).download(path(id));
+      if(r.error)throw mapErr(r.error);
+      await cachePut(id,r.data);return r.data;
+    })();
     inflight.set(id,p);p.finally(function(){inflight.delete(id)});return p;
   }
+  async function exists(id){
+    if(blobMem.has(id))return true;
+    if(!sb)await lib();
+    var r=await sb.storage.from(BUCKET).list(uid,{search:id,limit:5});
+    return !r.error&&(r.data||[]).some(function(o){return o.name===id});
+  }
   var assets={
-    upload:async function(blob,opt){var type=(opt&&opt.type)||blob.type||"application/octet-stream";var b64=await toB64(blob);var j=await call("bput",{type:type,name:(blob.name||"file"),b64:b64});await cachePut(j.id,blob.type?blob:new Blob([blob],{type:type}));return {id:j.id,url:"/_blob/"+j.id}},
-    delete:async function(id){blobMem.delete(id);try{var c=await caches.open("imp-blobs");await c.delete("/_imp_blob/"+id)}catch(_){}await call("bdel",{id:id})},
-    list:async function(){var j=await call("busage",{});return {assets:[],usage:{bytes:j.bytes||0,maxBytes:j.maxBytes||0}}}
+    upload:async function(blob,opt){
+      if(!sb)await lib();
+      var type=(opt&&opt.type)||blob.type||"application/octet-stream",id=genId();
+      var body=blob.type?blob:new Blob([blob],{type:type});
+      var r=await sb.storage.from(BUCKET).upload(path(id),body,{contentType:type,upsert:false,cacheControl:"31536000"});
+      if(r.error)throw mapErr(r.error);
+      await cachePut(id,body);
+      return {id:id,url:"/_blob/"+id};
+    },
+    delete:async function(id){
+      blobMem.delete(id);try{var c=await caches.open("imp-blobs");await c.delete("/_imp_blob/"+id)}catch(_){}
+      if(!sb)await lib();
+      var r=await sb.storage.from(BUCKET).remove([path(id)]);if(r.error)throw mapErr(r.error);
+    },
+    list:async function(){
+      if(!sb)await lib();
+      var bytes=0,off=0;
+      for(;;){
+        var r=await sb.storage.from(BUCKET).list(uid,{limit:1000,offset:off});
+        if(r.error)throw mapErr(r.error);
+        (r.data||[]).forEach(function(o){bytes+=+(o.metadata&&o.metadata.size)||0});
+        if(!r.data||r.data.length<1000)break;off+=1000;
+      }
+      return {assets:[],usage:{bytes:bytes,maxBytes:FREE_BYTES}};
+    }
   };
-  /* alamat /_blob/ID di halaman diarahkan ke Drive */
+  /* alamat /_blob/ID di halaman diarahkan ke Supabase Storage */
   var origFetch=window.fetch.bind(window);
   window.fetch=function(input,init){
     var url=typeof input==="string"?input:(input&&input.url)||"";
     var m=url.match(/^(?:https?:\/\/[^\/]+)?\/_blob\/([\w-]+)$/);
     if(m){
       var id=m[1],method=((init&&init.method)||(input&&input.method)||"GET").toUpperCase();
-      if(method==="HEAD")return call("bhead",{id:id}).then(function(j){return new Response(null,{status:j.exists?200:404})}).catch(function(){return new Response(null,{status:404})});
+      if(method==="HEAD")return exists(id).then(function(x){return new Response(null,{status:x?200:404})}).catch(function(){return new Response(null,{status:404})});
       return getBlob(id).then(function(b){return new Response(b,{status:200,headers:{"Content-Type":b.type||"application/octet-stream"}})}).catch(function(){return new Response(null,{status:404})});
     }
     return origFetch(input,init);
@@ -188,9 +320,11 @@
   var downloads={save:async function(o){var b=o.data instanceof Blob?o.data:new Blob([o.data]);var u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=o.filename||"download";document.body.appendChild(a);a.click();setTimeout(function(){a.remove();URL.revokeObjectURL(u)},1500)}};
 
   /* ---------- pintu masuk yang dipakai aplikasi ---------- */
+  var readyP=null;
+  function ensure(){if(!readyP)readyP=ready().then(function(ok){if(!ok)return needLogin()});return readyP}
   window.claude={use:async function(name){
     if(name==="sample")return null;
-    if(!cfg.url||!cfg.key)await needLogin();
+    await ensure();
     if(name==="db")return {collection:function(){return col}};
     if(name==="user")return {id:async function(){return "owner"}};
     if(name==="assets")return assets;
@@ -199,15 +333,16 @@
   }};
 
   /* ---------- kartu Koneksi di Pengaturan ---------- */
+  function showEmail(){var el=document.getElementById("imp-conn-url");if(el)el.textContent=email?"Masuk sebagai "+email:""}
   function addSetCard(){
     var host=document.getElementById("tab-pengaturan");if(!host||document.getElementById("imp-conn"))return;
     var c=document.createElement("div");c.className="setcard";c.id="imp-conn";
-    c.innerHTML='<h3 class="set-h">Koneksi Spreadsheet</h3><p class="hint">Data tersimpan di Google Spreadsheet, berkas di Google Drive milik Anda. Halaman memeriksa perubahan tiap beberapa detik.</p>'
+    c.innerHTML='<h3 class="set-h">Koneksi Supabase</h3><p class="hint">Data dan berkas tersimpan di project Supabase milik Anda. Perubahan dari perangkat lain muncul seketika.</p>'
       +'<p class="hint mono" id="imp-conn-url" style="word-break:break-all"></p>'
       +'<div class="actions" style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="soft" id="imp-sync-now">Sinkronkan sekarang</button><button type="button" class="ghost danger" id="imp-logout">Keluar dari perangkat ini</button></div>';
     var foot=host.querySelector("footer");host.insertBefore(c,foot||null);
-    document.getElementById("imp-conn-url").textContent=cfg.url?cfg.url.replace(/(\/s\/.{6}).+(.{6}\/exec)$/,"$1…$2"):"";
-    document.getElementById("imp-sync-now").onclick=function(){startPoll(true);flush().catch(function(){})};
+    showEmail();
+    document.getElementById("imp-sync-now").onclick=function(){lastT=0;startPoll(true);flush().catch(function(){})};
     document.getElementById("imp-logout").onclick=function(){if(this.dataset.arm){window.IMP_LOGOUT();return}this.dataset.arm=1;this.textContent="Ketuk lagi untuk keluar"};
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",addSetCard);else addSetCard();

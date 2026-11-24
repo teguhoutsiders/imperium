@@ -5,4 +5,4 @@ Buku catatan pribadi: tugas & rutinitas, proyek, impian, keuangan & anggaran, ma
 - **Buka**: https://teguhoutsiders.github.io/imperium/
 - **Pemasangan & perawatan**: lihat [PANDUAN.md](PANDUAN.md)
 
-Repositori ini hanya berisi tampilan. Semua data tersimpan di Google Spreadsheet dan Google Drive milik pemilik, diakses lewat web app Apps Script ([`apps-script/Code.gs`](apps-script/Code.gs)) dengan kunci akses yang tidak disimpan di sini.
+Repositori ini hanya berisi tampilan. Semua data dan berkas tersimpan di project Supabase milik pemilik ([`supabase-schema.sql`](supabase-schema.sql)), dan hanya bisa dibuka setelah login. Folder `apps-script/` adalah versi lama (Google Spreadsheet) dan tidak dipakai lagi.
