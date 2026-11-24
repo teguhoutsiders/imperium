@@ -7202,13 +7202,17 @@ window.ENGLISH_CEPAT = {
     orig.call(this,k,v);
     if(quiet||k!==KEY)return;
     try{if(this!==window.localStorage)return}catch(_){return}
-    try{orig.call(localStorage,TK,String(Date.now()))}catch(_){}
-    clearTimeout(timer);timer=setTimeout(function(){if(window.IMP_DOC_SAVE)window.IMP_DOC_SAVE("basicenglish",{kind:"basicenglish",data:v,t:Date.now()})},1500);
+    var stamp=Date.now();
+    try{orig.call(localStorage,TK,String(stamp))}catch(_){}
+    /* waktu yang sama dipakai untuk akun, supaya data yang kembali dari akun tidak dianggap lebih baru lalu memuat ulang latihan */
+    clearTimeout(timer);timer=setTimeout(function(){if(window.IMP_DOC_SAVE)window.IMP_DOC_SAVE("basicenglish",{kind:"basicenglish",data:v,t:stamp})},1500);
   };
   function localT(){try{return +localStorage.getItem(TK)||0}catch(_){return 0}}
   window.IMP_BE_SYNC=function(doc){
     if(!doc||typeof doc.data!=="string")return;
     if((+doc.t||0)<=localT())return;
+    var cur=null;try{cur=localStorage.getItem(KEY)}catch(_){}
+    if(cur===doc.data){try{orig.call(localStorage,TK,String(doc.t))}catch(_){}return}
     quiet=true;try{localStorage.setItem(KEY,doc.data);localStorage.setItem(TK,String(doc.t))}catch(_){}quiet=false;
     if(refresh){root.innerHTML="";refresh=null;open()}
   };
