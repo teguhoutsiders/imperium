@@ -1588,6 +1588,24 @@ ul.list>li.rec-day{background:var(--sunk);padding-block:6px;display:flex;align-i
 .ov-td i[data-tdone]:hover{transform:scale(1.2)}
 .ov-td i[data-tdone].on{background:var(--ok);border-color:var(--ok)}
 .ov-td .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px}
+
+/* ===== v-Nov24c: rapikan perataan, seret berkas, liabilities ===== */
+:is(#acct-list,#aset-list,#rec-list) ul.list>li:not(.rec-day){align-items:center}
+:is(#acct-list,#aset-list,#rec-list) ul.list>li>.amt{white-space:nowrap;line-height:1.3;align-self:center}
+:is(#acct-list,#aset-list,#rec-list) ul.list>li>.row-actions{align-self:center}
+#acct-list .acct-ic{align-self:center}
+.liab.recur{border-left:3px solid var(--accent)}
+.bg-acts{flex-wrap:wrap;align-items:center}
+.bg-addf{margin-top:2px}
+.mo-subh{margin:16px 0 0}
+.mo-top .hint{margin:4px 0 0}
+.mo-name small{font-weight:400}
+#file-list li[draggable="true"]{cursor:grab}
+#file-list li.dragging{opacity:.45}
+#file-list li.drop-on,#crumbs .crumb.drop-on{outline:2px dashed var(--accent);outline-offset:-3px;background:var(--accent-soft)!important}
+.fdrag-hint{margin-top:8px}
+@media (hover:none){.fdrag-hint{display:none}}
+@media (min-width:761px){:is(#acct-list,#aset-list) ul.list>li>.amt{min-width:150px;text-align:right}#rec-list ul.list>li>.amt{min-width:130px;text-align:right}}
 </style>
 
 <div class="shell">
@@ -1605,7 +1623,7 @@ ul.list>li.rec-day{background:var(--sunk);padding-block:6px;display:flex;align-i
       <div class="ngrp" data-ng="goals"><button type="button" class="ng-btn" data-ngb="goals" aria-expanded="false" aria-controls="ns-goals"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="1.6"/></svg><span class="ni">Goals</span><span class="count" data-gc="goals" hidden></span><svg class="ng-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
         <div class="nsub" id="ns-goals" data-sg="goals" hidden><a href="#proyek" data-tab="proyek"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg><span class="ni">Projects</span><span class="count" id="c-proyek">0</span></a><a href="#dreams" data-tab="dreams"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5-4.8-4.6 6.6-.9z"/></svg><span class="ni">Dreams</span><span class="count" id="c-dreams">0</span></a></div></div>
       <div class="ngrp" data-ng="money"><button type="button" class="ng-btn" data-ngb="money" aria-expanded="false" aria-controls="ns-money"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3v3a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V5"/></svg><span class="ni">Finance</span><span class="count" data-gc="money" hidden></span><svg class="ng-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
-        <div class="nsub" id="ns-money" data-sg="money" hidden><a href="#akun" data-tab="akun"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="19" height="13" rx="2.5"/><path d="M2.5 10.5h19M6.5 15h4"/></svg><span class="ni">Account</span></a><a href="#record" data-tab="record"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg><span class="ni">Record</span></a><a href="#aset" data-tab="aset"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-6M22 20H2"/></svg><span class="ni">Assets</span></a><a href="#hutang" data-tab="hutang"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12m0 0-5-5m5 5 5-5M5 20.5h14"/></svg><span class="ni">Debts</span></a><a href="#budget" data-tab="budget"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg><span class="ni">Budget</span></a><a href="#kategori" data-tab="kategori"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg><span class="ni">Category</span></a></div></div>
+        <div class="nsub" id="ns-money" data-sg="money" hidden><a href="#akun" data-tab="akun"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="19" height="13" rx="2.5"/><path d="M2.5 10.5h19M6.5 15h4"/></svg><span class="ni">Account</span></a><a href="#record" data-tab="record"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg><span class="ni">Record</span></a><a href="#aset" data-tab="aset"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-6M22 20H2"/></svg><span class="ni">Assets</span></a><a href="#hutang" data-tab="hutang"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12m0 0-5-5m5 5 5-5M5 20.5h14"/></svg><span class="ni">Liabilities</span></a><a href="#budget" data-tab="budget"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg><span class="ni">Budget</span></a><a href="#kategori" data-tab="kategori"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg><span class="ni">Category</span></a></div></div>
       <div class="ngrp" data-ng="lib"><button type="button" class="ng-btn" data-ngb="lib" aria-expanded="false" aria-controls="ns-lib"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="m16.5 4.6 3.4-.9 3.1 15.5-3.4.9z"/></svg><span class="ni">Library</span><span class="count" data-gc="lib" hidden></span><svg class="ng-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
         <div class="nsub" id="ns-lib" data-sg="lib" hidden><a href="#notes" data-tab="notes"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><span class="ni">Notes</span><span class="count" id="c-notes">0</span></a><div class="nfsub" id="nav-nf" hidden></div><div class="nfsub" id="nav-nd" hidden></div><a href="#files" data-tab="files"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H9l2 3h7.5A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/></svg><span class="ni">Files</span><span class="count" id="c-files">0</span></a><span class="count" id="c-tautan" hidden>0</span></div></div>
       <div class="sep" role="presentation"></div>
@@ -2067,17 +2085,20 @@ ul.list>li.rec-day{background:var(--sunk);padding-block:6px;display:flex;align-i
     <div class="ledger" id="debt-sum"></div>
     <div class="split wide-l"><div class="lcol">
     <form class="entry" id="f-debt" autocomplete="off">
-      <p class="formtitle" id="ft-debt">New debt</p>
-      <label>Name
-        <input id="debt-name" required maxlength="150" placeholder="e.g. Motorbike loan, Credit card">
+      <p class="formtitle" id="ft-debt">New liability</p>
+      <label class="wide">Type
+        <select id="debt-kind"><option value="debt">Debt (loan or installment with a total)</option><option value="recurring">Recurring obligation (fixed monthly cost)</option></select>
       </label>
-      <label>Starting debt (Rp)
+      <label>Name
+        <input id="debt-name" required maxlength="150" placeholder="e.g. Motorbike loan, Oil change">
+      </label>
+      <label id="lb-debt-amt">Starting debt (Rp)
         <input id="debt-amt" required inputmode="numeric" placeholder="25.000.000">
       </label>
-      <label>Debt start date
+      <label><span id="debt-date-lab">Debt start date</span>
         <input id="debt-date" type="date">
       </label>
-      <label>Monthly installment (Rp)
+      <label><span id="debt-inst-lab">Monthly installment (Rp)</span>
         <input id="debt-inst" inputmode="numeric" placeholder="Optional">
       </label>
       <label>Due day of month
@@ -2123,16 +2144,17 @@ ul.list>li.rec-day{background:var(--sunk);padding-block:6px;display:flex;align-i
   <section class="panel" id="tab-budget" hidden>
     <div class="bg-top">
       <label class="bg-month">Budget month<input type="month" id="bg-month"></label>
-      <div class="bg-acts"><button type="button" class="soft" id="bg-copy">Copy last month</button><button type="button" class="ghost" id="bg-next">Next month</button></div>
+      <div class="bg-acts"><button type="button" class="primary" id="bg-add">+ Add expense</button><button type="button" class="soft" id="bg-copy">Copy last month</button><button type="button" class="ghost" id="bg-next">Next month</button></div>
     </div>
+    <form class="entry bg-addf" id="f-bgadd" autocomplete="off" hidden>
+      <p class="formtitle">New expense type</p>
+      <label>Icon<input type="hidden" id="ct-ic-bgx" value="📦"><button type="button" id="ct-ib-bgx" class="bt-icon-btn" data-pkopen title="Choose emoji">📦</button></label>
+      <label>Name<input id="bg-add-name" maxlength="60" placeholder="e.g. Makan, Bensin" required></label>
+      <label>Budget this month (Rp)<input id="bg-add-amt" inputmode="numeric" placeholder="Optional"></label>
+      <div class="actions"><button type="button" class="ghost" id="bg-add-cancel">Cancel</button><button class="primary" type="submit">Add expense</button></div>
+    </form>
     <div class="ledger bg-ledger" id="bg-sum"></div>
     <div id="bg-table"></div>
-    <div class="setcard bg-types">
-      <h3 class="set-h">Expense types</h3>
-      <div class="bg-chips" id="bg-chips"></div>
-      <p class="hint">Expense types are now managed in Category settings. Spending in a type counts against its budget.</p>
-      <div class="actions"><button type="button" class="soft" id="bg-go-cat">Manage categories</button></div>
-    </div>
   </section>
 
   <!-- CATEGORY SETTINGS -->
@@ -2161,7 +2183,7 @@ ul.list>li.rec-day{background:var(--sunk);padding-block:6px;display:flex;align-i
   <section class="panel" id="tab-pengaturan" hidden>
     <div class="setcard" id="menu-card">
       <h3 class="set-h">Menu order</h3>
-      <p class="hint">Pick the row number for each submenu. It applies to the sidebar right away and is saved to your account.</p>
+      <p class="hint">Pick the row number for each menu and submenu. It applies to the sidebar right away and is saved to your account.</p>
       <div id="menu-ord"></div>
       <div class="actions"><button type="button" class="ghost" id="menu-reset">Reset to default order</button></div>
     </div>
@@ -2365,6 +2387,8 @@ window.I18N=(function(){
   Object.keys(NEWD).forEach(function(k){if(!Object.prototype.hasOwnProperty.call(D,k))D[k]=NEWD[k]});
   var OVR={"Liability": "Hutang", "Liabilities": "Hutang", "Liability (debt or installment)": "Hutang (pinjaman atau cicilan)", "Remaining liabilities": "Sisa hutang", "Use a liability": "Ambil dari daftar hutang", "Debt start date": "Tanggal mulai hutang", "Starting debt (Rp)": "Hutang awal (Rp)", "Total debt": "Total hutang", "Total debt (Rp)": "Total hutang (Rp)", "Debt payoff calculator": "Kalkulator pelunasan hutang", "+ Debt payoff calculator": "+ Kalkulator pelunasan hutang", "Enter a debt and the monthly installment to see how long it takes to pay off.": "Isi jumlah hutang dan cicilan per bulan untuk melihat berapa lama sampai lunas.", "Debt (Rp)": "Hutang (Rp)", "Flat (on starting debt)": "Flat (dari hutang awal)", "Effective (on remaining debt)": "Efektif (dari sisa hutang)", "Open the payoff calculator with this debt": "Buka kalkulator pelunasan dengan hutang ini", "Assets & debts": "Aset & hutang", "Assets, debts & cash flow": "Aset, hutang & arus kas", "Category": "Kategori", "Expense types are now managed in Category settings. Spending in a type counts against its budget.": "Tipe pengeluaran dikelola di menu Kategori. Pengeluaran pada satu tipe dihitung terhadap anggarannya.", "No expense types yet. Add one in Category settings.": "Belum ada tipe pengeluaran. Tambahkan di menu Kategori.", "Used when you add an expense record. The same types also set your monthly budget in Budget.": "Dipakai saat menambah record expense. Tipe yang sama dipakai untuk anggaran bulanan di menu Anggaran.", "Accounts": "Jumlah account", "Total balance": "Total saldo", "Group": "Grup", "e.g. Vehicles, Savings, Gold": "mis. Kendaraan, Tabungan, Emas", "To-do": "Tugas biasa", "No open to-dos.": "Tidak ada tugas yang belum selesai.", "Nothing done yet in this period.": "Belum ada yang selesai pada periode ini.", "Full backup (.zip)": "Cadangan penuh (.zip)", "Data only (.xlsx)": "Data saja (.xlsx)", "holds all your notes, numbers and settings plus every photo and file: payment proofs, cost receipts, dream covers, link logos and everything in Files. Restoring it reconnects each photo to its entry.": "berisi semua catatan, angka, dan pengaturan, ditambah setiap foto dan berkas: bukti bayar, nota biaya, sampul impian, logo tautan, dan semua isi Berkas. Saat dipulihkan, setiap foto tersambung lagi ke entrinya.", "is smaller and opens in Excel, but has no photos or files.": "lebih kecil dan bisa dibuka di Excel, tetapi tanpa foto dan berkas.", "What will change in your life when this comes true?": "Apa yang berubah dalam hidup Anda saat ini tercapai?", "Write anything you want to keep…": "Tulis apa saja yang ingin Anda simpan…"};
   Object.keys(OVR).forEach(function(k){D[k]=OVR[k]});
+  var OVR2={"Liabilities": "Liabilities", "New liability": "Liability baru", "Edit liability": "Ubah liability", "Add liability": "Tambah liability", "+ New liability": "+ Liability baru", "Debt (loan or installment with a total)": "Hutang (pinjaman/cicilan yang ada totalnya)", "Recurring obligation (fixed monthly cost)": "Kewajiban rutin (biaya tetap tiap bulan)", "e.g. Motorbike loan, Oil change": "mis. Kredit motor, Ganti oli motor", "Amount per month (Rp)": "Jumlah per bulan (Rp)", "Start date": "Tanggal mulai", "Fill in the amount per month, e.g. 150.000.": "Isi jumlah per bulan, mis. 150.000.", "Remaining debt": "Sisa hutang", "+ Add expense": "+ Tambah expense", "Add expense": "Tambah expense", "New expense type": "Expense baru", "Budget this month (Rp)": "Anggaran bulan ini (Rp)", "Choose emoji": "Pilih emoji", "Menu order": "Urutan menu", "Pick the row number for each menu and submenu. It applies to the sidebar right away and is saved to your account.": "Pilih nomor baris untuk tiap menu dan submenu. Langsung berlaku di sidebar dan tersimpan di akun Anda."};
+  Object.keys(OVR2).forEach(function(k){D[k]=OVR2[k]});
   /* Indonesian text used by the 3D office view, shown in English when English is chosen */
   var E={"Dalam":"Inside","Luar":"Outside","Putar":"Rotate","Menghubungkan":"Connecting","Geser untuk memutar, cubit atau scroll untuk zoom":"Drag to rotate, pinch or scroll to zoom"};
   var MS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],MI=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
@@ -3469,6 +3493,41 @@ window.I18N=(function(){
     const opts=[["","All files (top level)"]].concat(fl.filter(f=>!bad.has(f.id)).map(f=>[f.id,pathLabel(f.id)]).sort((a,b)=>a[1].localeCompare(b[1])));
     return opts.map(o=>'<option value="'+esc(o[0])+'"'+(o[0]===sel?' selected':'')+'>'+esc(o[1])+'</option>').join("");
   }
+  /* seret & lepas: berkas/folder ke folder lain (atau ke jejak folder di atas) */
+  let dragId=null;
+  function isInside(target,folderId){let f=folders().find(x=>x.id===target),g=0;while(f&&g++<40){if(f.id===folderId)return true;f=f.parent?folders().find(x=>x.id===f.parent):null}return false}
+  function dropTarget(el){
+    const li=el.closest&&el.closest('#file-list li[data-row^="folder:"]');if(li)return {el:li,id:li.dataset.row.slice(7)};
+    const cr=el.closest&&el.closest('#crumbs .crumb');if(cr)return {el:cr,id:cr.dataset.folder||""};
+    return null;
+  }
+  function canDrop(id,target){
+    const it=items.find(x=>x.id===id);if(!it)return false;
+    if(it.kind==="folder")return target!==id&&!isInside(target,id)&&(it.parent||"")!==target;
+    return (it.folder||"")!==target;
+  }
+  function clearDrop(){document.querySelectorAll(".drop-on").forEach(x=>x.classList.remove("drop-on"))}
+  $("tab-files").addEventListener("dragstart",e=>{
+    const li=e.target.closest&&e.target.closest("#file-list li[data-drag]");if(!li)return;
+    dragId=li.dataset.drag;li.classList.add("dragging");
+    try{e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",dragId)}catch(_){}
+  });
+  $("tab-files").addEventListener("dragend",()=>{dragId=null;clearDrop();document.querySelectorAll("#file-list .dragging").forEach(x=>x.classList.remove("dragging"))});
+  $("tab-files").addEventListener("dragover",e=>{
+    if(!dragId)return;const t=dropTarget(e.target);
+    clearDrop();if(!t||!canDrop(dragId,t.id))return;
+    e.preventDefault();try{e.dataTransfer.dropEffect="move"}catch(_){}t.el.classList.add("drop-on");
+  });
+  $("tab-files").addEventListener("dragleave",e=>{const t=dropTarget(e.target);if(t&&!t.el.contains(e.relatedTarget))t.el.classList.remove("drop-on")});
+  $("tab-files").addEventListener("drop",async e=>{
+    if(!dragId)return;const t=dropTarget(e.target);clearDrop();
+    const id=dragId;dragId=null;if(!t||!canDrop(id,t.id))return;
+    e.preventDefault();
+    const it=items.find(x=>x.id===id);if(!it)return;
+    const ok=await patch(id,it.kind==="folder"?{parent:t.id}:{folder:t.id});
+    const ID=document.documentElement.lang==="id",dest=t.id?(folders().find(f=>f.id===t.id)||{}).name:(ID?"Semua berkas":"All files");
+    if(ok){$("file-status").textContent=(ID?"“"+it.name+"” dipindah ke ":"Moved “"+it.name+"” to ")+dest+".";setTimeout(()=>{if($("file-status").textContent.indexOf(it.name)>=0)$("file-status").textContent=""},4000)}
+  });
   function editRow(it){
     const isF=it.kind==="folder";
     return '<li><div class="grow fedit"><label>Name<input id="fe-name" value="'+esc(it.name)+'" maxlength="200"></label><label>'+(isF?"Inside folder":"Folder")+'<select id="fe-folder">'+folderOptions(isF?(it.parent||""):(it.folder||""),isF?it.id:null)+'</select></label><div class="actions"><button type="button" class="ghost" data-fcancel>Cancel</button><button type="button" class="primary" data-fsave>Save</button></div></div></li>';
@@ -3477,14 +3536,14 @@ window.I18N=(function(){
     if(fileEdit===f.id)return editRow(f);
     const nF=byKind("file").filter(x=>x.folder===f.id).length,nS=folders().filter(x=>x.parent===f.id).length;
     const ID=document.documentElement.lang==="id",info=(nS?nS+" folder"+(nS>1&&!ID?"s":"")+" · ":"")+nF+(ID?" berkas":" file"+(nF===1?"":"s"));
-    return '<li class="mid rowlink" data-row="folder:'+esc(f.id)+'"><span class="ftile fold" aria-hidden="true">'+FOLDER_SVG+'</span><div class="grow"><button type="button" class="linkbtn" data-folder="'+esc(f.id)+'">'+esc(f.name)+'</button><div class="meta"><span>'+info+'</span>'+(fileQuery?'<span>in '+esc(pathLabel(f.parent))+'</span>':'')+'</div></div><div class="row-actions"><button class="ghost" data-fedit="'+esc(f.id)+'">Edit</button>'+(!nF&&!nS?'<button class="ghost danger" data-del="'+esc(f.id)+'">Delete</button>':'')+'</div></li>';
+    return '<li class="mid rowlink" draggable="true" data-drag="'+esc(f.id)+'" data-row="folder:'+esc(f.id)+'"><span class="ftile fold" aria-hidden="true">'+FOLDER_SVG+'</span><div class="grow"><button type="button" class="linkbtn" data-folder="'+esc(f.id)+'">'+esc(f.name)+'</button><div class="meta"><span>'+info+'</span>'+(fileQuery?'<span>in '+esc(pathLabel(f.parent))+'</span>':'')+'</div></div><div class="row-actions"><button class="ghost" data-fedit="'+esc(f.id)+'">Edit</button>'+(!nF&&!nS?'<button class="ghost danger" data-del="'+esc(f.id)+'">Delete</button>':'')+'</div></li>';
   }
   function fileRow(f){
     if(fileEdit===f.id)return editRow(f);
     const img=String(f.type).startsWith("image/");
     const tile=img?'<button type="button" class="ftile" data-open="'+esc(f.id)+'" aria-label="Open '+esc(f.name)+'"><img src="/_blob/'+esc(f.asset)+'" alt="" loading="lazy"></button>':'<span class="ftile" aria-hidden="true" data-prev="'+esc(f.id)+'">'+esc(TLAB[f.type]||extOf(f.name).toUpperCase().slice(0,4)||"FILE")+'</span>';
     const act='open:'+f.id;
-    return '<li class="mid'+(act?' rowlink':'')+'"'+(act?' data-row="'+esc(act)+'"':'')+'>'+tile+'<div class="grow"><div class="ttl">'+esc(f.name)+'</div><div class="meta"><span class="mono">'+fmtSize(f.size||0)+'</span><span class="mono">'+esc(fmtDate(ymd(new Date(f.created||Date.now()))))+'</span>'+(fileQuery?'<span>in '+esc(pathLabel(f.folder))+'</span>':'')+'</div></div><div class="row-actions"><button class="ghost" data-open="'+esc(f.id)+'">Open</button>'+(downloads?'<button class="ghost" data-dl="'+esc(f.id)+'">Download</button>':'')+'<button class="ghost" data-fedit="'+esc(f.id)+'">Edit</button><button class="ghost danger" data-del="'+esc(f.id)+'">Delete</button></div></li>';
+    return '<li class="mid'+(act?' rowlink':'')+'" draggable="true" data-drag="'+esc(f.id)+'"'+(act?' data-row="'+esc(act)+'"':'')+'>'+tile+'<div class="grow"><div class="ttl">'+esc(f.name)+'</div><div class="meta"><span class="mono">'+fmtSize(f.size||0)+'</span><span class="mono">'+esc(fmtDate(ymd(new Date(f.created||Date.now()))))+'</span>'+(fileQuery?'<span>in '+esc(pathLabel(f.folder))+'</span>':'')+'</div></div><div class="row-actions"><button class="ghost" data-open="'+esc(f.id)+'">Open</button>'+(downloads?'<button class="ghost" data-dl="'+esc(f.id)+'">Download</button>':'')+'<button class="ghost" data-fedit="'+esc(f.id)+'">Edit</button><button class="ghost danger" data-del="'+esc(f.id)+'">Delete</button></div></li>';
   }
   function renderFiles(){
     const fs=byKind("file"),fl=folders();
@@ -3500,7 +3559,7 @@ window.I18N=(function(){
     else{subs=fl.filter(f=>(f.parent||"")===curFolder);files=fs.filter(f=>(f.folder||"")===curFolder)}
     subs.sort((a,b)=>a.name.localeCompare(b.name));files.sort((a,b)=>(b.created||0)-(a.created||0));
     if(!subs.length&&!files.length){el.innerHTML='<div class="empty">'+(fileQuery?"No files or folders match your search.":curFolder?"This folder is empty. Upload files here or create a folder inside it.":"No files yet. Create folders and upload photos, PDFs, videos or text files, up to 20 MB each.")+'</div>';return}
-    el.innerHTML='<ul class="list">'+subs.map(folderRow).join("")+files.map(fileRow).join("")+'</ul>';filePreviews();
+    el.innerHTML='<ul class="list">'+subs.map(folderRow).join("")+files.map(fileRow).join("")+'</ul><p class="hint fdrag-hint">'+(document.documentElement.lang==="id"?"Tips: klik tahan berkas atau folder, lalu seret ke folder tujuan (atau ke nama folder di jejak atas untuk keluar dari folder).":"Tip: press and hold a file or folder, then drag it onto a folder (or onto a folder name in the path above to move it out).")+'</p>';filePreviews();
   }
 
 
@@ -3550,7 +3609,7 @@ window.I18N=(function(){
     add("Links",[["Name","URL","Category","In shortcuts"]].concat(byKind("link").map(l=>[l.title||"",l.url||"",catOf(l),l.pinned?"Yes":"No"])));
     const fs=byKind("fin"),liabs=fs.filter(f=>f.type==="liabilitas");
     add("Assets",[["Group","Name","Date","Amount (Rp)","Notes"]].concat(fs.filter(f=>f.type==="aset").map(f=>[f.group||"",f.name||"",f.date||"",+f.amount||0,f.note||""])));
-    add("Liabilities",[["Name","Start date","Total debt (Rp)","Paid (Rp)","Remaining (Rp)","Monthly (Rp)","Due day","Notes"]].concat(liabs.map(l=>{const st=liabStats(l);return [l.name||"",l.date||"",+l.amount||0,st.paid,st.rest,+l.installment||0,l.dueDay||"",l.note||""]})));
+    add("Liabilities",[["Type","Name","Start date","Total debt (Rp)","Paid (Rp)","Remaining (Rp)","Monthly (Rp)","Due day","Notes"]].concat(liabs.map(l=>{const st=liabStats(l);return [l.ltype==="recurring"?"Recurring":"Debt",l.name||"",l.date||"",+l.amount||0,st.paid,st.rest,+l.installment||0,l.dueDay||"",l.note||""]})));
     const lname=id=>(liabs.find(l=>l.id===id)||{}).name||"";
     add("Installments",[["Liability","Date","Amount (Rp)","Description","Photos"]].concat(byKind("pay").slice().sort(byDateDesc).map(p=>[lname(p.liab),p.date||"",+p.amount||0,p.note||"",(p.evidence||[]).length])));
     add("Accounts",[["Name","Type","Opening balance (Rp)","Balance (Rp)","Notes"]].concat(accts().map(a=>[a.name||"",acctType(a.atype)[1],+a.opening||0,acctBal(a,fs),a.note||""])));
@@ -3803,7 +3862,7 @@ window.I18N=(function(){
     const L=liabs.reduce((s,l)=>s+liabStats(l).rest,0),net=A-L;
     const txM=fs.filter(f=>isTx(f)&&(f.date||"").slice(0,7)===ym);
     const inM=txM.filter(f=>txDir(f)==="in").reduce((s,f)=>s+(+f.amount||0),0),outM=txM.filter(f=>txDir(f)==="out").reduce((s,f)=>s+(+f.amount||0),0);
-    const unpaid=liabs.filter(l=>{const st=liabStats(l);return st.rest>0&&!st.ps.some(p=>(p.date||"").slice(0,7)===ym)});
+    const unpaid=liabs.filter(l=>{const st=liabStats(l);return (st.rest>0||l.ltype==="recurring")&&!st.ps.some(p=>(p.date||"").slice(0,7)===ym)});
     let fb='<div class="kpis">'+kpi("Net worth",'<span class="'+(net<0?'neg':'')+'">'+(net<0?"−":"")+rp(Math.abs(net))+'</span>')+kpi("Remaining liabilities",'<span class="'+(L>0?"neg":"")+'">'+(L>0?"−":"")+rp(L)+'</span>')+kpi("In this month",'<span class="pos">+'+rp(inM)+'</span>')+kpi("Out this month",'<span class="neg">−'+rp(outM)+'</span>')+'</div>';
     if(unpaid.length){
       fb+='<div><p class="ov-sub">Installments not paid this month</p>'+unpaid.map(l=>{
@@ -3916,7 +3975,7 @@ window.I18N=(function(){
     if(!$("bg-month"))return;
     if($("bg-month").value!==bgMonth)$("bg-month").value=bgMonth;
     const types=btList();
-    $("bg-chips").innerHTML=types.length?types.map(t=>'<span class="pill p-mute"><span class="bt-i">'+esc(t.i)+'</span> <span class="catn">'+esc(t.n)+'</span></span>').join(""):'<span class="hint">No expense types yet.</span>';
+    if($("bg-chips"))$("bg-chips").innerHTML=types.length?types.map(t=>'<span class="pill p-mute"><span class="bt-i">'+esc(t.i)+'</span> <span class="catn">'+esc(t.n)+'</span></span>').join(""):'<span class="hint">No expense types yet.</span>';
     if(!ready){$("bg-table").innerHTML='<div class="empty">Loading…</div>';return}
     const doc=bgDoc(bgMonth),lines=(doc&&doc.lines)||{};
     const out=byKind("fin").filter(f=>isTx(f)&&txDir(f)==="out"&&(f.date||"").slice(0,7)===bgMonth);
@@ -3946,7 +4005,22 @@ window.I18N=(function(){
       await save("budget","budget-"+bgMonth,{month:bgMonth,lines})});
     $("bg-table").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("[data-bgin]")){e.preventDefault();e.target.blur()}});
   }
-  if($("bg-go-cat"))$("bg-go-cat").onclick=()=>{location.hash="kategori"};
+  if($("bg-add")){
+    const f=$("f-bgadd");
+    const close=()=>{f.reset();$("ct-ic-bgx").value="📦";$("ct-ib-bgx").textContent="📦";f.hidden=true};
+    $("bg-add").onclick=()=>{if(f.hidden){f.hidden=false;$("bg-add-name").focus()}else close()};
+    $("bg-add-cancel").onclick=close;
+    $("ct-ib-bgx").onclick=()=>btOpenPick("new",$("ct-ib-bgx"),"bgx");
+    $("bg-add-amt").addEventListener("blur",e=>{const v=parseAmt(e.target.value);if(v>0)e.target.value=fmtIn(v)});
+    f.addEventListener("submit",async e=>{
+      e.preventDefault();const n=$("bg-add-name").value.trim();if(!n)return;
+      const id="t"+Date.now().toString(36),list=catList("exp").slice();list.push({id,i:$("ct-ic-bgx").value||"📦",n});
+      if(!await catSave("exp",list))return;
+      const v=parseAmt($("bg-add-amt").value);
+      if(v>0){const doc=bgDoc(bgMonth),lines=Object.assign({},(doc&&doc.lines)||{});lines[id]=v;await save("budget","budget-"+bgMonth,{month:bgMonth,lines})}
+      close();
+    });
+  }
   /* ---------- PENGATURAN KATEGORI (income & expense) ---------- */
   ["exp","inc"].forEach(set=>{
     const f=$("f-cat-"+set),ul=$("ct-list-"+set),ib=$("ct-ib-"+set);
@@ -4489,16 +4563,27 @@ window.I18N=(function(){
   });
 
   /* ----- Hutang ----- */
-  const DEBL=["New debt","Edit debt","Add debt"];
+  const DEBL=["New liability","Edit liability","Add liability"];
+  const isRecur=l=>l.ltype==="recurring";
+  function syncDebtKind(){
+    const r=$("debt-kind").value==="recurring";
+    $("lb-debt-amt").hidden=r;$("debt-amt").required=!r;$("debt-inst").required=r;
+    $("debt-inst-lab").textContent=r?"Amount per month (Rp)":"Monthly installment (Rp)";
+    $("debt-inst").placeholder=r?"150.000":"Optional";
+    $("debt-date-lab").textContent=r?"Start date":"Debt start date";
+  }
+  $("debt-kind").addEventListener("change",syncDebtKind);
   $("f-debt").addEventListener("submit",async e=>{
     e.preventDefault();
-    const name=$("debt-name").value.trim(),amount=parseAmt($("debt-amt").value);
-    if(!name)return;if(isNaN(amount)){notice("Amount must be a number, e.g. 1.500.000.");return}
-    const inst=parseAmt($("debt-inst").value),dd=parseInt($("debt-dueday").value,10);
-    const data={type:"liabilitas",name,amount,date:$("debt-date").value||today(),note:$("debt-note").value.trim(),installment:isNaN(inst)?0:inst,dueDay:dd>=1&&dd<=31?dd:0};
-    if(await save("fin",editing.debt,data)){$("f-debt").reset();setEditing("debt",null,DEBL)}
+    const r=$("debt-kind").value==="recurring",name=$("debt-name").value.trim();if(!name)return;
+    const amount=r?0:parseAmt($("debt-amt").value),inst=parseAmt($("debt-inst").value),dd=parseInt($("debt-dueday").value,10);
+    if(!r&&isNaN(amount)){notice("Amount must be a number, e.g. 1.500.000.");return}
+    if(r&&!(inst>0)){notice("Fill in the amount per month, e.g. 150.000.");return}
+    notice("");
+    const data={type:"liabilitas",ltype:r?"recurring":"debt",name,amount,date:$("debt-date").value||today(),note:$("debt-note").value.trim(),installment:isNaN(inst)?0:inst,dueDay:dd>=1&&dd<=31?dd:0};
+    if(await save("fin",editing.debt,data)){$("f-debt").reset();syncDebtKind();setEditing("debt",null,DEBL)}
   });
-  $("debt-cancel").onclick=()=>{$("f-debt").reset();setEditing("debt",null,DEBL)};
+  $("debt-cancel").onclick=()=>{$("f-debt").reset();syncDebtKind();setEditing("debt",null,DEBL)};
   $("debt-list").addEventListener("click",e=>{
     const sb=e.target.closest("button[data-sim]");
     if(sb){calcFromLiab(sb.dataset.sim,true);return}
@@ -4508,15 +4593,35 @@ window.I18N=(function(){
     const f=items.find(i=>i.id===b.dataset.edit);if(!f)return;
     if(f.kind==="pay"){openEnt("pay",f.liab,f);return}
     $("debt-name").value=f.name||"";$("debt-amt").value=fmtIn(f.amount)||"0";$("debt-date").value=f.date||"";$("debt-note").value=f.note||"";
+    $("debt-kind").value=isRecur(f)?"recurring":"debt";syncDebtKind();
     $("debt-inst").value=fmtIn(f.installment);$("debt-dueday").value=f.dueDay||"";
     setEditing("debt",f.id,DEBL);$("debt-name").focus();
   });
   function liabStats(l){
     const ps=items.filter(x=>x.kind==="pay"&&x.liab===l.id).sort(byDateDesc);
     const paid=ps.reduce((s,p)=>s+(+p.amount||0),0);
-    return {ps,paid,rest:Math.max(0,(+l.amount||0)-paid)};
+    return {ps,paid,rest:l.ltype==="recurring"?0:Math.max(0,(+l.amount||0)-paid)};
+  }
+  function renderRecur(l){
+    const {ps,paid}=liabStats(l),t0=today(),ym=t0.slice(0,7),day=+t0.slice(8,10);
+    const psM=ps.filter(p=>(p.date||"").slice(0,7)===ym),paidM=psM.reduce((s,p)=>s+(+p.amount||0),0),m=+l.installment||0;
+    let pill;
+    if(psM.length&&paidM>=m)pill='<span class="pill p-ok">Paid this month</span>';
+    else if(psM.length)pill='<span class="pill p-warn">'+TT("Partly paid","Dibayar sebagian")+'</span>';
+    else if(l.dueDay&&day>l.dueDay)pill='<span class="pill p-crit">Unpaid this month</span>';
+    else if(l.dueDay)pill='<span class="pill p-warn">Due on day '+l.dueDay+'</span>';
+    else pill='<span class="pill p-mute">'+TT("Not paid yet this month","Belum dibayar bulan ini")+'</span>';
+    const meta=['<span class="pill p-acc">'+TT("Recurring","Rutin")+'</span>'];
+    if(l.date)meta.push('<span class="mono">Started '+esc(fmtDate(l.date))+'</span>');
+    if(l.note)meta.push('<span>'+esc(l.note)+'</span>');
+    return '<article class="liab recur"><div class="card-head"><div class="grow"><div class="ttl">'+esc(l.name)+'</div><div class="meta">'+meta.join("")+'</div></div>'+pill+'</div>'
+      +'<div class="nums"><div><span class="k">'+TT("Per month","Per bulan")+'</span><span class="amt">'+rp(m)+'</span></div><div><span class="k">'+TT("Paid this month","Dibayar bulan ini")+'</span><span class="amt">'+rp(paidM)+'</span></div><div><span class="k">'+TT("Paid in total","Total dibayar")+'</span><span class="amt">'+rp(paid)+'</span></div></div>'
+      +(ps.length?hist("pl-"+l.id,"Payment history · "+ps.length+" "+(ps.length===1?"payment":"payments"),entryList(l.id,ps,6,"payments")):'')
+      +'<div id="slot-'+esc(l.id)+'"></div>'
+      +'<div class="card-foot">'+(ent&&ent.mode==="pay"&&ent.parent===l.id?'<span></span>':'<span class="preview"><button class="soft" data-pay="'+esc(l.id)+'">+ Log payment</button></span>')+rowActs(l.id)+'</div></article>';
   }
   function renderLiab(l){
+    if(isRecur(l))return renderRecur(l);
     const {ps,paid,rest}=liabStats(l);
     const total=+l.amount||0, pct=total>0?Math.min(100,Math.round(paid/total*100)):0;
     const t0=today(),ym=t0.slice(0,7),day=+t0.slice(8,10);
@@ -4581,14 +4686,18 @@ window.I18N=(function(){
     parkEnt("pay");
     const el=$("debt-list");if(!el)return;
     const fs=byKind("fin"),liabs=fs.filter(f=>f.type==="liabilitas"),ym=today().slice(0,7);
-    const L=liabs.reduce((s,l)=>s+liabStats(l).rest,0);
-    const monthly=liabs.filter(l=>liabStats(l).rest>0).reduce((s,l)=>s+(+l.installment||0),0);
+    const debts=liabs.filter(l=>!isRecur(l)),recs=liabs.filter(isRecur);
+    const L=debts.reduce((s,l)=>s+liabStats(l).rest,0);
+    const monthly=debts.filter(l=>liabStats(l).rest>0).reduce((s,l)=>s+(+l.installment||0),0)+recs.reduce((s,l)=>s+(+l.installment||0),0);
     const paidM=items.filter(x=>x.kind==="pay"&&(x.date||"").slice(0,7)===ym).reduce((s,p)=>s+(+p.amount||0),0);
-    $("debt-sum").innerHTML='<div class="stat net"><div class="k">Remaining debt</div><div class="v'+(L>0?' neg':'')+'">'+(L>0?"−":"")+rp(L)+'</div></div><div class="stat"><div class="k">Monthly installments</div><div class="v">'+rp(monthly)+'</div></div><div class="stat"><div class="k">Installments paid this month</div><div class="v">'+rp(paidM)+'</div></div>';
+    $("debt-sum").innerHTML='<div class="stat net"><div class="k">Remaining debt</div><div class="v'+(L>0?' neg':'')+'">'+(L>0?"−":"")+rp(L)+'</div></div><div class="stat"><div class="k">'+TT("To pay per month","Wajib dibayar per bulan")+'</div><div class="v">'+rp(monthly)+'</div><div class="s">'+TT("Installments + recurring","Cicilan + kewajiban rutin")+'</div></div><div class="stat"><div class="k">'+TT("Paid this month","Dibayar bulan ini")+'</div><div class="v">'+rp(paidM)+'</div></div>';
     fillCalcLiabs(liabs);
     if(!ready){el.innerHTML='<div class="empty">Loading finance…</div>';return}
-    if(!liabs.length){el.innerHTML='<div class="empty">No debts yet. Add a loan or installment to track what is left to pay.</div>';return}
-    el.innerHTML='<div class="group"><h4>'+TT("Debts · remaining","Daftar hutang · sisa")+' <span class="mono neg">−'+rp(L)+'</span></h4><div class="liabs">'+liabs.sort((a,b)=>liabStats(b).rest-liabStats(a).rest).map(renderLiab).join("")+'</div></div>';
+    if(!liabs.length){el.innerHTML='<div class="empty">'+TT("No liabilities yet. Add a debt (loan or installment) or a recurring obligation such as a monthly oil change.","Belum ada liabilities. Tambahkan hutang (pinjaman atau cicilan) atau kewajiban rutin seperti ganti oli tiap bulan.")+'</div>';return}
+    let h="";
+    if(debts.length)h+='<div class="group"><h4>'+TT("Debts · remaining","Hutang · sisa")+' <span class="mono neg">−'+rp(L)+'</span></h4><div class="liabs">'+debts.sort((a,b)=>liabStats(b).rest-liabStats(a).rest).map(renderLiab).join("")+'</div></div>';
+    if(recs.length)h+='<div class="group"><h4>'+TT("Recurring obligations · per month","Kewajiban rutin · per bulan")+' <span class="mono">'+rp(recs.reduce((s,l)=>s+(+l.installment||0),0))+'</span></h4><div class="liabs">'+recs.sort((a,b)=>(+b.installment||0)-(+a.installment||0)).map(renderLiab).join("")+'</div></div>';
+    el.innerHTML=h;
     placeEnt("pay");
     fillCalcLiabs(liabs);
   }
@@ -4691,7 +4800,19 @@ window.I18N=(function(){
   const nsubOf=g=>document.querySelector('.nsub[data-sg="'+g+'"]');
   const curOrder=g=>{const ns=nsubOf(g);return ns?Array.prototype.map.call(ns.querySelectorAll(":scope>a[data-tab]"),a=>a.dataset.tab):[]};
   const DEF_ORDER={};Object.keys(GROUPS).forEach(g=>{DEF_ORDER[g]=curOrder(g)});
-  function cleanMenu(m){const o={};Object.keys(GROUPS).forEach(g=>{if(m&&Array.isArray(m[g]))o[g]=m[g].filter(t=>typeof t==="string")});return o}
+  function cleanMenu(m){const o={};Object.keys(GROUPS).concat(["__top"]).forEach(g=>{if(m&&Array.isArray(m[g]))o[g]=m[g].filter(t=>typeof t==="string")});return o}
+  const NAV=document.querySelector(".nav"),NAVSEP=NAV.querySelector(".sep");
+  const topEls=()=>Array.prototype.filter.call(NAV.children,c=>c!==NAVSEP&&(c.matches("a[data-tab]")||c.matches(".ngrp"))&&!(c.matches('a[data-tab="pengaturan"]')));
+  const topKey=c=>c.matches(".ngrp")?"g:"+c.dataset.ng:"t:"+c.dataset.tab;
+  const topName=c=>(c.querySelector(".ng-btn .ni")||c.querySelector(".ni")).textContent;
+  const DEF_TOP=topEls().map(topKey);
+  function effTop(){const sv=(menuOrder.__top||[]).filter(k=>DEF_TOP.includes(k));DEF_TOP.forEach(k=>{if(!sv.includes(k))sv.push(k)});return Array.from(new Set(sv))}
+  function applyTop(){
+    const want=effTop(),els={};topEls().forEach(c=>{els[topKey(c)]=c});
+    if(topEls().map(topKey).join()===want.join())return;
+    want.forEach(k=>{if(els[k])NAV.insertBefore(els[k],NAVSEP)});
+  }
+  function moveTop(k,pos){const arr=effTop().filter(x=>x!==k);arr.splice(Math.max(0,Math.min(arr.length,pos-1)),0,k);menuOrder.__top=arr;applyMenu();renderMenuCard();saveMenu()}
   let menuOrder={};
   try{menuOrder=cleanMenu(JSON.parse(localStorage.getItem(MENU_LS)||"null"))}catch(_){menuOrder={}}
   function effOrder(g){
@@ -4700,6 +4821,7 @@ window.I18N=(function(){
     return Array.from(new Set(sv));
   }
   function applyMenu(){
+    applyTop();
     Object.keys(GROUPS).forEach(g=>{
       const ns=nsubOf(g);if(!ns)return;
       const want=effOrder(g);
@@ -4734,7 +4856,14 @@ window.I18N=(function(){
   }
   function renderMenuCard(){
     const host=$("menu-ord");if(!host)return;
-    host.innerHTML=Array.prototype.map.call(document.querySelectorAll(".ngrp"),ng=>{
+    const tops=topEls();
+    const rowsTop='<div class="mo-grp mo-top"><h4>'+TT("Main menu","Menu utama")+'</h4>'+tops.map((c,i)=>{const k=topKey(c);
+        return '<div class="mo-row"><select class="mo-n" data-mo-top="'+k+'" aria-label="Row number">'+tops.map((_,j)=>'<option value="'+(j+1)+'"'+(j===i?' selected':'')+'>'+(j+1)+'</option>').join("")+'</select>'
+          +'<span class="mo-name">'+esc(topName(c))+(c.matches(".ngrp")?' <small class="hint">· '+TT("group","grup")+'</small>':'')+'</span>'
+          +'<button type="button" class="ghost" data-mo-tup="'+k+'" aria-label="Move up"'+(i===0?' disabled':'')+'>↑</button>'
+          +'<button type="button" class="ghost" data-mo-tdn="'+k+'" aria-label="Move down"'+(i===tops.length-1?' disabled':'')+'>↓</button></div>'}).join("")
+      +'<p class="hint">'+TT("Settings always stays at the bottom.","Pengaturan selalu di paling bawah.")+'</p></div><h3 class="set-h mo-subh">'+TT("Submenus","Submenu")+'</h3>';
+    host.innerHTML=rowsTop+Array.prototype.map.call(document.querySelectorAll(".ngrp"),ng=>{
       const g=ng.dataset.ng,tabs=curOrder(g);
       return '<div class="mo-grp"><h4>'+esc(ng.querySelector(".ng-btn .ni").textContent)+'</h4>'+tabs.map((t,i)=>{
         const nm=nsubOf(g).querySelector('a[data-tab="'+t+'"] .ni').textContent;
@@ -4745,8 +4874,10 @@ window.I18N=(function(){
       }).join("")+'</div>';
     }).join("");
   }
-  $("menu-card").addEventListener("change",e=>{const s=e.target.closest("select[data-mo-t]");if(s)moveTab(s.dataset.moG,s.dataset.moT,+s.value)});
+  $("menu-card").addEventListener("change",e=>{const t=e.target.closest("select[data-mo-top]");if(t){moveTop(t.dataset.moTop,+t.value);return}const s=e.target.closest("select[data-mo-t]");if(s)moveTab(s.dataset.moG,s.dataset.moT,+s.value)});
   $("menu-card").addEventListener("click",e=>{
+    const tu=e.target.closest("[data-mo-tup]");if(tu){const i=effTop().indexOf(tu.dataset.moTup);if(i>0)moveTop(tu.dataset.moTup,i);return}
+    const td=e.target.closest("[data-mo-tdn]");if(td){const o=effTop(),i=o.indexOf(td.dataset.moTdn);if(i>=0&&i<o.length-1)moveTop(td.dataset.moTdn,i+2);return}
     const up=e.target.closest("[data-mo-up]");if(up){const g=up.dataset.moG,i=curOrder(g).indexOf(up.dataset.moUp);if(i>0)moveTab(g,up.dataset.moUp,i);return}
     const dn=e.target.closest("[data-mo-dn]");if(dn){const g=dn.dataset.moG,o=curOrder(g),i=o.indexOf(dn.dataset.moDn);if(i>=0&&i<o.length-1)moveTab(g,dn.dataset.moDn,i+2);return}
     if(e.target.closest("#menu-reset")){menuOrder={};applyMenu();renderMenuCard();saveMenu()}
