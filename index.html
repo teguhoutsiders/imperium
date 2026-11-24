@@ -1580,6 +1580,14 @@ ul.list>li.rec-day{background:var(--sunk);padding-block:6px;display:flex;align-i
   .rec-top .bg-acts::-webkit-scrollbar{display:none}
   .ag-h{flex-wrap:wrap}
 }
+
+/* Ringkasan: tugas biasa pakai kotak, bukan centang */
+.ov-td .ov-rc-top{align-items:center}
+.ov-td .ttl{white-space:normal!important;overflow-wrap:anywhere}
+.ov-td i[data-tdone]{display:block;flex:none;width:18px;height:18px;border-radius:4px;border:1px solid var(--line);background:transparent;cursor:pointer;outline:2px solid var(--accent);outline-offset:1px;transition:transform .12s,background-color .15s}
+.ov-td i[data-tdone]:hover{transform:scale(1.2)}
+.ov-td i[data-tdone].on{background:var(--ok);border-color:var(--ok)}
+.ov-td .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px}
 </style>
 
 <div class="shell">
@@ -3740,7 +3748,7 @@ window.I18N=(function(){
           return '<i role="button" tabindex="0" data-rc="'+esc(t.id)+'|'+k+'" class="'+c+(isCur?" cur":"")+'" title="'+esc(keyLabel(rep,k))+(document.documentElement.lang==="id"?(d?" · selesai":" · belum"):(d?" · done":" · not done"))+'"></i>';
         }).join("");
         const rate=tot?Math.round(on/tot*100):0,st=streakOf(t);
-        h+='<div class="ov-rc-row"><div class="ov-rc-top"><span class="ttl">'+esc(t.title)+'</span><span class="mono rc-rate '+(rate>=80?"t-ok":rate>=50?"t-warn":"t-crit")+'">'+(tot?rate+'%':'–')+'</span></div><div class="rc-cells">'+cells+'</div>'+(st?'<span class="mono ov-rc-st">'+st+'-'+UNIT[rep]+' streak</span>':'')+'</div>';
+        h+='<div class="ov-rc-row"><div class="ov-rc-top"><span class="ttl">'+esc(t.title)+'</span><span class="mono rc-rate '+(rate>=80?"t-ok":rate>=50?"t-warn":"t-crit")+'">'+(tot?rate+'%':'–')+'</span></div><div class="rc-cells">'+cells+'</div>'+(st?'<span class="mono ov-rc-st">'+TKT(st+'-'+UNIT[rep]+' streak','beruntun '+st+' '+{day:"hari",week:"minggu",month:"bulan"}[UNIT[rep]])+'</span>':'')+'</div>';
       });
     });
     return h+'</div>';
@@ -3763,10 +3771,15 @@ window.I18N=(function(){
     k1.push(kpi("Due today or late",'<span class="'+(due.length?'neg':'')+'">'+due.length+'</span>'));
     const pend=rs.filter(t=>!doneNow(t)).sort((a,b)=>(REPORD[a.rep]-REPORD[b.rep])||((a.prio||2)-(b.prio||2)));
     let todayList="";
-    if(pend.length)todayList+='<div><p class="ov-sub">Routines still to do</p><ul class="list">'+pend.slice(0,12).map(t=>taskItem(t,projs,"ovr",false)).join("")+'</ul></div>';
-    if(due.length)todayList+='<div><p class="ov-sub">Due today or overdue</p><ul class="list">'+due.slice(0,12).map(t=>taskItem(t,projs,"ovd",false)).join("")+'</ul></div>';
+    const ovTodo=t=>{
+      const p=projs.find(x=>x.id===t.project),late=t.due&&t.due<t0,isT=t.due===t0;
+      const tip=TKT("Not done · tap to mark done","Belum · ketuk untuk menandai selesai");
+      return '<div class="ov-rc-row ov-td"><div class="ov-rc-top"><span class="ttl">'+esc(t.title)+'</span><i role="button" tabindex="0" data-tdone="'+esc(t.id)+'" class="off cur" title="'+esc(tip)+'" aria-label="'+esc(tip)+'"></i></div>'
+        +'<div class="meta">'+PRIO_PILL[t.prio||2]+(t.due?'<span class="mono'+(late?' neg':'')+'">'+(late?TKT("Overdue · ","Terlambat · "):isT?TKT("Today · ","Hari ini · "):"")+esc(fmtDate(t.due))+'</span>':'')+(p?'<span class="acn">'+esc(p.name)+'</span>':'')+'</div></div>';
+    };
+    if(due.length)todayList+='<div class="ov-rc"><p class="ov-sub">Due today or overdue</p>'+due.slice(0,12).map(ovTodo).join("")+'</div>';
     const upc=open.filter(t=>t.due&&t.due>t0).sort((a,b)=>a.due.localeCompare(b.due));
-    if(upc.length)todayList+='<div><p class="ov-sub">Coming up</p><ul class="list">'+upc.slice(0,6).map(t=>taskItem(t,projs,"ovu",false)).join("")+'</ul></div>';
+    if(upc.length)todayList+='<div class="ov-rc"><p class="ov-sub">Coming up</p>'+upc.slice(0,6).map(ovTodo).join("")+'</div>';
     if(!todayList)todayList=tasks.length?'<p class="hint">All caught up for now.</p>':'<p class="hint">No tasks yet. Add tasks or daily routines in Tasks.</p>';
     let html=card("today","Today","tugas",ovRecap(rs)+todayList);
 
@@ -3851,8 +3864,8 @@ window.I18N=(function(){
     if(e.target.id!=="ovl-url")return;
     setTimeout(()=>{const n=$("ovl-name"),u=$("ovl-url").value.trim();if(n&&u&&!n.value.trim()){n.value=host(normUrl(u));n.focus();n.select()}},0);
   });
-  $("ov").addEventListener("click",e=>{const c=e.target.closest("[data-rc]");if(c&&window.IMP_RC)IMP_RC(c)});
-  $("ov").addEventListener("keydown",e=>{const c=e.target.closest&&e.target.closest("[data-rc]");if(c&&(e.key==="Enter"||e.key===" ")&&window.IMP_RC){e.preventDefault();IMP_RC(c)}});
+  $("ov").addEventListener("click",e=>{const c=e.target.closest("[data-rc]");if(c&&window.IMP_RC){IMP_RC(c);return}const d=e.target.closest("[data-tdone]");if(d)tkTodo(d)});
+  $("ov").addEventListener("keydown",e=>{const c=e.target.closest&&e.target.closest("[data-rc],[data-tdone]");if(c&&(e.key==="Enter"||e.key===" ")){e.preventDefault();if(c.dataset.rc){if(window.IMP_RC)IMP_RC(c)}else tkTodo(c)}});
   $("ov").addEventListener("click",e=>{
     const b=e.target.closest("[data-ovl-del]");if(!b)return;
     e.preventDefault();
