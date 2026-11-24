@@ -1,5 +1,5 @@
 /* Imperium service worker: jaringan dulu, salinan terakhir saat offline. Data tidak disimpan di sini. */
-const C="imperium-shell-v25";
+const C="imperium-shell-v26";
 const SHELL=["./","index.html","imp-shim.js","manifest.webmanifest","icon-192-v2.png","icon-512-v2.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith("imperium-shell-")&&k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});

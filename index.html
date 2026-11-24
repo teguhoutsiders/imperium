@@ -1523,6 +1523,63 @@ ul.list>li.rec-day{background:var(--sunk);padding-block:6px;display:flex;align-i
 .mo-row button{padding:4px 10px;line-height:1.1}
 @media (max-width:900px){.cat-grid{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:760px){.rec-ledger{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rec-ledger .stat.net{grid-column:1/-1}}
+
+/* ===== v-Nov24b: tabel tugas, grup aset, rapikan tampilan ===== */
+#recap[hidden]{display:none!important}
+.tk-tbl{display:flex;flex-direction:column;overflow:hidden}
+.tk-head,.tk-row{display:grid;grid-template-columns:minmax(0,1fr) 300px 52px auto;align-items:center;column-gap:14px}
+.tk-head{padding:9px 14px;font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--sunk);border-bottom:1px solid var(--line)}
+.tk-head .r,.tk-rate{text-align:right}
+.tk-sec{display:flex;justify-content:space-between;gap:10px;padding:8px 14px;font-size:12px;letter-spacing:.07em;text-transform:uppercase;font-weight:600;color:var(--muted);background:color-mix(in srgb,var(--sunk) 55%,transparent);border-top:1px solid var(--line)}
+.tk-row{padding:10px 14px;border-top:1px solid var(--line);min-width:0}
+.tk-name{min-width:0}
+.tk-name .ttl{font-weight:500;overflow-wrap:anywhere}
+.tk-name .meta{margin-top:3px}
+.tk-row.done .tk-name .ttl{text-decoration:line-through;color:var(--muted)}
+.tk-cells{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.tk-cells i[data-tdone]{cursor:pointer;width:16px;height:16px;transition:transform .12s,background-color .15s}
+.tk-cells i[data-tdone]:hover{transform:scale(1.25);border-color:var(--accent)}
+.tk-due{font-size:12px;margin-right:8px;white-space:nowrap}
+.tk-rate{font-size:13px}
+.tk-row>.row-actions{flex-wrap:nowrap}
+.tk-empty{padding:12px 14px;border-top:1px solid var(--line)}
+.tk-hint{margin-top:8px}
+.aset-grp{margin-bottom:14px}
+.ag-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 6px}
+.ag-h h4{margin:0;min-width:0;display:flex;align-items:center;gap:8px}
+.ag-h h4 .ct-in{text-transform:none;letter-spacing:0;font-weight:500;max-width:260px}
+.ag-tot{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.ag-bar{height:4px;margin-bottom:8px}
+.ag-foot{display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px}
+.ag-btn{font-size:13px;padding:4px 10px}
+#aset-sum,#debt-sum{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+@media (max-width:1100px) and (min-width:761px){.tk-head,.tk-row{grid-template-columns:minmax(0,1fr) 250px 46px auto}.tk-cells i[data-rc]{width:14px;height:14px}}
+@media (max-width:760px){
+  .tk-head{display:none}
+  .tk-row{grid-template-columns:minmax(0,1fr) auto;row-gap:8px;padding:12px}
+  .tk-name{grid-column:1/-1}
+  .tk-cells{grid-column:1/-1;justify-content:flex-start;order:0!important;width:auto!important}
+  .tk-cells i{flex:none!important}
+  .tk-cells i[data-rc],.tk-cells i[data-tdone]{width:19px;height:19px}
+  .tk-rate{text-align:left}
+  .tk-row>.row-actions{justify-self:end}
+  .tk-sec{padding:8px 12px}
+  /* baris keuangan: nama penuh, jumlah + tombol di bawah */
+  :is(#acct-list,#rec-list,#aset-list) ul.list>li:not(.rec-day){display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:10px;row-gap:6px;align-items:center}
+  :is(#rec-list,#aset-list) ul.list>li:not(.rec-day){grid-template-columns:minmax(0,1fr) auto}
+  :is(#acct-list,#rec-list,#aset-list) ul.list>li>.grow{grid-column:1/-1;min-width:0}
+  #acct-list ul.list>li>.acct-ic{grid-row:1;grid-column:1}
+  #acct-list ul.list>li>.grow{grid-row:1;grid-column:2/-1}
+  :is(#acct-list,#rec-list,#aset-list) ul.list>li>.amt{grid-column:1;justify-self:start}
+  #acct-list ul.list>li>.amt{grid-column:1/3}
+  :is(#acct-list,#rec-list,#aset-list) ul.list>li>.row-actions{justify-self:end;flex-wrap:nowrap}
+  #aset-sum,#debt-sum{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #aset-sum .stat.net,#debt-sum .stat.net{grid-column:1/-1}
+  #debt-sum .stat.net{order:-1}
+  .rec-top .bg-acts{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;max-width:100%}
+  .rec-top .bg-acts::-webkit-scrollbar{display:none}
+  .ag-h{flex-wrap:wrap}
+}
 </style>
 
 <div class="shell">
@@ -1974,6 +2031,10 @@ ul.list>li.rec-day{background:var(--sunk);padding-block:6px;display:flex;align-i
       <label>Name
         <input id="aset-name" required maxlength="150" placeholder="e.g. Savings, Motorbike, Gold">
       </label>
+      <label>Group
+        <input id="aset-group" maxlength="60" list="aset-groups" placeholder="e.g. Vehicles, Savings, Gold">
+        <datalist id="aset-groups"></datalist>
+      </label>
       <label>Value (Rp)
         <input id="aset-amt" required inputmode="numeric" placeholder="1.500.000">
       </label>
@@ -2294,6 +2355,8 @@ window.I18N=(function(){
   };
   var NEWD={"New account": "Account baru", "Edit account": "Ubah account", "Add account": "Tambah account", "Account name": "Nama account", "Account type": "Tipe account", "e.g. BCA, Cash wallet, DANA": "mis. BCA, Dompet tunai, DANA", "Opening balance (Rp)": "Saldo awal (Rp)", "Total balance": "Total saldo", "Balance": "Saldo", "Deleting an account keeps its records, but they become “No account”.": "Menghapus account tidak menghapus record-nya, tetapi record itu jadi “Tanpa account”.", "No accounts yet. Add your cash, bank accounts and e-wallets so each record can say where the money moved.": "Belum ada account. Tambahkan dompet tunai, rekening bank, dan e-wallet supaya tiap record tahu uangnya lewat mana.", "View records": "Lihat record", "Cash": "Tunai", "Savings": "Tabungan", "Credit card": "Kartu kredit", "Other": "Lainnya", "New record": "Record baru", "Edit record": "Ubah record", "Add record": "Tambah record", "Month": "Bulan", "Previous": "Sebelumnya", "Next": "Berikutnya", "This month": "Bulan ini", "All time": "Semua waktu", "From account": "Dari account", "To account": "Ke account", "No account": "Tanpa account", "Select account": "Pilih account", "No category": "Tanpa kategori", "All accounts": "Semua account", "Filter records": "Saring record", "Filter by account": "Saring menurut account", "Optional, e.g. Lunch, Salary November": "Opsional, mis. Makan siang, Gaji November", "A transfer moves money between your accounts. It does not count as income or expense.": "Transfer memindahkan uang antar account. Tidak dihitung sebagai income atau expense.", "No records yet. Add your first income, expense or transfer.": "Belum ada record. Tambahkan income, expense, atau transfer pertama Anda.", "No records match these filters.": "Tidak ada record yang cocok dengan saringan ini.", "Amount must be a number greater than 0, e.g. 50.000.": "Jumlah harus angka lebih dari 0, mis. 50.000.", "Choose both accounts for a transfer.": "Pilih kedua account untuk transfer.", "Choose two different accounts.": "Pilih dua account yang berbeda.", "New asset": "Aset baru", "Edit asset": "Ubah aset", "Add asset": "Tambah aset", "Value (Rp)": "Nilai (Rp)", "e.g. Savings, Motorbike, Gold": "mis. Tabungan, Motor, Emas", "No assets yet. Add savings, vehicles, gold or anything you own.": "Belum ada aset. Tambahkan tabungan, kendaraan, emas, atau apa pun yang Anda miliki.", "New debt": "Hutang baru", "Edit debt": "Ubah hutang", "Add debt": "Tambah hutang", "e.g. Motorbike loan, Credit card": "mis. Kredit motor, Kartu kredit", "Debts": "Hutang", "Remaining debt": "Sisa hutang", "Monthly installments": "Cicilan per bulan", "No debts yet. Add a loan or installment to track what is left to pay.": "Belum ada hutang. Tambahkan pinjaman atau cicilan untuk memantau sisa yang harus dibayar.", "Expense types are now managed in Category settings. Spending in a type counts against its budget.": "Tipe pengeluaran sekarang dikelola di pengaturan Category. Pengeluaran pada satu tipe dihitung terhadap anggarannya.", "Manage categories": "Kelola kategori", "No expense types yet. Add one in Category settings.": "Belum ada tipe pengeluaran. Tambahkan di pengaturan Category.", "No expense types yet.": "Belum ada tipe pengeluaran.", "Spending is taken from expense records in Record for this month.": "Pengeluaran diambil dari record expense bulan ini di menu Record.", "Income category": "Kategori income", "Expense category": "Kategori expense", "Add category": "Tambah kategori", "e.g. Salary, Bonus": "mis. Gaji, Bonus", "Used when you add an income record.": "Dipakai saat menambah record income.", "Used when you add an expense record. The same types also set your monthly budget in Budget.": "Dipakai saat menambah record expense. Tipe yang sama juga dipakai untuk anggaran bulanan di menu Anggaran.", "Choose emoji": "Pilih emoji", "Change emoji": "Ganti emoji", "Rename": "Ganti nama", "Remove category": "Hapus kategori", "No categories yet.": "Belum ada kategori.", "Menu order": "Urutan menu", "Pick the row number for each submenu. It applies to the sidebar right away and is saved to your account.": "Pilih nomor baris untuk tiap submenu. Langsung berlaku di sidebar dan tersimpan di akun Anda.", "Reset to default order": "Kembalikan urutan awal", "Row number": "Nomor baris", "Move up": "Naik", "Move down": "Turun", "Net worth": "Kekayaan bersih", "this month": "bulan ini", "+ New record": "+ Record baru", "+ New account": "+ Account baru", "+ New asset": "+ Aset baru", "+ New debt": "+ Hutang baru"};
   Object.keys(NEWD).forEach(function(k){if(!Object.prototype.hasOwnProperty.call(D,k))D[k]=NEWD[k]});
+  var OVR={"Liability": "Hutang", "Liabilities": "Hutang", "Liability (debt or installment)": "Hutang (pinjaman atau cicilan)", "Remaining liabilities": "Sisa hutang", "Use a liability": "Ambil dari daftar hutang", "Debt start date": "Tanggal mulai hutang", "Starting debt (Rp)": "Hutang awal (Rp)", "Total debt": "Total hutang", "Total debt (Rp)": "Total hutang (Rp)", "Debt payoff calculator": "Kalkulator pelunasan hutang", "+ Debt payoff calculator": "+ Kalkulator pelunasan hutang", "Enter a debt and the monthly installment to see how long it takes to pay off.": "Isi jumlah hutang dan cicilan per bulan untuk melihat berapa lama sampai lunas.", "Debt (Rp)": "Hutang (Rp)", "Flat (on starting debt)": "Flat (dari hutang awal)", "Effective (on remaining debt)": "Efektif (dari sisa hutang)", "Open the payoff calculator with this debt": "Buka kalkulator pelunasan dengan hutang ini", "Assets & debts": "Aset & hutang", "Assets, debts & cash flow": "Aset, hutang & arus kas", "Category": "Kategori", "Expense types are now managed in Category settings. Spending in a type counts against its budget.": "Tipe pengeluaran dikelola di menu Kategori. Pengeluaran pada satu tipe dihitung terhadap anggarannya.", "No expense types yet. Add one in Category settings.": "Belum ada tipe pengeluaran. Tambahkan di menu Kategori.", "Used when you add an expense record. The same types also set your monthly budget in Budget.": "Dipakai saat menambah record expense. Tipe yang sama dipakai untuk anggaran bulanan di menu Anggaran.", "Accounts": "Jumlah account", "Total balance": "Total saldo", "Group": "Grup", "e.g. Vehicles, Savings, Gold": "mis. Kendaraan, Tabungan, Emas", "To-do": "Tugas biasa", "No open to-dos.": "Tidak ada tugas yang belum selesai.", "Nothing done yet in this period.": "Belum ada yang selesai pada periode ini.", "Full backup (.zip)": "Cadangan penuh (.zip)", "Data only (.xlsx)": "Data saja (.xlsx)", "holds all your notes, numbers and settings plus every photo and file: payment proofs, cost receipts, dream covers, link logos and everything in Files. Restoring it reconnects each photo to its entry.": "berisi semua catatan, angka, dan pengaturan, ditambah setiap foto dan berkas: bukti bayar, nota biaya, sampul impian, logo tautan, dan semua isi Berkas. Saat dipulihkan, setiap foto tersambung lagi ke entrinya.", "is smaller and opens in Excel, but has no photos or files.": "lebih kecil dan bisa dibuka di Excel, tetapi tanpa foto dan berkas.", "What will change in your life when this comes true?": "Apa yang berubah dalam hidup Anda saat ini tercapai?", "Write anything you want to keep…": "Tulis apa saja yang ingin Anda simpan…"};
+  Object.keys(OVR).forEach(function(k){D[k]=OVR[k]});
   /* Indonesian text used by the 3D office view, shown in English when English is chosen */
   var E={"Dalam":"Inside","Luar":"Outside","Putar":"Rotate","Menghubungkan":"Connecting","Geser untuk memutar, cubit atau scroll untuk zoom":"Drag to rotate, pinch or scroll to zoom"};
   var MS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],MI=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
@@ -2301,7 +2364,8 @@ window.I18N=(function(){
   var SK='\\b('+MS.join('|')+')\\b';
   function mon(m){return MI[MS.indexOf(m)]}
   var PRE=[["Updated ","Diperbarui "],["Saved ","Disimpan "],["Ends ","Berakhir "],["Started ","Dimulai "],["Target ","Target "],["Achieved ","Tercapai "],["Overdue · ","Terlambat · "],["Today · ","Hari ini · "],["Week of ","Minggu "],["Last export: ","Ekspor terakhir: "],["Storage used: ","Penyimpanan terpakai: "],["Uploading photo ","Mengunggah foto "],["Uploading ","Mengunggah "],["Payment history · ","Riwayat pembayaran · "],["Cost history · ","Riwayat biaya · "],["Transaction history · ","Riwayat transaksi · "],["Session history · ","Riwayat sesi · "],["Assets · ","Aset · "],["Paid off ~","Lunas ~"],["Liabilities · remaining ","Kewajiban · sisa "],["Due on day ","Jatuh tempo tanggal "],["Show all ","Tampilkan semua "],["Remove shortcut ","Hapus pintasan "],["Open ","Buka "],["Not uploaded: ","Tidak terunggah: "],["Showing the first ","Menampilkan "],["Packing photos and files: ","Mengemas foto dan berkas: "],["Restoring photos and files: ","Memulihkan foto dan berkas: "],["Restoring entries: ","Memulihkan entri: "],["Full backup saved (","Cadangan penuh tersimpan ("]];
-  var SUB=[[/ days left/g," hari lagi"],[/ days overdue/g," hari terlambat"],[/ payments left/g," pembayaran lagi"],[/ tasks open/g," tugas terbuka"],[/ done now/g," selesai sekarang"],[/ per month/g," per bulan"],[/ this month/g," bulan ini"],[/ in total/g," total"],[/(\d+)-day streak/g,"streak $1 hari"],[/(\d+)-week streak/g,"streak $1 minggu"],[/(\d+)-month streak/g,"streak $1 bulan"],[/^(\d+) of (\d+)/,"$1 dari $2"],[/ of (\d+) pages\. Download the file to see the rest\./,"  dari $1 halaman. Unduh berkas untuk melihat sisanya."],[/ \(shared with photos and logos elsewhere in Imperium\)\./," (dibagi dengan foto dan logo di bagian lain Imperium)."],[/\(full backup /g,"(cadangan penuh "],[/ (transactions|payments|costs)$/,function(m,w){return " "+({transactions:"transaksi",payments:"pembayaran",costs:"biaya"})[w]}],[new RegExp("\\b("+ML.join("|")+")\\b","g"),function(m){return MLI[ML.indexOf(m)]}],[/\bMonday\b|\bTuesday\b|\bWednesday\b|\bThursday\b|\bFriday\b|\bSaturday\b|\bSunday\b/g,function(m){return D[m]}]];
+  var MSI={Jan:"Jan",Feb:"Feb",Mar:"Mar",Apr:"Apr",May:"Mei",Jun:"Jun",Jul:"Jul",Aug:"Agu",Sep:"Sep",Oct:"Okt",Nov:"Nov",Dec:"Des"};
+  var SUB=[[/\/month\b/g,"/bulan"],[/\b(\d+) payments?$/,"$1 pembayaran"],[/~(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4})/g,function(m,a,y){return "~"+MSI[a]+" "+y}],[/([\d.,]+ [KMGT]?B) of ([\d.,]+ [KMGT]?B)/,"$1 dari $2"],[/ days left/g," hari lagi"],[/ days overdue/g," hari terlambat"],[/ payments left/g," pembayaran lagi"],[/ tasks open/g," tugas terbuka"],[/ done now/g," selesai sekarang"],[/ per month/g," per bulan"],[/ this month/g," bulan ini"],[/ in total/g," total"],[/(\d+)-day streak/g,"beruntun $1 hari"],[/(\d+)-week streak/g,"beruntun $1 minggu"],[/(\d+)-month streak/g,"beruntun $1 bulan"],[/^(\d+) of (\d+)/,"$1 dari $2"],[/ of (\d+) pages\. Download the file to see the rest\./,"  dari $1 halaman. Unduh berkas untuk melihat sisanya."],[/ \(shared with photos and logos elsewhere in Imperium\)\./," (dibagi dengan foto dan logo di bagian lain Imperium)."],[/\(full backup /g,"(cadangan penuh "],[/ (transactions|payments|costs)$/,function(m,w){return " "+({transactions:"transaksi",payments:"pembayaran",costs:"biaya"})[w]}],[new RegExp("\\b("+ML.join("|")+")\\b","g"),function(m){return MLI[ML.indexOf(m)]}],[/\bMonday\b|\bTuesday\b|\bWednesday\b|\bThursday\b|\bFriday\b|\bSaturday\b|\bSunday\b/g,function(m){return D[m]}]];
   var lang="en",SRC=new WeakMap(),OUT=new WeakMap(),ASRC=new WeakMap(),busy=false;
   var SKIP=".acn,.catn,.mo-grp,.ct-name,script,style,textarea,#tab-ielts,#tab-english,#fx-layer,.ttl,.note-body,.pn,.proj h3,.pnotes,.rc-name,.app .t,a.lnk,.fv-body,#kt-tags,#kt-log,.ftile,.crumb,.cover,#nav-nf .ttl,#nf-bar .ttl,.nfpill,.nd-user,#note-folder option:not([value=\"\"])";
   var ATTR=["placeholder","aria-label","title","alt"];
@@ -2339,7 +2403,7 @@ window.I18N=(function(){
     if(out!==cur){busy=true;n.nodeValue=out;busy=false}
   }
   function doAttrs(el){
-    if(!el.getAttribute||skip(el))return;
+    if(!el.getAttribute||(el.tagName!=="TEXTAREA"&&skip(el)))return;
     var map=ASRC.get(el);
     ATTR.forEach(function(a){
       if(!el.hasAttribute(a))return;
@@ -2380,7 +2444,7 @@ window.I18N=(function(){
     var changed=l!==lang;lang=l;
     document.documentElement.lang=l;
     walk(document.body);
-    if(changed)try{window.dispatchEvent(new Event("hashchange"))}catch(e){}
+    if(changed)try{window.dispatchEvent(new Event("imp-lang"));window.dispatchEvent(new Event("hashchange"))}catch(e){}
   }
   var init="en";try{var p=JSON.parse(localStorage.getItem("imperium-prefs")||"null");if(p&&p.lang==="id")init="id"}catch(e){}
   start();
@@ -2740,6 +2804,35 @@ window.I18N=(function(){
     if(p)meta.push('<span>'+esc(p.name)+'</span>');
     return '<li class="'+(dn?"done":"")+'"><input type="checkbox" class="check" id="'+pre+'-'+esc(t.id)+'" data-done="'+esc(t.id)+'" '+(dn?"checked":"")+' aria-label="Mark as done"><div class="grow"><div class="ttl">'+esc(t.title)+'</div><div class="meta">'+meta.join("")+'</div></div>'+(actions?rowActs(t.id):'')+'</li>';
   }
+  const TKT=(en,id)=>document.documentElement.lang==="id"?id:en;
+  function tkRoutineRow(t,rep,keys,curKey,projs){
+    const log=new Set(t.log||[]);let on=0,tot=0;
+    const cells=keys.map(k=>{
+      const isCur=k===curKey,d=log.has(k),na=!d&&keyEnded(rep,k,t.created);
+      if(d||(!na&&!isCur)){tot++;if(d)on++}
+      const tip=keyLabel(rep,k)+" · "+(na?TKT("before this routine existed","sebelum rutinitas dibuat"):d?TKT("done","selesai"):TKT("not done","belum"));
+      return '<i role="button" tabindex="0" data-rc="'+esc(t.id)+'|'+k+'" class="'+(d?"on":na?"na":"off")+(isCur?" cur":"")+'" title="'+esc(tip)+'" aria-label="'+esc(tip)+'"></i>';
+    }).join("");
+    const rate=tot?Math.round(on/tot*100):0,st=streakOf(t),p=projs.find(x=>x.id===t.project);
+    const U=TKT({day:"day",week:"week",month:"month"}[UNIT[rep]],{day:"hari",week:"minggu",month:"bulan"}[UNIT[rep]]);
+    const meta=[PRIO_PILL[t.prio||2],'<span class="mono">'+on+' '+TKT("of","dari")+' '+tot+'</span>'];
+    if(st)meta.push('<span class="mono">'+TKT(st+"-"+U+" streak","beruntun "+st+" "+U)+'</span>');
+    if(p)meta.push('<span class="acn">'+esc(p.name)+'</span>');
+    return '<div class="tk-row" role="row"><div class="tk-name" role="cell"><div class="ttl">'+esc(t.title)+'</div><div class="meta">'+meta.join("")+'</div></div>'
+      +'<div class="tk-cells rc-cells" role="cell">'+cells+'</div>'
+      +'<div class="tk-rate mono '+(tot?(rate>=80?"t-ok":rate>=50?"t-warn":"t-crit"):"")+'" role="cell">'+(tot?rate+"%":"–")+'</div>'+rowActs(t.id)+'</div>';
+  }
+  function tkTodoRow(t,projs){
+    const t0=today(),p=projs.find(x=>x.id===t.project),late=!t.done&&t.due&&t.due<t0,isT=t.due===t0;
+    const tip=t.done?TKT("Done · tap to reopen","Selesai · ketuk untuk membuka lagi"):TKT("Not done · tap to mark done","Belum · ketuk untuk menandai selesai");
+    const meta=[PRIO_PILL[t.prio||2]];
+    if(p)meta.push('<span class="acn">'+esc(p.name)+'</span>');
+    const due=t.due?'<span class="tk-due mono'+(late?" neg":"")+'">'+(late?TKT("Overdue · ","Terlambat · "):isT?TKT("Today · ","Hari ini · "):"")+esc(fmtDate(t.due))+'</span>':'<span class="tk-due hint">'+TKT("No due date","Tanpa tenggat")+'</span>';
+    return '<div class="tk-row'+(t.done?" done":"")+'" role="row"><div class="tk-name" role="cell"><div class="ttl">'+esc(t.title)+'</div><div class="meta">'+meta.join("")+'</div></div>'
+      +'<div class="tk-cells rc-cells" role="cell">'+due+'<i role="button" tabindex="0" data-tdone="'+esc(t.id)+'" class="'+(t.done?"on":"off")+' cur" title="'+esc(tip)+'" aria-label="'+esc(tip)+'"></i></div>'
+      +'<div class="tk-rate mono'+(t.done?" t-ok":"")+'" role="cell">'+(t.done?"✓":"–")+'</div>'+rowActs(t.id)+'</div>';
+  }
+  const PRIO_PILL={1:'<span class="pill p-crit">High</span>',2:'<span class="pill p-mute">Medium</span>',3:'<span class="pill p-mute">Low</span>'};
   function renderTasks(){
     const projs=byKind("project");
     const sel=$("task-proj"),cur=sel.value;
@@ -2750,17 +2843,33 @@ window.I18N=(function(){
     $("c-tugas").textContent=os.filter(t=>!t.done).length+rs.filter(t=>!doneNow(t)).length;
     if(taskFilter==="aktif")os=os.filter(t=>!t.done);
     else if(taskFilter==="selesai"){os=os.filter(t=>t.done);rs=rs.filter(doneNow)}
-    rs.sort((a,b)=>(doneNow(a)-doneNow(b))||(REPORD[a.rep]-REPORD[b.rep])||((a.prio||2)-(b.prio||2))||(a.created-b.created));
     os.sort((a,b)=>(a.done-b.done)||((a.due||"9999")<(b.due||"9999")?-1:(a.due||"9999")>(b.due||"9999")?1:0)||((a.prio||2)-(b.prio||2))||(a.created-b.created));
     const el=$("task-list");
     if(!ready){el.innerHTML='<div class="empty">Loading tasks…</div>';return}
     if(!rs.length&&!os.length){el.innerHTML='<div class="empty">'+(taskFilter==="selesai"?"Nothing done yet in this period.":"No tasks yet. Type your first task above. For a habit like reading every day, set Repeat to Daily.")+'</div>';return}
-    let html="";
-    if(rs.length)html+='<div class="group"><h4>Routines</h4><ul class="list">'+rs.map(t=>taskItem(t,projs,"chk",true)).join("")+'</ul></div>';
-    if(os.length)html+='<div class="group"><h4>To-do</h4><ul class="list">'+os.map(t=>taskItem(t,projs,"chk",true)).join("")+'</ul></div>';
-    else if(taskFilter==="aktif")html+='<div class="group"><h4>To-do</h4><div class="empty">No open to-dos.</div></div>';
-    el.innerHTML=html;
+    let h='<div class="ptbl-wrap tk-tbl" role="table"><div class="tk-head" role="row"><span role="columnheader">'+TKT("Task","Tugas")+'</span><span role="columnheader">'+TKT("Trend · tap a square to tick","Tren · ketuk kotak untuk mencentang")+'</span><span role="columnheader" class="r">%</span><span role="columnheader"></span></div>';
+    ["daily","weekly","monthly"].forEach(rep=>{
+      const g=rs.filter(t=>t.rep===rep).sort((a,b)=>((a.prio||2)-(b.prio||2))||((a.created||0)-(b.created||0)));if(!g.length)return;
+      const keys=recapKeys(rep),ck=periodKey(rep);
+      h+='<div class="tk-sec" role="row"><span>'+TKT(REP[rep]+" · "+RCLAB[rep],{daily:"Harian · 14 hari terakhir",weekly:"Mingguan · 8 minggu terakhir",monthly:"Bulanan · 6 bulan terakhir"}[rep])+'</span><span class="mono">'+g.filter(doneNow).length+' / '+g.length+' '+TKT("done now","selesai")+'</span></div>';
+      h+=g.map(t=>tkRoutineRow(t,rep,keys,ck,projs)).join("");
+    });
+    if(os.length||taskFilter==="aktif"){
+      h+='<div class="tk-sec" role="row"><span>To-do</span><span class="mono">'+os.filter(t=>t.done).length+' / '+os.length+' '+TKT("done","selesai")+'</span></div>';
+      h+=os.length?os.map(t=>tkTodoRow(t,projs)).join(""):'<div class="tk-empty hint">No open to-dos.</div>';
+    }
+    h+='</div><p class="hint tk-hint">'+TKT("Oldest on the left, newest on the right. The outlined square is the current period; dashed squares are from before the routine existed. For a to-do, the single square marks it done.","Terlama di kiri, terbaru di kanan. Kotak bergaris tebal = periode sekarang; kotak putus-putus = sebelum rutinitas dibuat. Untuk tugas biasa, satu kotak itu menandai selesai.")+'</p>';
+    el.innerHTML=h;
   }
+  function tkTodo(el){const t=items.find(x=>x.id===el.dataset.tdone);if(!t)return;el.classList.toggle("on",!t.done);toggleTask(t.id,!t.done)}
+  $("task-list").addEventListener("click",e=>{
+    const c=e.target.closest("[data-rc]");if(c){window.IMP_RC(c);return}
+    const d=e.target.closest("[data-tdone]");if(d)tkTodo(d);
+  });
+  $("task-list").addEventListener("keydown",e=>{
+    const c=e.target.closest&&e.target.closest("[data-rc],[data-tdone]");if(!c||(e.key!=="Enter"&&e.key!==" "))return;
+    e.preventDefault();if(c.dataset.rc)window.IMP_RC(c);else tkTodo(c);
+  });
 
 
   /* ---------- DREAMS ---------- */
@@ -2842,7 +2951,7 @@ window.I18N=(function(){
       const st=DSTAT[d.status||"dream"],steps=d.steps||[],nd=steps.filter(x=>x.done).length,pct=steps.length?Math.round(nd/steps.length*100):0;
       const meta=['<span>'+esc(d.cat||"Other")+'</span>'];
       if(d.status==="done"&&d.achievedAt)meta.push('<span class="mono">Achieved '+esc(fmtDate(d.achievedAt))+'</span>');
-      else if(d.year){const left=d.year-yNow;meta.push('<span class="mono'+(left<0?' neg':'')+'">Target '+d.year+(left>0?' · '+left+' year'+(left>1?'s':'')+' to go':left===0?' · this year':' · target passed')+'</span>')}
+      else if(d.year){const left=d.year-yNow;meta.push('<span class="mono'+(left<0?' neg':'')+'">Target '+d.year+(document.documentElement.lang==="id"?(left>0?' · '+left+' tahun lagi':left===0?' · tahun ini':' · target terlewat'):(left>0?' · '+left+' year'+(left>1?'s':'')+' to go':left===0?' · this year':' · target passed'))+'</span>')}
       const cover=d.cover?'<div class="cover"><img src="/_blob/'+esc(d.cover)+'" alt="" loading="lazy"></div>':'<div class="cover blank"><span>'+esc(d.cat||"Dream")+'</span></div>';
       const stepList=steps.map((x,k)=>'<li class="'+(x.done?"done":"")+'"><input type="checkbox" class="check" id="st-'+esc(d.id)+'-'+k+'" data-step="'+esc(d.id)+'|'+k+'" '+(x.done?"checked":"")+' aria-label="Step done"><span>'+esc(x.t)+'</span><button type="button" class="ghost" data-stepdel="'+esc(d.id)+'|'+k+'" aria-label="Remove step">×</button></li>').join("");
       return '<article class="proj dream'+(d.status==="done"?" achieved":"")+'">'+cover
@@ -3432,7 +3541,7 @@ window.I18N=(function(){
     add("Renewals",[["Name","Ends on","Days left","Renews","Cost (Rp)","Notes"]].concat(byKind("sub").map(x=>[x.name||"",x.end||"",x.end?daysLeft(x.end):"",CYC[x.cycle||"month"]||"",+x.cost||0,x.note||""])));
     add("Links",[["Name","URL","Category","In shortcuts"]].concat(byKind("link").map(l=>[l.title||"",l.url||"",catOf(l),l.pinned?"Yes":"No"])));
     const fs=byKind("fin"),liabs=fs.filter(f=>f.type==="liabilitas");
-    add("Assets",[["Name","Date","Amount (Rp)","Notes"]].concat(fs.filter(f=>f.type==="aset").map(f=>[f.name||"",f.date||"",+f.amount||0,f.note||""])));
+    add("Assets",[["Group","Name","Date","Amount (Rp)","Notes"]].concat(fs.filter(f=>f.type==="aset").map(f=>[f.group||"",f.name||"",f.date||"",+f.amount||0,f.note||""])));
     add("Liabilities",[["Name","Start date","Total debt (Rp)","Paid (Rp)","Remaining (Rp)","Monthly (Rp)","Due day","Notes"]].concat(liabs.map(l=>{const st=liabStats(l);return [l.name||"",l.date||"",+l.amount||0,st.paid,st.rest,+l.installment||0,l.dueDay||"",l.note||""]})));
     const lname=id=>(liabs.find(l=>l.id===id)||{}).name||"";
     add("Installments",[["Liability","Date","Amount (Rp)","Description","Photos"]].concat(byKind("pay").slice().sort(byDateDesc).map(p=>[lname(p.liab),p.date||"",+p.amount||0,p.note||"",(p.evidence||[]).length])));
@@ -3628,7 +3737,7 @@ window.I18N=(function(){
           const isCur=k===cur,d=log.has(k),na=keyEnded(rep,k,t.created);
           const c=d?"on":na?"na":"off";
           if(d||(!na&&!isCur)){tot++;if(d)on++}
-          return '<i role="button" tabindex="0" data-rc="'+esc(t.id)+'|'+k+'" class="'+c+(isCur?" cur":"")+'" title="'+esc(keyLabel(rep,k))+(d?" · done":" · not done")+'"></i>';
+          return '<i role="button" tabindex="0" data-rc="'+esc(t.id)+'|'+k+'" class="'+c+(isCur?" cur":"")+'" title="'+esc(keyLabel(rep,k))+(document.documentElement.lang==="id"?(d?" · selesai":" · belum"):(d?" · done":" · not done"))+'"></i>';
         }).join("");
         const rate=tot?Math.round(on/tot*100):0,st=streakOf(t);
         h+='<div class="ov-rc-row"><div class="ov-rc-top"><span class="ttl">'+esc(t.title)+'</span><span class="mono rc-rate '+(rate>=80?"t-ok":rate>=50?"t-warn":"t-crit")+'">'+(tot?rate+'%':'–')+'</span></div><div class="rc-cells">'+cells+'</div>'+(st?'<span class="mono ov-rc-st">'+st+'-'+UNIT[rep]+' streak</span>':'')+'</div>';
@@ -4228,11 +4337,11 @@ window.I18N=(function(){
     $("acct-sum").innerHTML='<div class="stat net"><div class="k">Total balance</div><div class="v'+(tot<0?' neg':'')+'">'+signRp(tot)+'</div></div><div class="stat"><div class="k">Accounts</div><div class="v">'+as.length+'</div></div>';
     if(!ready){el.innerHTML='<div class="empty">Loading finance…</div>';return}
     if(!as.length){el.innerHTML='<div class="empty">No accounts yet. Add your cash, bank accounts and e-wallets so each record can say where the money moved.</div>';return}
-    el.innerHTML='<div class="group"><h4>Accounts · <span class="mono">'+rp(tot)+'</span></h4><ul class="list">'+as.map(a=>{
+    el.innerHTML='<div class="group"><h4>'+TT("Accounts","Daftar account")+' · <span class="mono">'+rp(tot)+'</span></h4><ul class="list">'+as.map(a=>{
       const b=acctBal(a,fs),t=acctType(a.atype);
       let mi=0,mo=0;
       fs.forEach(f=>{if(!isTx(f)||f.acct!==a.id||(f.date||"").slice(0,7)!==ym)return;if(txDir(f)==="in")mi+=+f.amount||0;else mo+=+f.amount||0});
-      return '<li><span class="acct-ic" aria-hidden="true">'+t[2]+'</span><div class="grow"><div class="ttl">'+esc(a.name)+'</div><div class="meta"><span>'+t[1]+'</span>'+(a.note?'<span>'+esc(a.note)+'</span>':'')+'<span class="mono">+'+rp(mi)+' · −'+rp(mo)+'</span><span>this month</span></div></div><span class="amt'+(b<0?' neg':'')+'">'+signRp(b)+'</span><div class="row-actions"><button class="ghost" data-acct-rec="'+esc(a.id)+'">View records</button><button class="ghost" data-edit="'+esc(a.id)+'">Edit</button><button class="ghost danger" data-del="'+esc(a.id)+'">Delete</button></div></li>';
+      return '<li><span class="acct-ic" aria-hidden="true">'+t[2]+'</span><div class="grow"><div class="ttl">'+esc(a.name)+'</div><div class="meta"><span>'+t[1]+'</span>'+(a.note?'<span>'+esc(a.note)+'</span>':'')+'<span class="mono">+'+rp(mi)+' · −'+rp(mo)+' '+TT("this month","bulan ini")+'</span></div></div><span class="amt'+(b<0?' neg':'')+'">'+signRp(b)+'</span><div class="row-actions"><button class="ghost" data-acct-rec="'+esc(a.id)+'">View records</button><button class="ghost" data-edit="'+esc(a.id)+'">Edit</button><button class="ghost danger" data-del="'+esc(a.id)+'">Delete</button></div></li>';
     }).join("")+'</ul></div>';
   }
 
@@ -4350,13 +4459,18 @@ window.I18N=(function(){
     e.preventDefault();
     const name=$("aset-name").value.trim(),amount=parseAmt($("aset-amt").value);
     if(!name)return;if(isNaN(amount)){notice("Amount must be a number, e.g. 1.500.000.");return}
-    const data={type:"aset",name,amount,date:$("aset-date").value||today(),note:$("aset-note").value.trim()};
+    const data={type:"aset",name,amount,group:$("aset-group").value.trim().slice(0,60),date:$("aset-date").value||today(),note:$("aset-note").value.trim()};
     if(await save("fin",editing.aset,data)){$("f-aset").reset();setEditing("aset",null,ASSL)}
   });
   $("aset-cancel").onclick=()=>{$("f-aset").reset();setEditing("aset",null,ASSL)};
   $("aset-list").addEventListener("click",e=>{
+    const rn=e.target.closest("button[data-agren]");
+    if(rn){agEdit=rn.dataset.agren;renderAssets();const x=$("aset-list").querySelector("[data-agin]");if(x){x.focus();x.select()}return}
+    const ag=e.target.closest("button[data-agadd]");
+    if(ag){$("f-aset").reset();setEditing("aset",null,ASSL);setFormOpen("aset",true);$("aset-group").value=ag.dataset.agadd;$("aset-name").focus();return}
     const b=e.target.closest("button[data-edit]");if(!b)return;
     const f=items.find(i=>i.id===b.dataset.edit);if(!f)return;
+    $("aset-group").value=f.group||"";
     $("aset-name").value=f.name||"";$("aset-amt").value=fmtIn(f.amount)||"0";$("aset-date").value=f.date||"";$("aset-note").value=f.note||"";
     setEditing("aset",f.id,ASSL);$("aset-name").focus();
   });
@@ -4413,15 +4527,43 @@ window.I18N=(function(){
       +'<div class="card-foot">'+(ent&&ent.mode==="pay"&&ent.parent===l.id?'<span></span>':'<span class="preview"><button class="soft" data-pay="'+esc(l.id)+'">+ Log payment</button>'+(rest>0?'<button class="ghost" data-sim="'+esc(l.id)+'" title="Open the payoff calculator with this debt">Simulate</button>':'')+'</span>')+rowActs(l.id)+'</div></article>';
   }
   $("rec-date").value=today();syncRecType();
+  let agEdit=null;
   function renderAssets(){
     const el=$("aset-list");if(!el)return;
+    if(agEdit!==null&&document.activeElement&&document.activeElement.matches&&document.activeElement.matches("[data-agin]"))return;
     const fs=byKind("fin"),as=fs.filter(f=>f.type==="aset"),liabs=fs.filter(f=>f.type==="liabilitas");
     const A=as.reduce((s,f)=>s+(+f.amount||0),0),L=liabs.reduce((s,l)=>s+liabStats(l).rest,0),net=A-L;
-    $("aset-sum").innerHTML='<div class="stat"><div class="k">Total assets</div><div class="v">'+rp(A)+'</div></div><div class="stat net"><div class="k">Net worth</div><div class="v'+(net<0?' neg':'')+'">'+signRp(net)+'</div></div>';
+    const G={};as.forEach(f=>{const g=String(f.group||"").trim();(G[g]=G[g]||[]).push(f)});
+    const gsum=g=>G[g].reduce((s,f)=>s+(+f.amount||0),0);
+    const names=Object.keys(G).filter(Boolean).sort((a,b)=>gsum(b)-gsum(a)||a.localeCompare(b));
+    $("aset-groups").innerHTML=names.map(g=>'<option value="'+esc(g)+'"></option>').join("");
+    $("aset-sum").innerHTML='<div class="stat"><div class="k">Total assets</div><div class="v">'+rp(A)+'</div></div><div class="stat"><div class="k">'+TT("Groups","Grup")+'</div><div class="v">'+names.length+'</div></div><div class="stat net"><div class="k">Net worth</div><div class="v'+(net<0?' neg':'')+'">'+signRp(net)+'</div><div class="s">'+TT("Assets minus remaining debts","Aset dikurangi sisa hutang")+'</div></div>';
     if(!ready){el.innerHTML='<div class="empty">Loading finance…</div>';return}
     if(!as.length){el.innerHTML='<div class="empty">No assets yet. Add savings, vehicles, gold or anything you own.</div>';return}
-    el.innerHTML='<div class="group"><h4>Assets · <span class="mono">'+rp(A)+'</span></h4><ul class="list">'+as.slice().sort((a,b)=>(b.amount||0)-(a.amount||0)).map(f=>'<li><div class="grow"><div class="ttl">'+esc(f.name)+'</div><div class="meta">'+(f.date?'<span class="mono">'+esc(fmtDate(f.date))+'</span>':'')+(f.note?'<span>'+esc(f.note)+'</span>':'')+'</div></div><span class="amt">'+rp(f.amount)+'</span>'+rowActs(f.id)+'</li>').join("")+'</ul></div>';
+    if(G[""])names.push("");
+    const row=f=>'<li><div class="grow"><div class="ttl">'+esc(f.name)+'</div><div class="meta">'+(f.date?'<span class="mono">'+esc(fmtDate(f.date))+'</span>':'')+(f.note?'<span>'+esc(f.note)+'</span>':'')+'</div></div><span class="amt">'+rp(f.amount)+'</span>'+rowActs(f.id)+'</li>';
+    el.innerHTML=names.map(g=>{
+      const sum=gsum(g),pct=A>0?Math.round(sum/A*100):0;
+      const head=agEdit===g&&g?'<input class="ct-in" data-agin="'+esc(g)+'" maxlength="60" value="'+esc(g)+'" aria-label="'+TT("Group name","Nama grup")+'">'
+        :'<span class="ag-name acn">'+(g?esc(g):TT("No group","Tanpa grup"))+'</span>';
+      const tools=g?'<button type="button" class="ghost ag-btn" data-agren="'+esc(g)+'">'+TT("Rename","Ganti nama")+'</button>':'';
+      return '<section class="group aset-grp"><div class="ag-h"><h4>'+head+'</h4><span class="ag-tot mono">'+rp(sum)+' · '+pct+'%</span></div>'
+        +'<div class="bar ok ag-bar" aria-hidden="true"><i style="width:'+pct+'%"></i></div>'
+        +'<ul class="list">'+G[g].slice().sort((a,b)=>(b.amount||0)-(a.amount||0)).map(row).join("")+'</ul>'
+        +(g?'<div class="ag-foot">'+tools+'<button type="button" class="ghost ag-btn" data-agadd="'+esc(g)+'">+ '+TT("Add to this group","Tambah ke grup ini")+'</button></div>':'')+'</section>';
+    }).join("");
   }
+  $("aset-list").addEventListener("keydown",e=>{
+    const x=e.target.closest&&e.target.closest("[data-agin]");if(!x)return;
+    if(e.key==="Enter"){e.preventDefault();x.blur()}else if(e.key==="Escape"){x.dataset.cancel="1";x.blur()}
+  });
+  $("aset-list").addEventListener("focusout",async e=>{
+    const x=e.target.closest&&e.target.closest("[data-agin]");if(!x)return;
+    const old=x.dataset.agin,nw=x.value.trim().slice(0,60),cancel=x.dataset.cancel==="1";agEdit=null;
+    if(cancel||!nw||nw===old){renderAssets();return}
+    for(const f of byKind("fin").filter(f=>f.type==="aset"&&String(f.group||"").trim()===old))await patch(f.id,{group:nw});
+    renderAssets();
+  });
   function renderDebts(){
     parkEnt("pay");
     const el=$("debt-list");if(!el)return;
@@ -4433,7 +4575,7 @@ window.I18N=(function(){
     fillCalcLiabs(liabs);
     if(!ready){el.innerHTML='<div class="empty">Loading finance…</div>';return}
     if(!liabs.length){el.innerHTML='<div class="empty">No debts yet. Add a loan or installment to track what is left to pay.</div>';return}
-    el.innerHTML='<div class="group"><h4>Liabilities · remaining <span class="mono neg">−'+rp(L)+'</span></h4><div class="liabs">'+liabs.sort((a,b)=>liabStats(b).rest-liabStats(a).rest).map(renderLiab).join("")+'</div></div>';
+    el.innerHTML='<div class="group"><h4>'+TT("Debts · remaining","Daftar hutang · sisa")+' <span class="mono neg">−'+rp(L)+'</span></h4><div class="liabs">'+liabs.sort((a,b)=>liabStats(b).rest-liabStats(a).rest).map(renderLiab).join("")+'</div></div>';
     placeEnt("pay");
     fillCalcLiabs(liabs);
   }
@@ -4487,11 +4629,11 @@ window.I18N=(function(){
     const MN=ID?["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"]:BLN;
     const P=parseAmt($("calc-debt").value),A=parseAmt($("calc-inst").value);
     const rate=Math.max(0,parseFloat(String($("calc-rate").value).replace(",","."))||0)/100,type=$("calc-rtype").value;
-    if(!(P>0)||!(A>0)){out.innerHTML='<p class="hint">'+T("Fill in the debt and the monthly installment. Interest is optional.","Isi jumlah utang dan cicilan per bulan. Bunga boleh dikosongkan.")+'</p>';return}
+    if(!(P>0)||!(A>0)){out.innerHTML='<p class="hint">'+T("Fill in the debt and the monthly installment. Interest is optional.","Isi jumlah hutang dan cicilan per bulan. Bunga boleh dikosongkan.")+'</p>';return}
     const r=rate/12,flatI=type==="flat"?P*r:0;
     const firstInt=type==="flat"?flatI:P*r;
     if(A<=firstInt+0.5){
-      out.innerHTML='<p class="notice" style="margin:0">'+T("This installment only covers the interest (","Cicilan ini hanya menutup bunga (")+rp(firstInt)+T("/month), so the debt never goes down. Raise the installment above that amount.","/bulan), jadi utang tidak pernah berkurang. Naikkan cicilan di atas angka itu.")+'</p>';return}
+      out.innerHTML='<p class="notice" style="margin:0">'+T("This installment only covers the interest (","Cicilan ini hanya menutup bunga (")+rp(firstInt)+T("/month), so the debt never goes down. Raise the installment above that amount.","/bulan), jadi hutang tidak pernah berkurang. Naikkan cicilan di atas angka itu.")+'</p>';return}
     let bal=P,n=0,totInt=0,last=A;const yearly=[];let yPaid=0;
     const sv=$("calc-start").value;let sd=new Date();sd.setDate(1);
     if(/^\d{4}-\d{2}$/.test(sv))sd=new Date(+sv.slice(0,4),+sv.slice(5,7)-1,1);
@@ -4517,8 +4659,8 @@ window.I18N=(function(){
         '<div><span class="k">'+T("Total interest","Total bunga")+'</span><span class="v'+(totInt>0?' neg':'')+'">'+rp(totInt)+'</span></div>'+
       '</div>'+
       (totInt>0?'<div class="calc-bar" aria-hidden="true"><i style="width:'+pPct+'%"></i><i style="width:'+(100-pPct)+'%"></i></div><div class="calc-legend"><span><i style="background:var(--ok)"></i>'+T("Principal","Pokok")+' '+pPct+'%</span><span><i style="background:var(--warn)"></i>'+T("Interest","Bunga")+' '+(100-pPct)+'%</span></div>':'')+
-      (yearly.length>1?'<table class="calc-tbl"><thead><tr><th>'+T("Year","Tahun")+'</th><th>'+T("Paid that year","Dibayar")+'</th><th>'+T("Debt left","Sisa utang")+'</th></tr></thead><tbody>'+yearly.map(y=>'<tr><td>'+y[0]+'</td><td>'+rp(y[1])+'</td><td>'+rp(y[2])+'</td></tr>').join("")+'</tbody></table>':'')+
-      '<p class="hint">'+T("Estimate only. Lenders may round, add fees or count interest differently.","Perkiraan saja. Pihak pemberi utang bisa membulatkan, menambah biaya admin, atau menghitung bunga dengan cara lain.")+'</p>';
+      (yearly.length>1?'<table class="calc-tbl"><thead><tr><th>'+T("Year","Tahun")+'</th><th>'+T("Paid that year","Dibayar")+'</th><th>'+T("Debt left","Sisa hutang")+'</th></tr></thead><tbody>'+yearly.map(y=>'<tr><td>'+y[0]+'</td><td>'+rp(y[1])+'</td><td>'+rp(y[2])+'</td></tr>').join("")+'</tbody></table>':'')+
+      '<p class="hint">'+T("Estimate only. Lenders may round, add fees or count interest differently.","Perkiraan saja. Pihak pemberi pinjaman bisa membulatkan, menambah biaya admin, atau menghitung bunga dengan cara lain.")+'</p>';
   }
   (function(){
     const f=$("f-calc");if(!f)return;
@@ -4772,9 +4914,11 @@ window.I18N=(function(){
     for(let i=0;i<RCWIN[rep];i++){out.unshift(k);k=prevKey(rep,k)}
     return out;
   }
+  const BLN_ID=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
   function keyLabel(rep,k){
-    if(rep==="monthly"){const [y,m]=k.split("-");return BLN[+m-1]+" "+y}
-    return rep==="weekly"?"Week of "+fmtDate(k):fmtDate(k);
+    const ID=document.documentElement.lang==="id",M=ID?BLN_ID:BLN,fd=x=>{const [y,m,d]=x.split("-");return (+d)+" "+M[+m-1]+" "+y};
+    if(rep==="monthly"){const [y,m]=k.split("-");return M[+m-1]+" "+y}
+    return rep==="weekly"?(ID?"Minggu ":"Week of ")+fd(k):fd(k);
   }
   function keyEnded(rep,k,created){
     const c=ymd(new Date(created||Date.now()));
@@ -4784,6 +4928,7 @@ window.I18N=(function(){
   }
   function renderRecap(){
     const el=$("recap");if(!el)return;
+    el.hidden=true;el.innerHTML="";return;
     const rs=byKind("task").filter(isRoutine);
     if(!ready||!rs.length){el.innerHTML="";return}
     const cur={daily:periodKey("daily"),weekly:periodKey("weekly"),monthly:periodKey("monthly")};
@@ -4803,7 +4948,7 @@ window.I18N=(function(){
           return '<i role="button" tabindex="0" data-rc="'+esc(t.id)+'|'+k+'" class="'+c+(isCur?" cur":"")+'" title="'+esc(keyLabel(rep,k))+(na?" · before this routine existed":d?" · done":" · not done")+'"></i>';
         }).join("");
         const rate=tot?Math.round(on/tot*100):0,st=streakOf(t);
-        html+='<div class="rc-row"><div class="rc-name">'+esc(t.title)+'<small class="mono">'+(document.documentElement.lang==="id"?on+' dari '+tot+(st?' · streak '+st+' '+({day:"hari",week:"minggu",month:"bulan"}[UNIT[rep]]||UNIT[rep]):''):on+' of '+tot+(st?' · '+st+'-'+UNIT[rep]+' streak':''))+'</small></div><div class="rc-cells">'+cells+'</div><div class="rc-rate mono '+(rate>=80?"t-ok":rate>=50?"t-warn":"t-crit")+'">'+(tot?rate+'%':'–')+'</div></div>';
+        html+='<div class="rc-row"><div class="rc-name">'+esc(t.title)+'<small class="mono">'+(document.documentElement.lang==="id"?on+' dari '+tot+(st?' · beruntun '+st+' '+({day:"hari",week:"minggu",month:"bulan"}[UNIT[rep]]||UNIT[rep]):''):on+' of '+tot+(st?' · '+st+'-'+UNIT[rep]+' streak':''))+'</small></div><div class="rc-cells">'+cells+'</div><div class="rc-rate mono '+(rate>=80?"t-ok":rate>=50?"t-warn":"t-crit")+'">'+(tot?rate+'%':'–')+'</div></div>';
       });
       html+='</div>';
     });
@@ -4901,12 +5046,12 @@ window.I18N=(function(){
   function renderCalDay(ev){
     ev=ev||calEvents(+calSel.slice(0,4),+calSel.slice(5,7)-1);
     const es=(ev[calSel]||[]),el=$("cal-day");
-    let h='<h3 class="set-h">'+esc(fmtDate(calSel))+(calSel===today()?' · Today':'')+'</h3>';
+    let h='<h3 class="set-h">'+esc(fmtDate(calSel))+(calSel===today()?(document.documentElement.lang==="id"?' · Hari ini':' · Today'):'')+'</h3>';
     if(es.length)h+='<ul class="list">'+es.map(e=>'<li class="mid'+(e.done?" done":"")+'"><i class="dt ev-'+e.k+'"></i><div class="grow"><div class="ttl">'+esc(e.t)+'</div><div class="meta"><span>'+EVLAB[e.k]+'</span><span>'+esc(e.s||"")+'</span></div></div></li>').join("")+'</ul>';
     else h+='<p class="hint">Nothing scheduled on this day.</p>';
     if(calSel<=today()){
       const rs=byKind("task").filter(isRoutine);
-      if(rs.length)h+='<p class="ov-sub">Routines</p><ul class="list">'+rs.map(t=>{const d=(t.log||[]).includes(periodKey(t.rep,calSel));return '<li class="mid'+(d?" done":"")+'"><div class="grow"><div class="ttl">'+esc(t.title)+'</div><div class="meta"><span class="pill p-acc">'+REP[t.rep]+'</span><span>'+(d?"Done":"Not done")+(t.rep!=="daily"?" in this "+UNIT[t.rep]:"")+'</span></div></div></li>'}).join("")+'</ul>';
+      if(rs.length)h+='<p class="ov-sub">Routines</p><ul class="list">'+rs.map(t=>{const d=(t.log||[]).includes(periodKey(t.rep,calSel));return '<li class="mid'+(d?" done":"")+'"><div class="grow"><div class="ttl">'+esc(t.title)+'</div><div class="meta"><span class="pill p-acc">'+REP[t.rep]+'</span><span>'+(document.documentElement.lang==="id"?(d?"Selesai":"Belum")+({week:" minggu ini",month:" bulan ini"}[UNIT[t.rep]]||" hari ini"):(d?"Done":"Not done")+(t.rep!=="daily"?" this "+UNIT[t.rep]:" today"))+'</span></div></div></li>'}).join("")+'</ul>';
     }
     h+='<div><button type="button" class="soft" id="cal-add">+ Add a task due this day</button></div>';
     el.innerHTML=h;
@@ -4924,6 +5069,7 @@ window.I18N=(function(){
   function render(){renderBudget();renderLimit();renderApps();renderOverview();renderTasks();renderRecap();renderProjects();renderDreams();renderNotes();renderFiles();renderBackup();renderSubs();renderLinks();renderFinance();renderCalendar();renderSw()}
   render();
 
+  addEventListener("imp-lang",()=>{if(ready)render()});
   /* ---------- connect ---------- */
   async function start(){
     if(!window.claude||!window.claude.use){setSync("Not connected",true);notice("Open this page in Claude while signed in to save your notes.");return}
@@ -7153,7 +7299,7 @@ document.addEventListener("click",function(e){
 
   /* ================= 3. every input form folded by default ================= */
   var FOLD={
-    "f-calc":{en:"+ Debt payoff calculator",id:"+ Kalkulator pelunasan utang"},
+    "f-calc":{en:"+ Debt payoff calculator",id:"+ Kalkulator pelunasan hutang"},
     "ie-logf":{en:"+ Catat sesi belajar",id:"+ Catat sesi belajar"},
     "ie-mockf":{en:"+ Catat skor practice test",id:"+ Catat skor practice test"}
   };
