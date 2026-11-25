@@ -9357,7 +9357,7 @@ document.addEventListener("click",function(e){
   window.IMP_SET_DATE();
   function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;window.IMP_SET_DATE();try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
   setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
-  var base="imperium-shell-v44",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  var base="imperium-shell-v46",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
   function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
   function chk(){
     if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
@@ -9433,5 +9433,21 @@ document.addEventListener("click",function(e){
   if(window.IMP_UNLOCKED)setTimeout(open,0);
   addEventListener("imp-lang",function(){if(el&&!el.hidden)render()});
 })();
+</script>
+<style>
+/* header tiap menu dibekukan (freeze) di atas saat halaman digulir: laptop & HP */
+@media (min-width:761px){
+  .topbar{position:sticky;top:-20px;z-index:30;background:var(--bg);margin:-20px 0 0 -28px;padding:16px 0 12px 28px;border-bottom:1px solid transparent;transition:border-color .2s,box-shadow .2s;}
+}
+.topbar{background:var(--bg)}
+@media (max-width:760px){.topbar{position:sticky;top:-8px;z-index:30;margin-left:calc(-1 * max(14px,env(safe-area-inset-left,0px)));margin-right:calc(-1 * max(14px,env(safe-area-inset-right,0px)));padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));border-bottom:1px solid transparent}}
+/* latar header melebar sampai tepi kanan area isi */
+.topbar{box-shadow:0 0 0 100vmax var(--bg);clip-path:inset(0 -100vmax 0 0)}
+.main.hdr-stuck .topbar{border-bottom:1px solid var(--line);clip-path:inset(0 -100vmax -1px 0)}
+:root[data-ui="glass"] .topbar,:root[data-ui="aurora"] .topbar{background:color-mix(in srgb,var(--bg) 78%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+</style>
+<script>
+/* garis bawah header muncul saat konten digulir di bawahnya */
+(function(){var m=document.querySelector(".main");if(!m)return;function f(){m.classList.toggle("hdr-stuck",m.scrollTop>4)}m.addEventListener("scroll",f,{passive:true});addEventListener("hashchange",function(){setTimeout(f,0)});f()})();
 </script>
 </body></html>
