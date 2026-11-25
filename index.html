@@ -742,9 +742,6 @@ details.ie-acc>summary .ie-sub{font-weight:400}
 #tab-excel .xl-shadd:hover{background:#4fd18b2e}
 #tab-excel .xl-shin{width:110px;height:24px;padding:0 6px;font:600 12px Inter,system-ui,sans-serif;background:#10262c;color:var(--kp-fg);border:1px solid #4fd18b;border-radius:4px}
 /* kolom pas lebar layar (laptop & HP), tanpa geser ke samping */
-#tab-excel .xl-t{width:100%}
-#tab-excel .xl-t col:not(:first-child){width:auto!important}
-#tab-excel .xl-t th .xl-rs{display:none}
 @media (max-width:760px){
   /* HP: ribbon digeser ke samping, kolom selebar aslinya (100px, bisa ditarik), sel digulir di dalam kotak */
   #xl-host{height:auto!important;min-height:0}
@@ -1929,6 +1926,20 @@ html.tb-rzr,html.tb-rzr *{cursor:row-resize!important;user-select:none!important
 .tb-sz{display:inline-flex!important;flex-direction:row!important;align-items:center;gap:4px;font-size:14px;font-weight:700;color:var(--muted);padding:0 2px}
 .tb-sz input{width:66px!important;font:inherit;font-size:13px;font-weight:500;padding:5px 6px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
 @media (max-width:760px){.tb-pop{position:fixed;left:12px;right:12px;top:auto;bottom:calc(var(--navh,58px) + 14px + env(safe-area-inset-bottom,0px));width:auto}.tb-cr{right:-8px;width:16px}.tb-rr{bottom:-8px;height:16px}}
+</style>
+<style>
+/* Excel: handle ubah tinggi baris, tanpa teks bantuan di bawah sheet, tabel memenuhi layar */
+#tab-excel .xl>.met{display:none}
+#tab-excel .xl-t{width:1px}
+#tab-excel .xl-t th.xl-bh{position:sticky}
+#tab-excel .xl-rr{position:absolute;left:0;right:0;bottom:-3px;height:7px;cursor:row-resize;z-index:3;touch-action:none}
+#tab-excel .xl-rs{touch-action:none}
+#tab-excel .xl-rs:hover,#tab-excel .xl-rr:hover{background:#4fd18b66}
+#tab-excel .xl-t tr[style] td{height:auto}
+html.xl-rzc,html.xl-rzc *{cursor:col-resize!important;user-select:none!important}
+html.xl-rzr,html.xl-rzr *{cursor:row-resize!important;user-select:none!important}
+@media (min-width:761px){.main:has(>#tab-excel:not([hidden])){padding-bottom:12px}}
+@media (max-width:760px){#tab-excel .xl-rr{bottom:-6px;height:12px}#tab-excel .xl-rs{right:-6px!important;width:12px!important}}
 </style>
 <style>/* menu berwarna: tiap menu punya warna sendiri (HP dan laptop) */
   .nav>a[data-tab="overview"]{--mc:var(--v4)}
@@ -8173,7 +8184,7 @@ document.addEventListener("click",function(e){
   function kena(m, g) { return !(m.r2 < g.r1 || m.r1 > g.r2 || m.c2 < g.c1 || m.c1 > g.c2); }
   function rapikan(o) {
     o = o || {}; o.sel = o.sel || {}; o.gaya = o.gaya || {}; o.merge = o.merge || []; o.cf = o.cf || []; o.filter = o.filter || null;
-    o.lebar = o.lebar || {}; o.brs = Math.max(100, +o.brs || 0); o.nama = o.nama || "Excel Bos";
+    o.lebar = o.lebar || {}; o.tinggi = o.tinggi || {}; o.brs = Math.max(100, +o.brs || 0); o.nama = o.nama || "Excel Bos";
     /* versi pertama menyimpan format per kolom (umum/rp/angka/teks): pindahkan ke format per sel */
     if (o.fmt) { Object.keys(o.sel).forEach(function (k) { var f = o.fmt[k.replace(/\d+$/, "")]; if (!f || !f.t || f.t === "umum") return;
       var s = o.gaya[k] || {}; if (!s.nf) { s.nf = { rp: "accounting", angka: "number", teks: "text" }[f.t]; if (f.d != null) s.d = f.d; } o.gaya[k] = s; }); delete o.fmt; }
@@ -8305,7 +8316,10 @@ document.addEventListener("click",function(e){
     /* ---------- format angka & gaya sel ---------- */
     function gy(k) { return S.gaya[k] || {}; }
     function nf(k) { var s = gy(k), t = s.nf || "general"; return { t: t, d: s.d != null ? s.d : (t === "number" ? 2 : 0) }; }
-    function lebar(c) { return S.lebar[huruf(c)] || 100; }
+    /* lebar bawaan = pas lebar layar (Imperium); kolom yang sudah ditarik pakai lebarnya sendiri, seperti Excel */
+    function lebarBawaan() { var g = el.querySelector("[data-grid]"), w = g ? g.clientWidth : 0; if (!w) return 100; var tetap = 0, n = 0; for (var i = 0; i < KOL; i++) { var v = S.lebar[huruf(i)]; if (v) tetap += v; else n++; } return n ? Math.max(12, Math.floor((w - 44 - tetap) / n)) : 100; }
+    function lebar(c) { return S.lebar[huruf(c)] || lebarBawaan(); }
+    function tinggi(r) { return (S.tinggi && +S.tinggi[r]) || 0; }
     function isiSel(k, v) {
       var raw = S.sel[k], f = nf(k);
       if (v && v.e) return { h: esc(v.e), al: "center", err: 1 };
@@ -8430,12 +8444,12 @@ document.addEventListener("click",function(e){
     }
 
     /* ---------- grid ---------- */
-    function htmlBaris(r) { var h = '<tr><th class="xl-bh" data-r="' + r + '">' + (r + 1) + "</th>"; for (var c = 0; c < KOL; c++) h += '<td data-r="' + r + '" data-c="' + c + '"></td>'; return h + "</tr>"; }
+    function htmlBaris(r) { var h = '<tr' + (tinggi(r) ? ' style="height:' + tinggi(r) + 'px"' : "") + '><th class="xl-bh" data-r="' + r + '">' + (r + 1) + '<span class="xl-rr" data-rr="' + r + '" title="Seret untuk ubah tinggi baris · klik dua kali untuk kembali"></span></th>'; for (var c = 0; c < KOL; c++) h += '<td data-r="' + r + '" data-c="' + c + '"></td>'; return h + "</tr>"; }
     function bangun() {
       var h = '<table class="xl-t"><colgroup><col style="width:42px">';
       for (var c = 0; c < KOL; c++) h += '<col style="width:' + lebar(c) + 'px">';
       h += '</colgroup><thead><tr><th class="xl-pj" title="Pilih semua"></th>';
-      for (c = 0; c < KOL; c++) h += '<th class="xl-kh" data-c="' + c + '">' + huruf(c) + '<span class="xl-rs" data-rs="' + c + '"></span></th>';
+      for (c = 0; c < KOL; c++) h += '<th class="xl-kh" data-c="' + c + '">' + huruf(c) + '<span class="xl-rs" data-rs="' + c + '" title="Seret untuk ubah lebar kolom · klik dua kali untuk kembali"></span></th>';
       h += "</tr></thead><tbody>"; for (var r = 0; r < S.brs; r++) h += htmlBaris(r);
       grid.innerHTML = h + "</tbody></table>"; petakan();
     }
@@ -8627,12 +8641,25 @@ document.addEventListener("click",function(e){
     /* di HP: ketuk sel yang sudah terpilih sekali lagi = ubah isi */
     grid.addEventListener("click", function (e) { var td = e.target.closest("td"); if (td && !ed && e.pointerType === "touch" && seretTadi && seretTadi.aktifTadi) mulaiEdit(S.sel[alamat(A.r, A.c)] || "", "ubah"); });
     /* lebar kolom: seret garis kanan judul kolom */
-    grid.addEventListener("mousedown", function (e) {
-      var c = e.target.dataset.rs; if (c == null) return; e.preventDefault(); e.stopPropagation(); c = +c;
-      var x0 = e.clientX, w0 = lebar(c), col = grid.querySelectorAll("col")[c + 1];
-      function gerakM(ev) { var w = Math.max(30, Math.min(600, w0 + ev.clientX - x0)); S.lebar[huruf(c)] = w; col.style.width = w + "px"; }
-      function lepas() { document.removeEventListener("mousemove", gerakM); document.removeEventListener("mouseup", lepas); draft(); }
-      document.addEventListener("mousemove", gerakM); document.addEventListener("mouseup", lepas);
+    /* lebar kolom & tinggi baris: seret garis judul kolom/baris (mouse & sentuh), klik dua kali = kembali ke bawaan (Imperium 2026-11-26) */
+    grid.addEventListener("pointerdown", function (e) {
+      var rs = e.target.dataset.rs, rr = e.target.dataset.rr; if (rs == null && rr == null) return; e.preventDefault(); e.stopPropagation();
+      var gerak, ubahan = false, x0 = e.clientX, y0 = e.clientY;
+      if (rs != null) { var c = +rs, w0 = lebar(c), cols = grid.querySelectorAll("col");
+        /* kunci lebar kolom lain dulu supaya hanya kolom ini yang berubah */
+        for (var i = 0; i < KOL; i++) if (!S.lebar[huruf(i)]) cols[i + 1].style.width = lebar(i) + "px";
+        gerak = function (ev) { var w = Math.round(Math.max(12, Math.min(800, w0 + ev.clientX - x0))); if (w !== w0) ubahan = true; S.lebar[huruf(c)] = w; cols[c + 1].style.width = w + "px"; };
+        document.documentElement.classList.add("xl-rzc");
+      } else { var r = +rr, tr = TR[r], h0 = tinggi(r) || tr.getBoundingClientRect().height;
+        gerak = function (ev) { var h = Math.round(Math.max(16, Math.min(400, h0 + ev.clientY - y0))); if (Math.abs(h - h0) > 0) ubahan = true; S.tinggi = S.tinggi || {}; S.tinggi[r] = h; tr.style.height = h + "px"; };
+        document.documentElement.classList.add("xl-rzr"); }
+      function lepas() { document.removeEventListener("pointermove", gerak); document.removeEventListener("pointerup", lepas); document.removeEventListener("pointercancel", lepas);
+        document.documentElement.classList.remove("xl-rzc", "xl-rzr"); if (ubahan) { if (rs != null && !Object.keys(S.lebar).length) {} draft(); } }
+      document.addEventListener("pointermove", gerak); document.addEventListener("pointerup", lepas); document.addEventListener("pointercancel", lepas);
+    }, true);
+    grid.addEventListener("dblclick", function (e) {
+      var rs = e.target.dataset.rs, rr = e.target.dataset.rr; if (rs == null && rr == null) return; e.preventDefault(); e.stopPropagation();
+      if (rs != null) { delete S.lebar[huruf(+rs)]; lebarKolom(); } else if (S.tinggi) { delete S.tinggi[+rr]; TR[+rr].style.height = ""; } draft();
     }, true);
 
     /* ---------- keyboard di grid ---------- */
@@ -8958,6 +8985,7 @@ document.addEventListener("click",function(e){
           ws["!ref"] = maxR < 0 ? "A1" : "A1:" + alamat(maxR, maxC); ws["!cols"] = cols;
           if (S.merge.length) ws["!merges"] = S.merge.map(function (m) { return { s: { r: m.r1, c: m.c1 }, e: { r: m.r2, c: m.c2 } }; });
           if (S.filter) { ws["!autofilter"] = { ref: alamat(S.filter.r, S.filter.c1) + ":" + alamat(filterR2(), S.filter.c2) }; var rows = []; Object.keys(HID).forEach(function (x) { rows[+x] = { hidden: true }; }); if (rows.length) ws["!rows"] = rows; }
+          if (S.tinggi && Object.keys(S.tinggi).length) { ws["!rows"] = ws["!rows"] || []; Object.keys(S.tinggi).forEach(function (x) { ws["!rows"][+x] = Object.assign(ws["!rows"][+x] || {}, { hpx: S.tinggi[x] }); }); }
           var wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, "Excel Bos"); X.writeFile(wb, nama + ".xlsx");
           svTeks = bergaya ? "✓ Di-download lengkap dengan format" : "Di-download (warna, garis, dan font tidak ikut karena pustaka format gagal dimuat)"; statusSimpan(); return;
         }
@@ -9063,7 +9091,10 @@ document.addEventListener("click",function(e){
     try{pb=parseFloat(getComputedStyle(mn).paddingBottom)||0}catch(_){}
     var top=r.top+(mn?mn.scrollTop:0)+(document.scrollingElement?document.scrollingElement.scrollTop:0);
     if(matchMedia("(max-width:760px)").matches){host.style.height="";return}
-    host.style.height=Math.max(320,Math.floor(innerHeight-top-Math.min(pb,140)-8))+"px";if(mn)mn.scrollTop=0}
+    host.style.height=Math.max(320,Math.floor(innerHeight-top-12))+"px";if(mn)mn.scrollTop=0;
+    /* koreksi setelah tata letak selesai: bawah lembar tepat 12px dari bawah layar, tanpa halaman ikut tergulir */
+    requestAnimationFrame(function(){var b=host.getBoundingClientRect().bottom,want=innerHeight-12,cur=parseFloat(host.style.height)||0;if(cur&&Math.abs(b-want)>1)host.style.height=Math.max(320,Math.floor(cur-(b-want)))+"px";
+      if(mn){var extra=mn.scrollHeight-mn.clientHeight;if(extra>0&&extra<200){host.style.height=Math.max(320,(parseFloat(host.style.height)||0)-extra)+"px"}mn.scrollTop=0}})}
   addEventListener("resize",fit);
   function open(){
     fit();setTimeout(fit,0);
@@ -9459,7 +9490,7 @@ document.addEventListener("click",function(e){
   window.IMP_SET_DATE();
   function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;window.IMP_SET_DATE();try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
   setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
-  var base="imperium-shell-v48",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  var base="imperium-shell-v49",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
   function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
   function chk(){
     if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
