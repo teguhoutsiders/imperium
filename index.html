@@ -1717,6 +1717,22 @@ table.xl-t{border-collapse:separate;border-spacing:0;table-layout:fixed;font-siz
   .xl-hbody{grid-template-columns:1fr}
 }
 </style>
+<style>/* mobile: menu bawah berwarna */
+@media (max-width:760px){
+  .nav>a[data-tab="overview"]{--mc:var(--v4)}
+  .ngrp[data-ng="train"]{--mc:var(--v2)}
+  .ngrp[data-ng="plan"]{--mc:var(--v3)}
+  .ngrp[data-ng="goals"]{--mc:var(--v1)}
+  .ngrp[data-ng="money"]{--mc:var(--v7)}
+  .ngrp[data-ng="lib"]{--mc:var(--v5)}
+  .nav>a[data-tab="excel"]{--mc:#1D7A45}
+  .nav>a[data-tab="pengaturan"]{--mc:var(--v6)}
+  :root[data-mode="dark"] .nav>a[data-tab="excel"]{--mc:#5FD38D}
+  .nav>a .ic,.ngrp>.ng-btn .ic{color:var(--mc)!important}
+  .nav>a,.ngrp>.ng-btn{color:color-mix(in srgb,var(--mc) 70%,var(--muted))!important}
+  .nav>a[aria-current="page"],.ngrp>.ng-btn.on{background:color-mix(in srgb,var(--mc) 16%,transparent)!important;color:var(--mc)!important;font-weight:600}
+}
+</style>
 <div class="shell">
   <aside class="side" id="side" aria-label="Main menu">
     <div class="side-brand">
