@@ -1975,6 +1975,19 @@ html.xl-rzr,html.xl-rzr *{cursor:row-resize!important;user-select:none!important
 .tb-sw{display:block;width:18px;height:4px;border-radius:2px;border:1px solid rgba(0,0,0,.2)}
 .tb-clr input[type=color]{position:absolute;inset:0;width:100%!important;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
 </style>
+<style>
+/* zoom in / out Excel & Tabel */
+.zm{display:inline-flex;align-items:center;gap:4px;margin-left:auto;flex:none}
+.zm button{font:600 14px/1 Inter,system-ui,sans-serif;min-width:26px;height:26px;padding:0 6px;border-radius:6px;border:1px solid transparent;background:none;color:inherit;cursor:pointer}
+.zm button:hover{background:rgba(127,127,127,.15)}
+.zm .zm-p{min-width:48px;font-size:12.5px;font-family:var(--f-mono)}
+.zm input[type=range]{width:110px;accent-color:#4fd18b;margin:0;padding:0;background:none!important;border:0!important;box-shadow:none!important;height:18px}
+#tab-excel .zm{color:var(--kp-fg)}
+#tab-excel .xl-sheets{align-items:center}
+#tab-tabel .tb-bar .zm{margin-left:8px}
+#tab-tabel .tb-bar .tb-st{margin-left:auto}
+@media (max-width:760px){.zm input[type=range]{width:80px}#tab-tabel .tb-bar .zm{margin-left:0}}
+</style>
 <style>/* menu berwarna: tiap menu punya warna sendiri (HP dan laptop) */
   .nav>a[data-tab="overview"]{--mc:var(--v4)}
   .ngrp[data-ng="train"]{--mc:var(--v2)}
@@ -9542,6 +9555,42 @@ document.addEventListener("click",function(e){
 })();
 </script>
 <script>
+/* ==== Imperium: zoom in / zoom out untuk menu Excel & Tabel (Teguh 2026-11-26) ====
+   Kontrol seperti pojok kanan bawah Excel: [−] slider [+] 100%. Juga Ctrl + scroll mouse / cubit touchpad di atas sel.
+   Ukuran tersimpan per menu di perangkat ini. */
+(function(){
+  var MIN=50,MAX=200,STEP=10;
+  function T(en,id){return document.documentElement.lang==="id"?id:en}
+  var Z={excel:{key:"imp-zoom-excel",host:"xl-host",target:".xl-t",bar:".xl-sheets",wrap:".xl-grid"},
+         tabel:{key:"imp-zoom-tabel",host:"tb-host",target:".tb-t",bar:".tb-bar",wrap:".tb-wrap"}};
+  function get(k){var v=100;try{v=+localStorage.getItem(Z[k].key)||100}catch(_){}return Math.max(MIN,Math.min(MAX,v))}
+  function set(k,v){v=Math.round(Math.max(MIN,Math.min(MAX,v)));try{localStorage.setItem(Z[k].key,String(v))}catch(_){}apply(k);return v}
+  function apply(k){var c=Z[k],h=document.getElementById(c.host);if(!h)return;var v=get(k),t=h.querySelector(c.target);
+    if(t)t.style.zoom=v===100?"":String(v/100);
+    h.querySelectorAll(".zm").forEach(function(w){var r=w.querySelector("input[type=range]"),p=w.querySelector(".zm-p");if(r&&document.activeElement!==r)r.value=v;if(p)p.textContent=v+"%"})}
+  function widget(k){var d=document.createElement("div");d.className="zm";d.dataset.zk=k;
+    d.innerHTML='<button type="button" data-zm="-" title="'+T("Zoom out","Perkecil")+'" aria-label="'+T("Zoom out","Perkecil")+'">−</button>'
+      +'<input type="range" min="'+MIN+'" max="'+MAX+'" step="'+STEP+'" value="'+get(k)+'" aria-label="Zoom">'
+      +'<button type="button" data-zm="+" title="'+T("Zoom in","Perbesar")+'" aria-label="'+T("Zoom in","Perbesar")+'">+</button>'
+      +'<button type="button" class="zm-p" data-zm="0" title="'+T("Back to 100%","Kembali ke 100%")+'">'+get(k)+"%</button>";
+    d.addEventListener("click",function(e){var b=e.target.closest("[data-zm]");if(!b)return;e.preventDefault();var v=get(k);
+      set(k,b.dataset.zm==="+"?Math.floor(v/STEP)*STEP+STEP:b.dataset.zm==="-"?Math.ceil(v/STEP)*STEP-STEP:100)});
+    d.addEventListener("input",function(e){if(e.target.type==="range")set(k,+e.target.value)});
+    return d}
+  function mount(k){var c=Z[k],h=document.getElementById(c.host);if(!h)return;var bar=h.querySelector(c.bar);
+    if(bar&&!bar.querySelector(".zm"))bar.appendChild(widget(k));apply(k)}
+  /* pasang ulang setiap kali Excel/Tabel menggambar ulang isinya */
+  Object.keys(Z).forEach(function(k){var h=document.getElementById(Z[k].host);if(!h)return;
+    var mo=new MutationObserver(function(){if(!h.querySelector(Z[k].bar+" .zm")||(h.querySelector(Z[k].target)&&h.querySelector(Z[k].target).style.zoom!==(get(k)===100?"":String(get(k)/100))))mount(k)});
+    mo.observe(h,{childList:true,subtree:true});mount(k);
+    /* Ctrl + scroll (atau cubit touchpad) di atas sel = zoom, seperti Excel */
+    h.addEventListener("wheel",function(e){if(!(e.ctrlKey||e.metaKey))return;if(!e.target.closest(Z[k].wrap))return;e.preventDefault();
+      set(k,get(k)+(e.deltaY<0?STEP:-STEP))},{passive:false});
+  });
+  addEventListener("imp-lang",function(){Object.keys(Z).forEach(function(k){var h=document.getElementById(Z[k].host);if(h)h.querySelectorAll(".zm").forEach(function(w){w.remove()});mount(k)})});
+})();
+</script>
+<script>
 /* Tab yang dibiarkan terbuka: (1) lewat tengah malam, tampilan "hari ini" diperbarui; (2) ada versi baru, tampilkan tombol muat ulang */
 (function(){
   function ymd(d){return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
@@ -9551,7 +9600,7 @@ document.addEventListener("click",function(e){
   window.IMP_SET_DATE();
   function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;window.IMP_SET_DATE();try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
   setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
-  var base="imperium-shell-v54",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  var base="imperium-shell-v55",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
   function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
   function chk(){
     if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
