@@ -1941,6 +1941,16 @@ html.xl-rzr,html.xl-rzr *{cursor:row-resize!important;user-select:none!important
 @media (min-width:761px){.main:has(>#tab-excel:not([hidden])){padding-bottom:12px}}
 @media (max-width:760px){#tab-excel .xl-rr{bottom:-6px;height:12px}#tab-excel .xl-rs{right:-6px!important;width:12px!important}}
 </style>
+<style>
+/* Tabel: pilihan sel terlihat jelas, tombol aktif ditandai, gaya tampilan menu tidak merusak sel */
+#tab-tabel .tb-t input{border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important}
+#tab-tabel .tb-t input.tb-h{border-radius:6px!important}
+#tab-tabel .tb-t td input:focus,#tab-tabel .tb-t input.tb-h:focus{box-shadow:inset 0 0 0 2px var(--accent)!important;background:var(--surface)!important}
+#tab-tabel .tb-t td.on{background:color-mix(in srgb,var(--accent) 16%,transparent)}
+#tab-tabel .tb-t td.cur{outline:2px solid var(--accent);outline-offset:-2px}
+#tab-tabel .tb-bar button.on{background:color-mix(in srgb,var(--accent) 16%,transparent)!important;border-color:color-mix(in srgb,var(--accent) 45%,transparent)!important;color:var(--accent)}
+#tab-tabel .tb-bar button{box-shadow:none!important;text-transform:none!important}
+</style>
 <style>/* menu berwarna: tiap menu punya warna sendiri (HP dan laptop) */
   .nav>a[data-tab="overview"]{--mc:var(--v4)}
   .ngrp[data-ng="train"]{--mc:var(--v2)}
@@ -9113,7 +9123,7 @@ document.addEventListener("click",function(e){
    format Normal / Accounting. Bisa banyak tabel. Tersimpan ke akun (dokumen kind "tabel"). */
 (function(){
   var host=document.getElementById("tb-host");if(!host)return;
-  var seen={},books=[],cur=null,sel=null,anchor=null,dirty=false,timer=0,editing=false,lastSig="";
+  var lastEdit=null,seen={},books=[],cur=null,sel=null,anchor=null,dirty=false,timer=0,editing=false,lastSig="";
   var LS="imp-tabel-cur";
   function esc(t){return String(t==null?"":t).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
   function uid(){return "tbl-"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
@@ -9184,13 +9194,20 @@ document.addEventListener("click",function(e){
     paint();
     if(keep){var q=keep.hc!=null?'[data-hc="'+keep.hc+'"]':'input.tb-in[data-r="'+keep.r+'"][data-c="'+keep.c+'"]',x=host.querySelector(q);if(x){x.focus({preventScroll:true})}}
   }
-  function paint(){var R=rect();host.querySelectorAll("td[data-r]").forEach(function(td){var r=+td.dataset.r,c=+td.dataset.c;td.classList.toggle("on",!!R&&r>=R.r1&&r<=R.r2&&c>=R.c1&&c<=R.c2)});
+  function paint(){var R=rect();host.querySelectorAll("td[data-r]").forEach(function(td){var r=+td.dataset.r,c=+td.dataset.c;td.classList.toggle("on",!!R&&r>=R.r1&&r<=R.r2&&c>=R.c1&&c<=R.c2);td.classList.toggle("cur",!!sel&&r===sel.r2&&c===sel.c2)});
+    if(R){var st0=stOf(R.r1,R.c1),al0=st0.al||(st0.f==="acc"?"right":"left"),f0=st0.f==="acc"?"acc":"normal";
+      ["left","center","right"].forEach(function(k){var b=host.querySelector('[data-ta="al-'+k+'"]');if(b)b.classList.toggle("on",al0===k)});
+      ["normal","acc"].forEach(function(k){var b=host.querySelector('[data-ta="f-'+k+'"]');if(b)b.classList.toggle("on",f0===k)})}
     host.querySelectorAll("th[data-ch]").forEach(function(th){var c=+th.dataset.ch;th.classList.toggle("on",!!R&&c>=R.c1&&c<=R.c2)});
     host.querySelectorAll("th[data-rh]").forEach(function(th){var r=+th.dataset.rh;th.classList.toggle("on",!!R&&r>=R.r1&&r<=R.r2)});szFill()}
   function cellInput(r,c){return host.querySelector('input.tb-in[data-r="'+r+'"][data-c="'+c+'"]')}
   function go(r,c,ext){r=Math.max(0,Math.min(cur.rows.length-1,r));c=Math.max(0,Math.min(cur.cols.length-1,c));
     if(ext&&sel){sel.r2=r;sel.c2=c}else sel={r1:r,c1:c,r2:r,c2:c};var x=cellInput(r,c);if(x){x.focus();try{x.select()}catch(_){}}paint()}
-  function apply(fn){var R=rect();if(!R)return;cur.st=cur.st||{};for(var r=R.r1;r<=R.r2;r++)for(var c=R.c1;c<=R.c2;c++){var k=r+","+c,o=Object.assign({},cur.st[k]||{});fn(o);
+  function target(){var R=rect();if(!R)return null;
+    if(R.r1===R.r2&&R.c1===R.c2&&lastEdit&&Date.now()-lastEdit.t<60000&&(lastEdit.r!==R.r1||lastEdit.c!==R.c1)&&!(cur.rows[R.r1]&&cur.rows[R.r1][R.c1])&&cur.rows[lastEdit.r]&&cur.rows[lastEdit.r][lastEdit.c]){
+      sel={r1:lastEdit.r,c1:lastEdit.c,r2:lastEdit.r,c2:lastEdit.c};return rect()}
+    return R}
+  function apply(fn){var R=target();if(!R)return;cur.st=cur.st||{};for(var r=R.r1;r<=R.r2;r++)for(var c=R.c1;c<=R.c2;c++){var k=r+","+c,o=Object.assign({},cur.st[k]||{});fn(o);
       if(o.al==="left"&&o.f!=="acc")delete o.al;if(o.f==="normal")delete o.f;if(Object.keys(o).length)cur.st[k]=o;else delete cur.st[k]}save();render()}
   function shiftSt(fn){var n={};Object.keys(cur.st||{}).forEach(function(k){var p=k.split(","),nk=fn(+p[0],+p[1]);if(nk)n[nk[0]+","+nk[1]]=cur.st[k]});cur.st=n;
     ["rh","cw"].forEach(function(key){if(!cur[key])return;var m={};Object.keys(cur[key]).forEach(function(i){var nk=key==="rh"?fn(+i,0):fn(0,+i);if(nk)m[key==="rh"?nk[0]:nk[1]]=cur[key][i]});cur[key]=m})}
@@ -9201,6 +9218,7 @@ document.addEventListener("click",function(e){
     if(a==="del"){if(btn.dataset.arm!=="1"){btn.dataset.arm="1";btn.textContent=T("Delete?","Hapus?");btn.classList.add("arm");setTimeout(function(){if(btn.isConnected){btn.dataset.arm="";btn.textContent="🗑";btn.classList.remove("arm")}},2500);return}
       var id=cur.id;books=books.filter(function(b){return b.id!==id});clearTimeout(timer);dirty=false;if(window.IMP_DOC_DEL)window.IMP_DOC_DEL(id);
       if(!books.length){books=[blank()];cur=books[0];save()}else cur=books[0];sel=null;render();return}
+    if(/^al-/.test(a)||a==="f-acc"||a==="f-normal")R=target();
     if(/^al-/.test(a)){var al=a.slice(3);if(!R){status(T("Select cells first","Pilih sel dulu"));return}apply(function(o){o.al=al});
       if(R.r1===0&&R.r2===cur.rows.length-1){for(var c=R.c1;c<=R.c2;c++)cur.cols[c].al=al;save();render()}return}
     if(a==="f-acc"||a==="f-normal"){if(!R){status(T("Select cells first","Pilih sel dulu"));return}var f=a==="f-acc"?"acc":"normal";
@@ -9281,6 +9299,7 @@ document.addEventListener("click",function(e){
   host.addEventListener("mouseover",function(e){if(!drag)return;var td=e.target.closest("td[data-r]");if(!td)return;sel.r2=+td.dataset.r;sel.c2=+td.dataset.c;if(sel.r1!==sel.r2||sel.c1!==sel.c2){var a=document.activeElement;if(a&&a.blur&&host.contains(a))a.blur()}paint()});
   document.addEventListener("mouseup",function(){drag=null});
   host.addEventListener("focusin",function(e){var x=e.target;editing=true;
+    if(x.classList.contains("tb-h")){var hc=+x.dataset.hc;sel={r1:0,r2:cur.rows.length-1,c1:hc,c2:hc};lastEdit=null;paint();return}
     if(x.classList.contains("tb-in")){var r=+x.dataset.r,c=+x.dataset.c,v=cur.rows[r][c]||"";if(x.value!==v)x.value=v;
       if(!sel||drag||(sel.r1===sel.r2&&sel.c1===sel.c2)){if(!(sel&&sel.r1!==sel.r2||sel&&sel.c1!==sel.c2))sel={r1:r,c1:c,r2:r,c2:c}}paint()}});
   host.addEventListener("focusout",function(e){var x=e.target;editing=false;
@@ -9288,7 +9307,7 @@ document.addEventListener("click",function(e){
     if(x.classList.contains("tb-h")){var ci=+x.dataset.hc,nv=x.value.trim()||T("Column ","Kolom ")+(ci+1);if(x.value!==nv)x.value=nv;if(cur.cols[ci]&&cur.cols[ci].h!==nv){cur.cols[ci].h=nv;save()}}
     setTimeout(function(){if(!host.contains(document.activeElement))flush()},0)});
   host.addEventListener("input",function(e){var x=e.target;
-    if(x.classList.contains("tb-in")){var r=+x.dataset.r,c=+x.dataset.c;cur.rows[r][c]=x.value;save()}
+    if(x.classList.contains("tb-in")){var r=+x.dataset.r,c=+x.dataset.c;cur.rows[r][c]=x.value;lastEdit={r:r,c:c,t:Date.now()};save()}
     else if(x.classList.contains("tb-h")){var ci=+x.dataset.hc;cur.cols[ci].h=x.value;save()}});
   host.addEventListener("keydown",function(e){var x=e.target;
     if(x.classList.contains("tb-h")){if(e.key==="Enter"||e.key==="ArrowDown"){e.preventDefault();go(0,+x.dataset.hc)}return}
@@ -9490,7 +9509,7 @@ document.addEventListener("click",function(e){
   window.IMP_SET_DATE();
   function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;window.IMP_SET_DATE();try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
   setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
-  var base="imperium-shell-v49",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  var base="imperium-shell-v50",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
   function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
   function chk(){
     if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
