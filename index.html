@@ -2678,7 +2678,6 @@ html.xl-rzr,html.xl-rzr *{cursor:row-resize!important;user-select:none!important
     </div>
   </section>
 
-  <footer>Your data and files are stored in your own Supabase project.</footer>
   <!-- EXCEL -->
   <section class="panel" id="tab-excel" hidden><div id="xl-host"></div></section>
   <section class="panel" id="tab-tabel" hidden><div id="tb-host" class="tb"></div></section>
@@ -9136,17 +9135,17 @@ document.addEventListener("click",function(e){
     else if(e.shiftKey&&e.key==="F11"){e.preventDefault();tambah()}
   },true);
   /* tinggi lembar = sisa layar, supaya ribbon tetap terlihat dan yang digulir hanya sel */
-  function fit(){if((location.hash||"")!=="#excel")return;var r=host.getBoundingClientRect(),mn=document.querySelector(".main"),pb=0;
-    try{pb=parseFloat(getComputedStyle(mn).paddingBottom)||0}catch(_){}
-    var top=r.top+(mn?mn.scrollTop:0)+(document.scrollingElement?document.scrollingElement.scrollTop:0);
+  function fit(){if((location.hash||"")!=="#excel")return;var mn=document.querySelector(".main");
     if(matchMedia("(max-width:760px)").matches){host.style.height="";return}
-    host.style.height=Math.max(320,Math.floor(innerHeight-top-12))+"px";if(mn)mn.scrollTop=0;
-    /* koreksi setelah tata letak selesai: bawah lembar tepat 12px dari bawah layar, tanpa halaman ikut tergulir */
-    requestAnimationFrame(function(){var b=host.getBoundingClientRect().bottom,want=innerHeight-12,cur=parseFloat(host.style.height)||0;if(cur&&Math.abs(b-want)>1)host.style.height=Math.max(320,Math.floor(cur-(b-want)))+"px";
-      if(mn){var extra=mn.scrollHeight-mn.clientHeight;if(extra>0&&extra<200){host.style.height=Math.max(320,(parseFloat(host.style.height)||0)-extra)+"px"}mn.scrollTop=0}})}
+    if(mn)mn.scrollTop=0;
+    /* lembar memenuhi sisa layar sampai bawah (jarak 12px), tanpa halaman ikut tergulir */
+    var top=host.getBoundingClientRect().top;host.style.height=Math.max(320,Math.floor(innerHeight-top-12))+"px";
+    if(mn){var extra=mn.scrollHeight-mn.clientHeight;if(extra>0)host.style.height=Math.max(320,(parseFloat(host.style.height)||0)-extra)+"px";mn.scrollTop=0}}
+  function fitLater(){fit();requestAnimationFrame(fit);setTimeout(fit,250);setTimeout(fit,900)}
+  try{document.fonts&&document.fonts.ready.then(fit)}catch(_){}
   addEventListener("resize",fit);
   function open(){
-    fit();setTimeout(fit,0);
+    fitLater();
     if(mounted||(location.hash||"").slice(1)!=="excel")return;
     if(!window.FileBos||!window.FileBos.excel){host.innerHTML='<div class="empty">Excel belum terpasang.</div>';return}
     try{window.FileBos.excel(host);mounted=true;tabs()}catch(e){host.innerHTML='<div class="empty">Excel gagal dimuat: '+String(e.message).replace(/</g,"&lt;")+'</div>'}
@@ -9600,7 +9599,7 @@ document.addEventListener("click",function(e){
   window.IMP_SET_DATE();
   function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;window.IMP_SET_DATE();try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
   setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
-  var base="imperium-shell-v55",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  var base="imperium-shell-v56",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
   function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
   function chk(){
     if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
