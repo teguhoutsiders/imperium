@@ -2928,14 +2928,16 @@ window.I18N=(function(){
     let h=(location.hash||"").slice(1);if(h==="stopwatch")h="calendar";if(h==="keuangan")h="aset";const t=TABS.includes(h)?h:"overview";
     const g=groupOf(t);
     if(g&&lastSub[g]!==t){lastSub[g]=t;try{localStorage.setItem("imp-lastsub",JSON.stringify(lastSub))}catch(_){}}
-    if(t!==curTab){prevTab=curTab;curTab=t}
+    const tabChanged=t!==curTab;
+    if(tabChanged){prevTab=curTab;curTab=t}
     TABS.forEach(n=>{$("tab-"+n).hidden=n!==t;document.querySelector('[data-tab="'+n+'"]').setAttribute("aria-current",n===t?"page":"false")});
     document.querySelectorAll(".ng-btn").forEach(b=>b.classList.toggle("on",b.dataset.ngb===g));
     if(g&&!isMob())openGroup(g);
     $("view-title").textContent=document.querySelector('[data-tab="'+t+'"] .ni').textContent;
     if(t==="files")setTimeout(()=>{if(assets&&!usageLoaded)refreshUsage()},0);
     closeMenu();
-    const mn=document.querySelector(".main");if(mn)mn.scrollTop=0;
+    /* hanya gulir ke atas saat benar-benar pindah menu; ganti pilihan di halaman yang sama (mis. Pengaturan) tetap di posisinya */
+    if(tabChanged){const mn=document.querySelector(".main");if(mn)mn.scrollTop=0}
   }
   /* ---------- sidebar (HP) ---------- */
   function openMenu(){}
@@ -5455,7 +5457,7 @@ window.I18N=(function(){
     const vv=e.target.closest("[data-vivid-opt]");if(vv){setPrefs({vivid:vv.dataset.vividOpt});return}
     const gr=e.target.closest("[data-grad-opt]");if(gr){setPrefs({grad:+gr.dataset.gradOpt});return}
     const ui=e.target.closest("[data-ui-opt]");if(ui){setPrefs({ui:ui.dataset.uiOpt});return}
-    const tf=e.target.closest("[data-tfx-opt]");if(tf){setPrefs({tfx:tf.dataset.tfxOpt}).then(()=>{const x=$("tfx-try");if(x){x.focus();if(window.IMP_FX)IMP_FX.test(prefs.tfx)}});return}
+    const tf=e.target.closest("[data-tfx-opt]");if(tf){setPrefs({tfx:tf.dataset.tfxOpt}).then(()=>{const x=$("tfx-try");if(x){x.focus({preventScroll:true});if(window.IMP_FX)IMP_FX.test(prefs.tfx)}});return}
     const an=e.target.closest("[data-anim-opt]");if(an){setPrefs({anim:an.dataset.animOpt}).then(()=>{if(prefs.anim!=="off")window.dispatchEvent(new Event("hashchange"))});return}
     const m=e.target.closest("[data-mode-opt]");if(m){setPrefs({mode:m.dataset.modeOpt});return}
     const a=e.target.closest("[data-acc-opt]");if(a){setPrefs({accent:a.dataset.accOpt});return}
@@ -9549,7 +9551,7 @@ document.addEventListener("click",function(e){
   window.IMP_SET_DATE();
   function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;window.IMP_SET_DATE();try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
   setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
-  var base="imperium-shell-v53",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  var base="imperium-shell-v54",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
   function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
   function chk(){
     if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
