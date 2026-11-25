@@ -1717,6 +1717,16 @@ table.xl-t{border-collapse:separate;border-spacing:0;table-layout:fixed;font-siz
   .xl-hbody{grid-template-columns:1fr}
 }
 </style>
+<style>.bg-pick{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 6px}
+.bg-pk{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card,transparent);color:var(--ink);border-radius:999px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer}
+.bg-pk:hover{border-color:var(--accent,#2b6);background:color-mix(in srgb,var(--accent,#2b6) 8%,transparent)}
+.bg-pk b{color:var(--accent,#2b6);font-weight:700}
+.bg-or{margin-top:10px}
+.bg-tbl td:first-child{white-space:nowrap}
+.bg-rm{margin-left:8px;border:0;background:none;color:var(--muted);font:inherit;font-size:15px;line-height:1;padding:2px 6px;border-radius:6px;cursor:pointer;opacity:.55}
+.bg-rm:hover,.bg-rm.arm{opacity:1;color:var(--crit,#c33);background:color-mix(in srgb,var(--crit,#c33) 10%,transparent)}
+.bg-rm.arm{font-size:12px;font-weight:600}
+</style>
 <style>/* menu berwarna: tiap menu punya warna sendiri (HP dan laptop) */
   .nav>a[data-tab="overview"]{--mc:var(--v4)}
   .ngrp[data-ng="train"]{--mc:var(--v2)}
@@ -2280,11 +2290,13 @@ table.xl-t{border-collapse:separate;border-spacing:0;table-layout:fixed;font-siz
       <div class="bg-acts"><button type="button" class="primary" id="bg-add">+ Add expense</button><button type="button" class="soft" id="bg-copy">Copy last month</button><button type="button" class="ghost" id="bg-next">Next month</button></div>
     </div>
     <form class="entry bg-addf" id="f-bgadd" autocomplete="off" hidden>
-      <p class="formtitle">New expense type</p>
+      <p class="formtitle">Choose from your expense categories</p>
+      <div class="bg-pick wide" id="bg-pick"></div>
+      <p class="formtitle bg-or">Or create a new category</p>
       <label>Icon<input type="hidden" id="ct-ic-bgx" value="📦"><button type="button" id="ct-ib-bgx" class="bt-icon-btn" data-pkopen title="Choose emoji">📦</button></label>
-      <label>Name<input id="bg-add-name" maxlength="60" placeholder="e.g. Makan, Bensin" required></label>
+      <label>Name<input id="bg-add-name" maxlength="60" placeholder="e.g. Makan, Bensin"></label>
       <label>Budget this month (Rp)<input id="bg-add-amt" inputmode="numeric" placeholder="Optional"></label>
-      <div class="actions"><button type="button" class="ghost" id="bg-add-cancel">Cancel</button><button class="primary" type="submit">Add expense</button></div>
+      <div class="actions"><button type="button" class="ghost" id="bg-add-cancel">Cancel</button><button class="primary" type="submit">Create &amp; add</button></div>
     </form>
     <div class="ledger bg-ledger" id="bg-sum"></div>
     <div id="bg-table"></div>
@@ -2451,7 +2463,7 @@ window.I18N=(function(){
   var D={
   "Lead time":"Lead time","New lead time":"Lead time baru","Edit lead time":"Ubah lead time","+ New lead time":"+ Lead time baru","Due within 7 days":"Habis ≤ 7 hari","⏳ Days left":"⏳ Hari lagi","📅 Days running":"📅 Hari berjalan","Countdown to a due date, e.g. monthly data quota":"Hitung mundur sampai tanggal habis, mis. kuota bulanan","Count up since a date, e.g. days since last day of work":"Hitung maju sejak suatu tanggal, mis. sejak hari terakhir kerja","Repeats":"Berulang","Every month":"Tiap bulan","Every year":"Tiap tahun","Bought / start date":"Tanggal beli / mulai","Group":"Grup","Optional, e.g. Kuota, Kerja, Kendaraan":"Opsional, mis. Kuota, Kerja, Kendaraan",
   "⏱ Stopwatch":"⏱ Stopwatch","⏳ Countdown":"⏳ Hitung mundur","Hours":"Jam","Minutes":"Menit","Seconds":"Detik","+1 min":"+1 menit","1 min":"1 mnt","5 min":"5 mnt","10 min":"10 mnt","15 min":"15 mnt","25 min":"25 mnt","30 min":"30 mnt","45 min":"45 mnt","1 h":"1 jam","1.5 h":"1,5 jam","e.g. Makan, Bensin":"mis. Makan, Bensin","✳ Claude limit":"✳ Limit Claude","Not filled in yet · tap to fill in":"Belum diisi · ketuk untuk mengisi","Open Claude usage page ↗":"Buka halaman Usage Claude ↗","+ New task":"+ Tugas baru","+ New project":"+ Proyek baru","+ New dream":"+ Impian baru","+ New renewal":"+ Masa aktif baru","+ New link":"+ Tautan baru","+ New note":"+ Catatan baru","+ New finance entry":"+ Entri keuangan baru","Restart":"Ulangi","Time’s up — session saved.":"Waktu habis — sesi tersimpan.","Couldn’t save the session.":"Gagal menyimpan sesi.",
-  "Budget month":"Bulan anggaran","Copy last month":"Salin dari bulan lalu","Next month":"Bulan depan","Expense types":"Tipe pengeluaran","Icon":"Ikon","Add type":"Tambah tipe","Expense type":"Tipe pengeluaran","No type":"Tanpa tipe","These types also appear when you record an outgoing transaction in Assets & debts, so spending is counted against the budget.":"Tipe ini juga muncul saat mencatat transaksi keluar di Aset & utang, jadi pengeluaran langsung dihitung terhadap anggaran.","Total budget":"Total anggaran","Spent":"Terpakai","Remaining":"Sisa","Over budget":"Melebihi anggaran","Type":"Tipe","Budget (Rp)":"Anggaran (Rp)","Untyped spending":"Pengeluaran tanpa tipe","Remove type":"Hapus tipe","Spending is taken from outgoing transactions in Assets & debts for this month.":"Pengeluaran diambil dari transaksi keluar di Aset & utang pada bulan ini.","No expense types yet. Add one on the left.":"Belum ada tipe pengeluaran. Tambahkan di sebelah kiri.","Copied from last month.":"Disalin dari bulan lalu.","Last month has no budget.":"Bulan lalu belum ada anggaran.","Saved":"Tersimpan","Claude limit":"Limit Claude","Color variety":"Variasi warna","Colorful":"Warna-warni","Single accent":"Satu warna aksen","5-hour":"5 jam","Weekly":"Mingguan","Set Claude limit":"Atur limit Claude","Used (%)":"Terpakai (%)","Resets at":"Reset pada","resets in":"reset dalam","reset":"sudah reset","Tap to fill in":"Ketuk untuk mengisi","Copy the numbers from Claude Settings › Usage. A page can't read your Claude usage by itself.":"Salin angkanya dari Pengaturan Claude › Penggunaan. Halaman ini tidak bisa membaca pemakaian Claude sendiri.",
+  "Budget month":"Bulan anggaran","Choose from your expense categories":"Pilih dari kategori expense Anda","Or create a new category":"Atau buat kategori baru","Create & add":"Buat & tambahkan","All expense categories are already in the budget.":"Semua kategori expense sudah ada di anggaran.","No expense categories yet. Create one below or in Category.":"Belum ada kategori expense. Buat di bawah atau di menu Kategori.","No expenses in the budget yet. Tap “+ Add expense” to choose from your categories.":"Belum ada expense di anggaran. Ketuk “+ Tambah expense” untuk memilih dari kategori Anda.","Other spending (not in budget)":"Pengeluaran lain (di luar anggaran)","Remove from budget":"Hapus dari anggaran","Copy last month":"Salin dari bulan lalu","Next month":"Bulan depan","Expense types":"Tipe pengeluaran","Icon":"Ikon","Add type":"Tambah tipe","Expense type":"Tipe pengeluaran","No type":"Tanpa tipe","These types also appear when you record an outgoing transaction in Assets & debts, so spending is counted against the budget.":"Tipe ini juga muncul saat mencatat transaksi keluar di Aset & utang, jadi pengeluaran langsung dihitung terhadap anggaran.","Total budget":"Total anggaran","Spent":"Terpakai","Remaining":"Sisa","Over budget":"Melebihi anggaran","Type":"Tipe","Budget (Rp)":"Anggaran (Rp)","Untyped spending":"Pengeluaran tanpa tipe","Remove type":"Hapus tipe","Spending is taken from outgoing transactions in Assets & debts for this month.":"Pengeluaran diambil dari transaksi keluar di Aset & utang pada bulan ini.","No expense types yet. Add one on the left.":"Belum ada tipe pengeluaran. Tambahkan di sebelah kiri.","Copied from last month.":"Disalin dari bulan lalu.","Last month has no budget.":"Bulan lalu belum ada anggaran.","Saved":"Tersimpan","Claude limit":"Limit Claude","Color variety":"Variasi warna","Colorful":"Warna-warni","Single accent":"Satu warna aksen","5-hour":"5 jam","Weekly":"Mingguan","Set Claude limit":"Atur limit Claude","Used (%)":"Terpakai (%)","Resets at":"Reset pada","resets in":"reset dalam","reset":"sudah reset","Tap to fill in":"Ketuk untuk mengisi","Copy the numbers from Claude Settings › Usage. A page can't read your Claude usage by itself.":"Salin angkanya dari Pengaturan Claude › Penggunaan. Halaman ini tidak bisa membaca pemakaian Claude sendiri.",
   "Paste a link (https://…)":"Tempel link (https://…)","Name (optional)":"Nama (opsional)","Remove link":"Hapus link","Paste a link above and give it a name. It is also saved in Library › Links.":"Tempel link di atas lalu beri nama. Link juga tersimpan di Library › Tautan.","Interface style":"Gaya tampilan","Card, menu and button style":"Gaya kartu, menu, dan tombol","Applies to cards, inner cards, buttons and the sidebar. Saved to your account.":"Berlaku untuk kartu, kartu dalam, tombol, dan sidebar. Tersimpan di akun Anda.","Typing effect":"Efek mengetik","Effect":"Efek","Try typing here…":"Coba ketik di sini…","Adds a small effect each time you type in any text box. Saved to your account.":"Menambah efek kecil setiap kali Anda mengetik di kotak teks mana pun. Tersimpan di akun Anda.","Animation":"Animasi","Motion":"Gerakan","Lively":"Hidup","Subtle":"Halus","Off":"Mati","Movement when you open a menu, switch pages or press buttons. On a phone, swipe left or right to move between menus.":"Gerakan saat membuka menu, pindah halaman, atau menekan tombol. Di HP, geser kiri atau kanan untuk pindah menu.","Flat":"Datar","Glow":"Cahaya","Pop":"Letup","Sparks":"Percikan","Confetti":"Konfeti","Emoji burst":"Ledakan emoji","Power mode":"Mode power","Ripple":"Riak","Typewriter sound":"Suara mesin ketik","Rainbow":"Pelangi","Paper":"Kertas","Dark red":"Merah gelap","Deep teal":"Teal gelap","Indigo night":"Malam indigo","Bronze":"Perunggu","Dark green":"Hijau gelap","Navy night":"Biru malam","Gradient level":"Tingkat degradasi","Strong":"Kuat","Medium":"Sedang","Background, sidebar, cards and inner cards use steps of the same color. Strong makes the steps clearer.":"Latar, sidebar, kartu, dan kartu dalam memakai tingkatan dari warna yang sama. Kuat membuat tingkatannya lebih jelas.","Add link":"Tambah link","Tap a square to mark that day, week or month as done or not done.":"Ketuk kotak untuk menandai hari, minggu, atau bulan itu sudah atau belum dikerjakan.","List":"Daftar","Small cards":"Kartu kecil","Large cards":"Kartu besar","View":"Tampilan","No links yet. Tap Add link, paste the address and give it a name.":"Belum ada link. Ketuk Tambah link, tempel alamatnya, lalu beri nama.","Coming up":"Akan datang","Daily routines":"Rutinitas harian","Weekly routines":"Rutinitas mingguan","Monthly routines":"Rutinitas bulanan",
   "Personal notebook":"Buku catatan pribadi","Overview":"Ringkasan","Agent AI":"Agen AI","Tasks":"Tugas","Stopwatch & Calendar":"Stopwatch & Kalender","Stopwatch":"Stopwatch","Calendar":"Kalender","Projects":"Proyek","Dreams":"Impian","Renewals":"Masa Aktif","Links":"Tautan","Files":"Berkas","Notes":"Catatan","Finance":"Keuangan","Settings":"Pengaturan","Shortcuts":"Pintasan","Connecting…":"Menghubungkan…","Auto-saved":"Tersimpan otomatis","Main menu":"Menu utama","Sections":"Bagian","Open menu":"Buka menu","Not connected":"Tidak terhubung","Not connected yet":"Belum terhubung","Disconnected":"Terputus",
   "Your data and files are stored in your own Supabase project.":"Data dan berkas Anda tersimpan di project Supabase milik Anda.",
@@ -2645,12 +2657,18 @@ window.I18N=(function(){
   }
   document.querySelector(".nav").addEventListener("click",e=>{
     const b=e.target.closest(".ng-btn");if(!b)return;
-    if(isMob()){const f=b.parentNode.querySelector(".nsub>a[data-tab]");if(f){location.hash=f.dataset.tab;return}}
-    openGroup(b.getAttribute("aria-expanded")==="true"?null:b.dataset.ngb);
+    /* klik menu besar: kembali ke sub-menu terakhir yang dibuka di grup itu (awal: sub-menu pertama) */
+    const g=b.dataset.ngb,curT=(location.hash||"").slice(1);
+    if(groupOf(curT)!==g){const last=lastSub[g],f=b.parentNode.querySelector(".nsub>a[data-tab]");const to=last&&GROUPS[g].includes(last)?last:(f&&f.dataset.tab);if(to){location.hash=to;return}}
+    if(isMob())return;
+    openGroup(b.getAttribute("aria-expanded")==="true"?null:g);
   });
+  let lastSub={},prevTab=null,curTab=null;try{lastSub=JSON.parse(localStorage.getItem("imp-lastsub")||"{}")||{}}catch(_){}
   function showTab(){
     let h=(location.hash||"").slice(1);if(h==="stopwatch")h="calendar";if(h==="keuangan")h="aset";const t=TABS.includes(h)?h:"overview";
     const g=groupOf(t);
+    if(g&&lastSub[g]!==t){lastSub[g]=t;try{localStorage.setItem("imp-lastsub",JSON.stringify(lastSub))}catch(_){}}
+    if(t!==curTab){prevTab=curTab;curTab=t}
     TABS.forEach(n=>{$("tab-"+n).hidden=n!==t;document.querySelector('[data-tab="'+n+'"]').setAttribute("aria-current",n===t?"page":"false")});
     document.querySelectorAll(".ng-btn").forEach(b=>b.classList.toggle("on",b.dataset.ngb===g));
     if(g&&!isMob())openGroup(g);
@@ -2669,6 +2687,17 @@ window.I18N=(function(){
   $("scrim").addEventListener("click",closeMenu);
   $("side").addEventListener("click",e=>{if(e.target.closest(".nav a, .app"))closeMenu()});
   addEventListener("keydown",e=>{if(e.key==="Escape"&&isMob()&&!$("scrim").hidden)closeMenu()});
+  /* Laptop: Esc = bolak-balik ke menu sebelumnya (mis. Arsip › Catatan ⇄ Keuangan › Anggaran).
+     Tidak dipakai saat sedang mengetik, ada jendela/popup terbuka, atau di dalam Excel. */
+  addEventListener("keydown",e=>{
+    if(e.key!=="Escape"||e.ctrlKey||e.altKey||e.metaKey||e.shiftKey||e.repeat||isMob()||!prevTab)return;
+    const a=document.activeElement;
+    if(a&&a!==document.body&&(a.matches("input,textarea,select,[contenteditable],[contenteditable] *")||a.closest("#tab-excel,[role=dialog],dialog")))return;
+    if(document.querySelector('[role="dialog"]:not([hidden]),dialog[open],[aria-modal="true"]:not([hidden]),.entry:not([hidden]) :focus'))return;
+    if(curTab==="excel")return;
+    const vis=[...document.querySelectorAll("form.entry:not([hidden])")].some(f=>f.closest(".panel")&&!f.closest(".panel").hidden&&f.matches(".bg-addf,[data-popup]"));if(vis)return;
+    e.preventDefault();location.hash=prevTab;
+  },true);
   addEventListener("hashchange",showTab); showTab(); syncGroupCounts();
 
   /* ---------- status ---------- */
@@ -4100,10 +4129,21 @@ window.I18N=(function(){
   function btList(){return catList("exp")}
   async function btSave(list){return catSave("exp",list)}
   function bgDoc(m){return items.find(i=>i.id==="budget-"+m)}
+  /* Kategori yang tampil di tabel Anggaran dipilih lewat "+ Tambah expense" (bukan otomatis semua kategori) */
+  function bgSel(){
+    const d=items.find(i=>i.id==="budget-sel");if(d&&Array.isArray(d.sel))return d.sel;
+    const used=new Set();items.forEach(i=>{if(i.kind==="budget"&&i.lines)Object.keys(i.lines).forEach(k=>{if(+i.lines[k])used.add(k)})});
+    return btList().map(t=>t.id).filter(id=>used.has(id));
+  }
+  async function bgSetSel(sel){return save("budget","budget-sel",{sel:sel})}
+  function renderBgPick(){
+    const el=$("bg-pick");if(!el)return;const sel=new Set(bgSel()),av=btList().filter(t=>!sel.has(t.id));
+    el.innerHTML=av.length?av.map(t=>'<button type="button" class="bg-pk" data-bgpk="'+esc(t.id)+'"><span class="bt-i">'+esc(t.i)+'</span> <span class="catn">'+esc(t.n)+'</span> <b>+</b></button>').join(""):'<span class="hint">'+(btList().length?"All expense categories are already in the budget.":"No expense categories yet. Create one below or in Category.")+'</span>';
+  }
   function renderBudget(){
     if(!$("bg-month"))return;
     if($("bg-month").value!==bgMonth)$("bg-month").value=bgMonth;
-    const types=btList();
+    const allT=btList(),selS=new Set(bgSel()),types=allT.filter(t=>selS.has(t.id));renderBgPick();
     if($("bg-chips"))$("bg-chips").innerHTML=types.length?types.map(t=>'<span class="pill p-mute"><span class="bt-i">'+esc(t.i)+'</span> <span class="catn">'+esc(t.n)+'</span></span>').join(""):'<span class="hint">No expense types yet.</span>';
     if(!ready){$("bg-table").innerHTML='<div class="empty">Loading…</div>';return}
     const doc=bgDoc(bgMonth),lines=(doc&&doc.lines)||{};
@@ -4113,13 +4153,13 @@ window.I18N=(function(){
     const totB=types.reduce((s,t)=>s+(+lines[t.id]||0),0),totS=out.reduce((s,f)=>s+(+f.amount||0),0),rem=totB-totS;
     const [y,mm]=bgMonth.split("-");
     $("bg-sum").innerHTML='<div class="stat"><div class="k">Total budget</div><div class="v">'+rp(totB)+'</div><div class="s">'+BLN[+mm-1]+' '+y+'</div></div><div class="stat"><div class="k">Spent</div><div class="v neg">'+rp(totS)+'</div></div><div class="stat net"><div class="k">Remaining</div><div class="v'+(rem<0?' neg':'')+'">'+(rem<0?"−":"")+rp(Math.abs(rem))+'</div></div>';
-    if(!types.length){$("bg-table").innerHTML='<div class="empty">No expense types yet. Add one in Category settings.</div>';return}
+    if(!types.length){$("bg-table").innerHTML='<div class="empty">No expenses in the budget yet. Tap “+ Add expense” to choose from your categories.</div>';return}
     const keep=document.activeElement&&document.activeElement.dataset&&document.activeElement.dataset.bgin;
     let rows=types.map(t=>{
       const b=+lines[t.id]||0,s=spentBy[t.id]||0,p=b?Math.min(100,Math.round(s/b*100)):(s?100:0),over=b&&s>b;
-      return '<tr><td><span class="bt-i">'+esc(t.i)+'</span> <span class="catn">'+esc(t.n)+'</span></td><td class="r"><input class="bg-in mono" inputmode="numeric" data-bgin="'+esc(t.id)+'" value="'+(b?fmtIn(b):"")+'" placeholder="0" aria-label="Budget (Rp)"></td><td class="r mono spent">'+rp(s)+'</td><td class="r mono'+(over?' neg':'')+'">'+(b?(b-s<0?"−":"")+rp(Math.abs(b-s)):"–")+'</td><td class="bg-barc"><div class="bar'+(over?' over':' ok')+'"><i style="width:'+p+'%"></i></div></td></tr>';
+      return '<tr><td><span class="bt-i">'+esc(t.i)+'</span> <span class="catn">'+esc(t.n)+'</span><button type="button" class="bg-rm" data-bgrm="'+esc(t.id)+'" title="Remove from budget" aria-label="Remove from budget">×</button></td><td class="r"><input class="bg-in mono" inputmode="numeric" data-bgin="'+esc(t.id)+'" value="'+(b?fmtIn(b):"")+'" placeholder="0" aria-label="Budget (Rp)"></td><td class="r mono spent">'+rp(s)+'</td><td class="r mono'+(over?' neg':'')+'">'+(b?(b-s<0?"−":"")+rp(Math.abs(b-s)):"–")+'</td><td class="bg-barc"><div class="bar'+(over?' over':' ok')+'"><i style="width:'+p+'%"></i></div></td></tr>';
     }).join("");
-    if(untyped)rows+='<tr class="bg-untyped"><td>Untyped spending</td><td></td><td class="r mono">'+rp(untyped)+'</td><td></td><td></td></tr>';
+    if(untyped)rows+='<tr class="bg-untyped"><td>Other spending (not in budget)</td><td></td><td class="r mono">'+rp(untyped)+'</td><td></td><td></td></tr>';
     $("bg-table").innerHTML='<div class="ptbl-wrap"><table class="ptbl bg-tbl"><thead><tr><th>Type</th><th class="r">Budget (Rp)</th><th class="r">Spent</th><th class="r">Remaining</th><th></th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><td>Total</td><td class="r mono">'+rp(totB)+'</td><td class="r mono spent">'+rp(totS)+'</td><td class="r mono'+(rem<0?' neg':'')+'">'+(rem<0?"−":"")+rp(Math.abs(rem))+'</td><td></td></tr></tfoot></table></div><p class="hint" id="bg-msg">Spending is taken from expense records in Record for this month.</p>';
     if(keep){const x=document.querySelector('[data-bgin="'+keep+'"]');if(x){x.focus();try{x.setSelectionRange(x.value.length,x.value.length)}catch(_){}}}
   }
@@ -4133,18 +4173,26 @@ window.I18N=(function(){
       if(isNaN(v)||!v)delete lines[x.dataset.bgin];else lines[x.dataset.bgin]=v;
       await save("budget","budget-"+bgMonth,{month:bgMonth,lines})});
     $("bg-table").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("[data-bgin]")){e.preventDefault();e.target.blur()}});
+    $("bg-table").addEventListener("click",async e=>{const b=e.target.closest("[data-bgrm]");if(!b)return;
+      if(b.dataset.arm!=="1"){b.dataset.arm="1";b.textContent=document.documentElement.lang==="id"?"Hapus?":"Remove?";b.classList.add("arm");setTimeout(()=>{if(b.isConnected){b.dataset.arm="";b.textContent="×";b.classList.remove("arm")}},2500);return}
+      await bgSetSel(bgSel().filter(x=>x!==b.dataset.bgrm))});
+    $("bg-pick")&&$("bg-pick").addEventListener("click",async e=>{const b=e.target.closest("[data-bgpk]");if(!b)return;b.disabled=true;
+      const sel=bgSel().slice();if(!sel.includes(b.dataset.bgpk))sel.push(b.dataset.bgpk);await bgSetSel(sel)});
   }
   if($("bg-add")){
     const f=$("f-bgadd");
     const close=()=>{f.reset();$("ct-ic-bgx").value="📦";$("ct-ib-bgx").textContent="📦";f.hidden=true};
     $("bg-add").onclick=()=>{if(f.hidden){f.hidden=false;$("bg-add-name").focus()}else close()};
     $("bg-add-cancel").onclick=close;
+    addEventListener("keydown",e=>{if(e.key==="Escape"&&!f.hidden&&!$("tab-budget").hidden&&!(document.getElementById("bt-pick")&&!document.getElementById("bt-pick").hidden)){e.preventDefault();e.stopImmediatePropagation();close()}},true);
     $("ct-ib-bgx").onclick=()=>btOpenPick("new",$("ct-ib-bgx"),"bgx");
     $("bg-add-amt").addEventListener("blur",e=>{const v=parseAmt(e.target.value);if(v>0)e.target.value=fmtIn(v)});
     f.addEventListener("submit",async e=>{
       e.preventDefault();const n=$("bg-add-name").value.trim();if(!n)return;
       const id="t"+Date.now().toString(36),list=catList("exp").slice();list.push({id,i:$("ct-ic-bgx").value||"📦",n});
+      const sel=bgSel().slice();
       if(!await catSave("exp",list))return;
+      sel.push(id);await bgSetSel(sel);
       const v=parseAmt($("bg-add-amt").value);
       if(v>0){const doc=bgDoc(bgMonth),lines=Object.assign({},(doc&&doc.lines)||{});lines[id]=v;await save("budget","budget-"+bgMonth,{month:bgMonth,lines})}
       close();
@@ -9184,7 +9232,7 @@ addEventListener("hashchange",()=>{if((location.hash||"")==="#excel"&&cur){setTi
   var day=ymd(new Date());
   function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
   setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
-  var base="imperium-shell-v38",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  var base="imperium-shell-v39",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
   function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
   function chk(){
     if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
