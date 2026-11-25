@@ -75,17 +75,23 @@
 
   /* ---------- layar masuk ---------- */
   var loginResolve=null,loginP=null;
-  function needLogin(){if(!loginP)loginP=new Promise(function(r){loginResolve=r;showLogin()});return loginP}
+  function needLogin(mode){if(!loginP)loginP=new Promise(function(r){loginResolve=r;showLogin(mode)});return loginP}
+  /* kunci Imperium: tiap kali Imperium dibuka (tab/aplikasi baru) wajib masukkan password; muat ulang di tab yang sama tidak ditanya lagi */
+  var LS_LOCK="imp-lock-h",SS_UNLOCK="imp-unlocked";
+  function unlocked(){try{return sessionStorage.getItem(SS_UNLOCK)==="1"}catch(_){return false}}
+  async function lockHash(m,p){try{var b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("imperium|"+String(m).trim().toLowerCase()+"|"+p));return Array.prototype.map.call(new Uint8Array(b),function(x){return ("0"+x.toString(16)).slice(-2)}).join("")}catch(_){return ""}}
+  async function markUnlocked(m,p){try{sessionStorage.setItem(SS_UNLOCK,"1")}catch(_){}var h=await lockHash(m,p);if(h)lsSet(LS_LOCK,h);
+    try{window.IMP_UNLOCKED=true;window.dispatchEvent(new Event("imp-unlocked"))}catch(_){}}
   function onAuthLost(){
     if(loginResolve)return; /* layar masuk sudah tampil */
     stopPoll();stopRealtime();
     loginP=null;needLogin().then(function(){startRealtime();startPoll(true)});
   }
-  function showLogin(){
+  function showLogin(mode){
     var old=document.getElementById("imp-login");if(old)old.remove();
     var d=document.createElement("div");d.id="imp-login";
     d.innerHTML='<form id="imp-login-f" autocomplete="on">'
-      +'<div class="il-logo">IMPERIUM</div><p class="il-sub">Buku catatan pribadi</p>'
+      +'<div class="il-logo">IMPERIUM</div><p class="il-sub">'+(mode==="lock"?"Masukkan password untuk membuka Imperium":"Buku catatan pribadi")+'</p>'
       +'<label>Email<input id="imp-l-mail" type="text" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" required></label>'
       +'<label>Password<input id="imp-l-key" type="password" autocomplete="current-password" required></label>'
       +'<label class="il-show"><input type="checkbox" id="imp-l-show"> Tampilkan password</label>'
@@ -105,9 +111,13 @@
         var r=await sb.auth.signInWithPassword({email:u.value.trim(),password:k.value});
         if(r.error)throw r.error;
         email=r.data.user.email||"";setUid(r.data.user.id);showEmail();
+        await markUnlocked(u.value,k.value);
         d.remove();var res=loginResolve;loginResolve=null;if(res)res();
       }catch(err){
         btn.disabled=false;
+        /* offline: buka kunci dengan password terakhir yang pernah benar di perangkat ini */
+        if(mode==="lock"&&isNet(err)){var h=await lockHash(u.value,k.value),sv=lsGet(LS_LOCK);
+          if(h&&sv&&h===sv){await markUnlocked(u.value,k.value);d.remove();var rs=loginResolve;loginResolve=null;if(rs)rs();return}if(h&&sv){msg.textContent="Password salah.";return}}
         var m=String(err&&err.message||err);
         msg.textContent=/invalid login|invalid credentials/i.test(m)?"Email atau password salah."
           :/not confirmed/i.test(m)?"Akun belum dikonfirmasi. Di Supabase › Authentication › Users, konfirmasi akun ini."
@@ -327,7 +337,7 @@
 
   /* ---------- pintu masuk yang dipakai aplikasi ---------- */
   var readyP=null;
-  function ensure(){if(!readyP)readyP=ready().then(function(ok){if(!ok)return needLogin()});return readyP}
+  function ensure(){if(!readyP)readyP=ready().then(function(ok){if(!ok)return needLogin();if(!unlocked())return needLogin("lock")});return readyP}
   window.claude={use:async function(name){
     if(name==="sample")return null;
     await ensure();
