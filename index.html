@@ -1952,58 +1952,22 @@ html.xl-rzr,html.xl-rzr *{cursor:row-resize!important;user-select:none!important
 #tab-tabel .tb-bar button{box-shadow:none!important;text-transform:none!important}
 </style>
 <style>
-/* ===== Excel putih seperti Microsoft Excel (mode terang & gelap) ===== */
-#tab-excel{--kp-line:#d0d7de;--kp-muted:#5f6b7a;--kp-fg:#1f2328}
-#tab-excel .xl{background:#fff!important;border:1px solid #d0d7de!important;color:#1f2328;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-#tab-excel .xl-rb{background:#f8f9fa;border-color:#d0d7de}
-#tab-excel .xl-grp{border-right-color:#e1e4e8}
-#tab-excel .xl-rb button{color:#1f2328}
-#tab-excel .xl-rb button:hover{background:#e8ecef}
-#tab-excel .xl-rb button.on{background:#d3f0e0;border-color:#21a366!important;color:#0e5c30}
-#tab-excel .xl input,#tab-excel .xl select{background:#fff!important;color:#1f2328!important;border:1px solid #c8ccd0!important}
-#tab-excel .xl-fx i{color:#5f6b7a}
-#tab-excel .xl-grid{background:#fff;border-color:#c8c8c8}
-#tab-excel .xl-grid:focus{border-color:#21a366}
-#tab-excel .xl-t th{background:#f3f3f3;color:#444;border-right-color:#d4d4d4;border-bottom-color:#d4d4d4}
-#tab-excel .xl-t th.on{background:#d3f0e0;color:#107c41}
-#tab-excel .xl-t td{border-right-color:#e1e1e1;border-bottom-color:#e1e1e1;color:#000}
-#tab-excel .xl-t td.err{color:#c00000}
-#tab-excel .xl-t td.pilih{box-shadow:inset 0 0 0 999px rgba(33,115,70,.12)}
-#tab-excel .xl-t td.aktif{outline:2px solid #107c41}
-#tab-excel .xl-t td.titik{outline-color:#0078d4}
-#tab-excel .xl-t td.edit input{background:#fff!important;color:#000!important;outline-color:#107c41;border:0!important}
-#tab-excel .xl-fb{background:#f3f3f3;color:#333;border-color:#b8b8b8}
-#tab-excel .xl-fb.on{background:#107c41;color:#fff}
-#tab-excel .xl-pop{background:#fff;color:#1f2328;border-color:#d0d7de;box-shadow:0 8px 24px rgba(0,0,0,.18)}
-#tab-excel .xl-pop button.it{color:#1f2328}
-#tab-excel .xl-pop button.it:hover{background:#eef2f5}
-#tab-excel .xl-pal button{border-color:rgba(0,0,0,.25)}
-#tab-excel .xl-bawah{color:#5f6b7a}
-#tab-excel .xl-bawah b{color:#1f2328}
-#tab-excel .xl-sheets{border-top-color:#d0d7de}
-#tab-excel .xl-sh{color:#444}
-#tab-excel .xl-sh:hover{background:#eef2f5;color:#000}
-#tab-excel .xl-sh.on{background:#fff;color:#107c41;border-color:#d0d7de;border-top-color:transparent;box-shadow:inset 0 -2px 0 #107c41}
-#tab-excel .xl-shx{color:#888}
-#tab-excel .xl-shadd{color:#107c41}
-#tab-excel .xl-shadd:hover{background:#d3f0e0}
-#tab-excel .xl-shin{background:#fff;color:#000;border-color:#107c41}
-#tab-excel .xl-rs:hover,#tab-excel .xl-rr:hover{background:#21a36666}
-/* ===== Tabel: grid putih seperti Excel ===== */
-#tab-tabel .tb-wrap{background:#fff;border-color:#c8c8c8}
-#tab-tabel .tb-t th,#tab-tabel .tb-t td{border-right-color:#d9d9d9;border-bottom-color:#d9d9d9}
-#tab-tabel .tb-t thead th{background:#f3f3f3}
-#tab-tabel .tb-t thead th.on{background:#d3f0e0}
-#tab-tabel .tb-t th.tb-rn{background:#f3f3f3;color:#555}
-#tab-tabel .tb-t th.tb-rn.on{background:#d3f0e0;color:#107c41}
-#tab-tabel .tb-t input{color:#000}
-#tab-tabel .tb-t input.tb-h{color:#1f2328}
-#tab-tabel .tb-t td.on{background-color:rgba(33,115,70,.12)}
-#tab-tabel .tb-t td[style*="background"].on{box-shadow:inset 0 0 0 999px rgba(33,115,70,.12)}
-#tab-tabel .tb-t td.cur{outline-color:#107c41}
-#tab-tabel .tb-t td input:focus,#tab-tabel .tb-t input.tb-h:focus{box-shadow:inset 0 0 0 2px #107c41!important;background:transparent!important}
-#tab-tabel .tb-t input.acc.neg{color:#c00000}
-#tab-tabel .tb-cr:hover::after,#tab-tabel th[data-ch]:hover .tb-cr::after{background:#107c41}
+/* ===== Tabel: grid hitam, senada dengan Excel (mode terang & gelap) ===== */
+#tab-tabel .tb-wrap{background:#141824;border-color:#2a3a44}
+#tab-tabel .tb-t th,#tab-tabel .tb-t td{border-right-color:#ffffff14;border-bottom-color:#ffffff14}
+#tab-tabel .tb-t thead th{background:#1d2232;border-right-color:#2a3a44;border-bottom-color:#2a3a44}
+#tab-tabel .tb-t thead th.on{background:#27402f}
+#tab-tabel .tb-t th.tb-rn{background:#1d2232;color:#8fa0aa;border-right-color:#2a3a44;border-bottom-color:#2a3a44}
+#tab-tabel .tb-t th.tb-rn.on{background:#27402f;color:#9fe3b9}
+#tab-tabel .tb-t th.tb-corner{background:#1d2232}
+#tab-tabel .tb-t input{color:#e6ecef}
+#tab-tabel .tb-t input.tb-h{color:#e6ecef}
+#tab-tabel .tb-t td.on{background-color:#4fd18b24}
+#tab-tabel .tb-t td[style*="background"].on{box-shadow:inset 0 0 0 999px #4fd18b24}
+#tab-tabel .tb-t td.cur{outline-color:#4fd18b}
+#tab-tabel .tb-t td input:focus,#tab-tabel .tb-t input.tb-h:focus{box-shadow:inset 0 0 0 2px #4fd18b!important;background:transparent!important}
+#tab-tabel .tb-t input.acc.neg{color:#f07a70}
+#tab-tabel .tb-cr:hover::after,#tab-tabel th[data-ch]:hover .tb-cr::after,#tab-tabel .tb-rr:hover::after{background:#4fd18b}
 /* pilihan warna */
 .tb-clr{position:relative;display:inline-flex!important;flex-direction:column!important;align-items:center;justify-content:center;gap:1px;width:30px;height:30px;border-radius:8px;cursor:pointer;border:1px solid transparent}
 .tb-clr:hover{background:var(--sunk,rgba(0,0,0,.05));border-color:var(--line)}
@@ -9208,6 +9172,8 @@ document.addEventListener("click",function(e){
   function tblStyle(){return custW()?"width:"+tblW()+"px":"width:max(100%,"+tblW()+"px)"}
   /* border: disimpan sebagai garis bawah/kanan tiap sel (atas/kiri hanya untuk baris/kolom pertama) supaya garis tidak dobel */
   function bdStyle(st){var o="";if(st.bb)o+="border-bottom:"+st.bb+";";if(st.br)o+="border-right:"+st.br+";";if(st.bt)o+="border-top:"+st.bt+";";if(st.bl)o+="border-left:"+st.bl+";";return o}
+  /* tulisan otomatis gelap di atas warna isi yang terang (seperti Excel), kalau warna tulisan tidak diatur sendiri */
+  function autoFc(bg){var m=/^#?([0-9a-f]{6})$/i.exec(String(bg||""));if(!m)return "";var n=parseInt(m[1],16),l=(0.299*(n>>16)+0.587*(n>>8&255)+0.114*(n&255))/255;return l>0.6?"#000000":""}
   var CL={bg:"#FFF2CC",fc:"#C00000"};try{Object.assign(CL,JSON.parse(localStorage.getItem("imp-tabel-cl")||"{}"))}catch(_){}
   var BD={w:"1px",s:"solid",c:"#1f2937"};try{Object.assign(BD,JSON.parse(localStorage.getItem("imp-tabel-bd")||"{}"))}catch(_){}
   function bdVal(thick){return (thick?Math.max(2,parseInt(BD.w,10)+1)+"px":BD.w)+" "+BD.s+" "+BD.c}
@@ -9242,13 +9208,13 @@ document.addEventListener("click",function(e){
   function grid(){
     var c=cur.cols,h='<div class="tb-wrap"><table class="tb-t" style="'+tblStyle()+'"><colgroup><col class="tb-nc">'+c.map(function(_,ci){return '<col data-cw="'+ci+'" style="width:'+cw(ci)+'px">'}).join("")+"</colgroup><thead><tr>"
       +'<th class="tb-corner" data-all title="'+T("Select all","Pilih semua")+'"></th>'
-      +c.map(function(col,ci){var al=col.al||"left";return '<th data-ch="'+ci+'"'+(col.bg?' style="background:'+esc(col.bg)+'"':"")+'><input class="tb-h" data-hc="'+ci+'" value="'+esc(col.h)+'" style="text-align:'+al+(col.fc?";color:"+esc(col.fc):"")+'" aria-label="'+T("Header","Header")+" "+(ci+1)+'"><span class="tb-cr" data-cr="'+ci+'" title="'+T("Drag to resize · double-click to reset","Seret untuk ubah lebar · klik dua kali untuk kembali")+'"></span></th>'}).join("")
+      +c.map(function(col,ci){var al=col.al||"left";return '<th data-ch="'+ci+'"'+(col.bg?' style="background:'+esc(col.bg)+'"':"")+'><input class="tb-h" data-hc="'+ci+'" value="'+esc(col.h)+'" style="text-align:'+al+((col.fc||autoFc(col.bg))?";color:"+esc(col.fc||autoFc(col.bg)):"")+'" aria-label="'+T("Header","Header")+" "+(ci+1)+'"><span class="tb-cr" data-cr="'+ci+'" title="'+T("Drag to resize · double-click to reset","Seret untuk ubah lebar · klik dua kali untuk kembali")+'"></span></th>'}).join("")
       +"</tr></thead><tbody>";
     cur.rows.forEach(function(row,ri){
       h+='<tr data-tr="'+ri+'"'+(rh(ri)?' style="height:'+rh(ri)+'px"':"")+'><th class="tb-rn" data-rh="'+ri+'">'+(ri+1)+'<span class="tb-rr" data-rr="'+ri+'" title="'+T("Drag to resize · double-click to reset","Seret untuk ubah tinggi · klik dua kali untuk kembali")+'"></span></th>';
       for(var ci=0;ci<c.length;ci++){var v=row[ci]==null?"":row[ci],st=stOf(ri,ci),al=st.al||(st.f==="acc"?"right":"left"),neg=st.f==="acc"&&(num(v)||0)<0;
         var tdS=bdStyle(st)+(st.bg?"background:"+st.bg+";":"");
-        h+='<td data-r="'+ri+'" data-c="'+ci+'"'+(tdS?' style="'+tdS+'"':"")+'><input class="tb-in'+(st.f==="acc"?" acc":"")+(neg?" neg":"")+'" data-r="'+ri+'" data-c="'+ci+'" value="'+esc(shown(ri,ci,v))+'" style="text-align:'+al+(st.fc&&!neg?";color:"+st.fc:"")+'" aria-label="'+esc((c[ci].h||"")+" "+(ri+1))+'"></td>'}
+        h+='<td data-r="'+ri+'" data-c="'+ci+'"'+(tdS?' style="'+tdS+'"':"")+'><input class="tb-in'+(st.f==="acc"?" acc":"")+(neg?" neg":"")+'" data-r="'+ri+'" data-c="'+ci+'" value="'+esc(shown(ri,ci,v))+'" style="text-align:'+al+(!neg&&(st.fc||autoFc(st.bg))?";color:"+(st.fc||autoFc(st.bg)):"")+'" aria-label="'+esc((c[ci].h||"")+" "+(ri+1))+'"></td>'}
       h+="</tr>";
     });
     return h+"</tbody></table></div>";
@@ -9583,7 +9549,7 @@ document.addEventListener("click",function(e){
   window.IMP_SET_DATE();
   function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;window.IMP_SET_DATE();try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
   setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
-  var base="imperium-shell-v51",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  var base="imperium-shell-v53",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
   function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
   function chk(){
     if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
