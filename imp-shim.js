@@ -217,16 +217,22 @@
   /* realtime: perubahan dari perangkat lain masuk seketika; polling hanya cadangan */
   function startRealtime(){
     if(rtCh||!sb||!uid)return;
-    rtCh=sb.channel("imp-docs-"+uid)
+    var me=rtCh=sb.channel("imp-docs-"+uid)
       .on("postgres_changes",{event:"*",schema:"public",table:"docs",filter:"user_id=eq."+uid},function(p){
         if(applyRow(p.new)){persist();emit(false)}else persist();
       })
-      .subscribe(function(st){var was=rtOk;rtOk=st==="SUBSCRIBED";if(rtOk!==was&&pollTimer)startPoll(rtOk)});
+      .subscribe(function(st){if(me!==rtCh)return;var was=rtOk;rtOk=st==="SUBSCRIBED";if(rtOk!==was&&pollTimer)startPoll(rtOk);
+        /* koneksi realtime putus (laptop tidur, Wi-Fi ganti): sambung ulang, lalu tarik data yang terlewat */
+        if(me===rtCh&&(st==="CHANNEL_ERROR"||st==="TIMED_OUT"||st==="CLOSED")){clearTimeout(rtRetry);rtRetry=setTimeout(function(){if(!uid)return;stopRealtime();startRealtime();pull()},4000)}});
   }
+  var rtRetry=0;
   function stopRealtime(){if(rtCh&&sb){try{sb.removeChannel(rtCh)}catch(_){}}rtCh=null;rtOk=false}
   function startPoll(now){stopPoll();if(now)pull();pollTimer=setInterval(pull,document.hidden?60000:(rtOk?30000:5000))}
   function stopPoll(){clearInterval(pollTimer);pollTimer=0}
   document.addEventListener("visibilitychange",function(){if(!pollTimer)return;startPoll(!document.hidden)});
+  /* jendela laptop diklik lagi: langsung ambil perubahan terbaru dari HP */
+  var lastFocusPull=0;window.addEventListener("focus",function(){if(!pollTimer||Date.now()-lastFocusPull<3000)return;lastFocusPull=Date.now();pull()});
+  window.IMP_REFRESH=function(){emit(false)};
   window.addEventListener("online",function(){if(pollTimer){startPoll(true);flush().catch(function(){})}});
 
   /* ---------- status kecil di pojok ---------- */

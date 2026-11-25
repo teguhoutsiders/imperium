@@ -1717,8 +1717,7 @@ table.xl-t{border-collapse:separate;border-spacing:0;table-layout:fixed;font-siz
   .xl-hbody{grid-template-columns:1fr}
 }
 </style>
-<style>/* mobile: menu bawah berwarna */
-@media (max-width:760px){
+<style>/* menu berwarna: tiap menu punya warna sendiri (HP dan laptop) */
   .nav>a[data-tab="overview"]{--mc:var(--v4)}
   .ngrp[data-ng="train"]{--mc:var(--v2)}
   .ngrp[data-ng="plan"]{--mc:var(--v3)}
@@ -1728,10 +1727,17 @@ table.xl-t{border-collapse:separate;border-spacing:0;table-layout:fixed;font-siz
   .nav>a[data-tab="excel"]{--mc:#1D7A45}
   .nav>a[data-tab="pengaturan"]{--mc:var(--v6)}
   :root[data-mode="dark"] .nav>a[data-tab="excel"]{--mc:#5FD38D}
-  .nav>a .ic,.ngrp>.ng-btn .ic{color:var(--mc)!important}
+  .nav>a .ic,.ngrp>.ng-btn .ic,.ngrp .nsub>a .ic{color:var(--mc)!important}
   .nav>a,.ngrp>.ng-btn{color:color-mix(in srgb,var(--mc) 70%,var(--muted))!important}
-  .nav>a[aria-current="page"],.ngrp>.ng-btn.on{background:color-mix(in srgb,var(--mc) 16%,transparent)!important;color:var(--mc)!important;font-weight:600}
+  .nav>a[aria-current="page"],.ngrp .nsub>a[aria-current="page"]{background:color-mix(in srgb,var(--mc) 16%,transparent)!important;color:var(--mc)!important;font-weight:600}
+  .ngrp>.ng-btn.on{color:var(--mc)!important;font-weight:600}
+  .nav>a:hover,.ngrp>.ng-btn:hover,.ngrp .nsub>a:hover{background:color-mix(in srgb,var(--mc) 9%,transparent)}
+@media (max-width:760px){
+  .ngrp>.ng-btn.on{background:color-mix(in srgb,var(--mc) 16%,transparent)!important}
 }
+.imp-upd{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:90;display:flex;gap:10px;align-items:center;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.25);font-size:14px}
+.imp-upd button{background:var(--bg);color:var(--ink);border:0;border-radius:8px;padding:6px 12px;font:inherit;font-weight:600;cursor:pointer}
+@media (max-width:760px){.imp-upd{bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
 </style>
 <div class="shell">
   <aside class="side" id="side" aria-label="Main menu">
@@ -9169,6 +9175,27 @@ if(window.IMP_XL_LAST)window.IMP_XL_SYNC(window.IMP_XL_LAST);else chrome();
 /* kembali ke grid kalau tab dibuka lagi */
 addEventListener("hashchange",()=>{if((location.hash||"")==="#excel"&&cur){setTimeout(()=>{const g=$("xl-grid");if(g)g.focus({preventScroll:true})},60)}});
 
+})();
+</script>
+<script>
+/* Tab yang dibiarkan terbuka: (1) lewat tengah malam, tampilan "hari ini" diperbarui; (2) ada versi baru, tampilkan tombol muat ulang */
+(function(){
+  function ymd(d){return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
+  var day=ymd(new Date());
+  function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
+  setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
+  var base="imperium-shell-v38",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
+  function chk(){
+    if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
+    ver().then(function(v){
+      if(!v)return;if(!base){base=v;return}
+      if(v!==base&&!shown){shown=true;var b=document.createElement("div");b.className="imp-upd";b.setAttribute("role","status");
+        b.innerHTML='<span>'+(document.documentElement.lang==="id"?"Imperium versi baru tersedia":"A new version of Imperium is available")+'</span><button type="button">'+(document.documentElement.lang==="id"?"Muat ulang":"Reload")+'</button>';
+        b.querySelector("button").onclick=function(){location.reload()};document.body.appendChild(b)}
+    });
+  }
+  setTimeout(chk,3000);setInterval(chk,10*60000);document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("focus",chk);
 })();
 </script>
 </body></html>
