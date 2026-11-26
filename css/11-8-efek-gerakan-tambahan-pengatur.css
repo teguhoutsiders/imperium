@@ -1,0 +1,27 @@
+/* 8 efek gerakan tambahan (Pengaturan › Animasi › Gerakan) */
+@keyframes axSlideL{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
+@keyframes axSlideR{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:none}}
+@keyframes axZoom{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
+@keyframes axFlip{from{opacity:0;transform:perspective(1200px) rotateY(-14deg) translateX(-20px)}to{opacity:1;transform:none}}
+@keyframes axBounce{0%{opacity:0;transform:translateY(34px)}55%{opacity:1;transform:translateY(-8px)}75%{transform:translateY(3px)}100%{transform:none}}
+@keyframes axBlur{from{opacity:0;filter:blur(12px);transform:scale(1.02)}to{opacity:1;filter:none;transform:none}}
+@keyframes axSwing{0%{opacity:0;transform:perspective(1000px) rotateX(-18deg);transform-origin:top center}60%{opacity:1;transform:perspective(1000px) rotateX(5deg)}100%{transform:none}}
+@keyframes axDrop{0%{opacity:0;transform:translateY(-40px) scale(1.02)}70%{opacity:1;transform:translateY(4px)}100%{transform:none}}
+@keyframes axElastic{0%{opacity:0;transform:scale(.8)}45%{opacity:1;transform:scale(1.04)}65%{transform:scale(.98)}82%{transform:scale(1.01)}100%{transform:none}}
+:root[data-anim="slide"] section.panel.fx-in,:root[data-anim="slide"] section.panel.fx-in.fx-l,:root[data-anim="slide"] section.panel.fx-in.fx-r{animation:axSlideL .38s cubic-bezier(.2,.8,.2,1)}
+:root[data-anim="slide"] section.panel.fx-in.fx-r{animation-name:axSlideR}
+:root[data-anim="zoom"] section.panel.fx-in,:root[data-anim="zoom"] section.panel.fx-in.fx-l,:root[data-anim="zoom"] section.panel.fx-in.fx-r{animation:axZoom .34s cubic-bezier(.2,.8,.2,1)}
+:root[data-anim="flip"] section.panel.fx-in,:root[data-anim="flip"] section.panel.fx-in.fx-l,:root[data-anim="flip"] section.panel.fx-in.fx-r{animation:axFlip .5s cubic-bezier(.2,.8,.2,1)}
+:root[data-anim="bounce"] section.panel.fx-in,:root[data-anim="bounce"] section.panel.fx-in.fx-l,:root[data-anim="bounce"] section.panel.fx-in.fx-r{animation:axBounce .62s cubic-bezier(.3,.7,.3,1)}
+:root[data-anim="blur"] section.panel.fx-in,:root[data-anim="blur"] section.panel.fx-in.fx-l,:root[data-anim="blur"] section.panel.fx-in.fx-r{animation:axBlur .45s ease-out}
+:root[data-anim="swing"] section.panel.fx-in,:root[data-anim="swing"] section.panel.fx-in.fx-l,:root[data-anim="swing"] section.panel.fx-in.fx-r{animation:axSwing .6s ease-out}
+:root[data-anim="drop"] section.panel.fx-in,:root[data-anim="drop"] section.panel.fx-in.fx-l,:root[data-anim="drop"] section.panel.fx-in.fx-r{animation:axDrop .5s cubic-bezier(.2,.8,.2,1)}
+:root[data-anim="elastic"] section.panel.fx-in,:root[data-anim="elastic"] section.panel.fx-in.fx-l,:root[data-anim="elastic"] section.panel.fx-in.fx-r{animation:axElastic .7s ease-out}
+:root[data-anim="zoom"] .fx-pop{animation-name:axZoom}
+:root[data-anim="bounce"] .fx-pop{animation-name:axBounce;animation-duration:.6s}
+:root[data-anim="blur"] .fx-pop{animation-name:axBlur}
+:root[data-anim="elastic"] .fx-pop{animation-name:axElastic;animation-duration:.65s}
+:root[data-anim="drop"] .fx-pop{animation-name:axDrop}
+:root[data-anim="bounce"] button:active:not(:disabled),:root[data-anim="elastic"] button:active:not(:disabled){transform:scale(.9)}
+:root:is([data-anim="bounce"],[data-anim="elastic"],[data-anim="zoom"]) .ovc:hover,:root:is([data-anim="bounce"],[data-anim="elastic"],[data-anim="zoom"]) .proj:hover{transform:translateY(-3px) scale(1.01)}
+@media (prefers-reduced-motion:reduce){:root:not([data-anim="off"]) section.panel.fx-in{animation-duration:.01s!important}}

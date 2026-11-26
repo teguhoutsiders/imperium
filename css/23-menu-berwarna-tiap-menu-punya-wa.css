@@ -1,0 +1,23 @@
+/* menu berwarna: tiap menu punya warna sendiri (HP dan laptop) */
+  .nav>a[data-tab="overview"]{--mc:var(--v4)}
+  .ngrp[data-ng="train"]{--mc:var(--v2)}
+  .ngrp[data-ng="plan"]{--mc:var(--v3)}
+  .ngrp[data-ng="goals"]{--mc:var(--v1)}
+  .ngrp[data-ng="money"]{--mc:var(--v7)}
+  .ngrp[data-ng="lib"]{--mc:var(--v5)}
+  .nav>a[data-tab="excel"]{--mc:#1D7A45}
+  .nav>a[data-tab="tabel"]{--mc:#C2410C}
+  :root[data-mode="dark"] .nav>a[data-tab="tabel"]{--mc:#FB923C}
+  .nav>a[data-tab="pengaturan"]{--mc:var(--v6)}
+  :root[data-mode="dark"] .nav>a[data-tab="excel"]{--mc:#5FD38D}
+  .nav>a .ic,.ngrp>.ng-btn .ic,.ngrp .nsub>a .ic{color:var(--mc)!important}
+  .nav>a,.ngrp>.ng-btn{color:color-mix(in srgb,var(--mc) 70%,var(--muted))!important}
+  .nav>a[aria-current="page"],.ngrp .nsub>a[aria-current="page"]{background:color-mix(in srgb,var(--mc) 16%,transparent)!important;color:var(--mc)!important;font-weight:600}
+  .ngrp>.ng-btn.on{color:var(--mc)!important;font-weight:600}
+  .nav>a:hover,.ngrp>.ng-btn:hover,.ngrp .nsub>a:hover{background:color-mix(in srgb,var(--mc) 9%,transparent)}
+@media (max-width:760px){
+  .ngrp>.ng-btn.on{background:color-mix(in srgb,var(--mc) 16%,transparent)!important}
+}
+.imp-upd{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:90;display:flex;gap:10px;align-items:center;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.25);font-size:14px}
+.imp-upd button{background:var(--bg);color:var(--ink);border:0;border-radius:8px;padding:6px 12px;font:inherit;font-weight:600;cursor:pointer}
+@media (max-width:760px){.imp-upd{bottom:calc(84px + env(safe-area-inset-bottom,0px))}}

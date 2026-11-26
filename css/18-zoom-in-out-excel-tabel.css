@@ -1,0 +1,11 @@
+/* zoom in / out Excel & Tabel */
+.zm{display:inline-flex;align-items:center;gap:4px;margin-left:auto;flex:none}
+.zm button{font:600 14px/1 Inter,system-ui,sans-serif;min-width:26px;height:26px;padding:0 6px;border-radius:6px;border:1px solid transparent;background:none;color:inherit;cursor:pointer}
+.zm button:hover{background:rgba(127,127,127,.15)}
+.zm .zm-p{min-width:48px;font-size:12.5px;font-family:var(--f-mono)}
+.zm input[type=range]{width:110px;accent-color:#4fd18b;margin:0;padding:0;background:none!important;border:0!important;box-shadow:none!important;height:18px}
+#tab-excel .zm{color:var(--kp-fg)}
+#tab-excel .xl-sheets{align-items:center}
+#tab-tabel .tb-bar .zm{margin-left:8px}
+#tab-tabel .tb-bar .tb-st{margin-left:auto}
+@media (max-width:760px){.zm input[type=range]{width:80px}#tab-tabel .tb-bar .zm{margin-left:0}}

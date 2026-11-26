@@ -1,0 +1,35 @@
+/* ===== v-Nov25: warna uang (hijau/merah), menu bawah di HP, tab Excel ===== */
+.mny.pos,.mny-pos{color:var(--ok)!important}
+.mny.neg,.mny-neg{color:var(--crit)!important}
+.sync-top{display:none}
+
+/* --- HP: menu utama pindah ke bawah --- */
+@media (max-width:760px){
+  :root{--navh:58px}
+  .side{position:fixed;top:auto;left:0;right:0;bottom:0;width:auto;height:auto;max-height:none;transform:none!important;transition:none;z-index:45;flex-direction:row;align-items:stretch;gap:0;overflow:visible;
+    padding:0 max(2px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(2px,env(safe-area-inset-left,0px));border-right:0;border-top:1px solid var(--line);box-shadow:0 -4px 18px rgba(0,0,0,.16)}
+  .side .side-brand,.side .side-foot{display:none}
+  .nav{flex:1;min-width:0;flex-direction:row;gap:0;align-items:stretch;height:var(--navh);overflow-x:auto;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav>.sep{display:none}
+  .nav>a,.nav>.ngrp{flex:1 1 40px;min-width:38px;display:flex}
+  .nav>a,.ngrp>.ng-btn{flex-direction:column;justify-content:center;align-items:center;gap:3px;padding:6px 0;border-radius:12px;font-size:9.5px;letter-spacing:-.01em;line-height:1.1;text-align:center;position:relative;min-width:0;width:100%}
+  .nav>a .ni,.ng-btn .ni{flex:none;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .nav>a .ic,.ng-btn .ic{width:21px;height:21px}
+  .ng-chev{display:none}
+  .nav>a .count,.ng-btn .count{position:absolute;top:2px;left:calc(50% + 5px);font-size:9px;padding:0 5px;line-height:15px}
+  .ng-btn[aria-expanded="true"]{background:var(--accent-soft);color:var(--accent)}
+  .nav .nsub{position:fixed;left:10px;right:10px;bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px) + 10px);z-index:46;margin:0;padding:8px;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:0 14px 44px rgba(0,0,0,.4);max-height:min(62vh,440px);overflow-y:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .nav .nsub a{padding:11px 12px;font-size:14px;border-radius:10px;justify-content:flex-start;gap:10px}
+  .nav .nsub a .count{margin-left:auto}
+  .nav .nsub .nfsub{grid-column:1/-1;margin:0}
+  .scrim{z-index:44}
+  .menu-btn{display:none!important}
+  .main{padding-bottom:calc(var(--navh) + 28px + env(safe-area-inset-bottom,0px))}
+  .topbar .sync-top{display:inline;margin-left:auto;font-size:11px}
+  #tab-english .fb-tab,#ie-tabs{bottom:calc(var(--navh) + env(safe-area-inset-bottom,0px));padding-bottom:8px}
+  .main:has(>#tab-english:not([hidden])),.main:has(>#tab-ielts:not([hidden])){padding-bottom:calc(84px + var(--navh) + env(safe-area-inset-bottom,0px))}
+  .fx-toast{bottom:calc(var(--navh) + 14px + env(safe-area-inset-bottom,0px))}
+  .main:has(>#tab-english:not([hidden]))~.fx-toast,body:has(#tab-english:not([hidden])) .fx-toast,body:has(#tab-ielts:not([hidden])) .fx-toast{bottom:calc(var(--navh) + 74px + env(safe-area-inset-bottom,0px))}
+  #imp-net{bottom:calc(var(--navh) + 12px + env(safe-area-inset-bottom,0px))}
+}

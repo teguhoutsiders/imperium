@@ -1,0 +1,4 @@
+(function(){var sp=document.getElementById("imp-splash");try{var t=localStorage.getItem("imp-theme-bg");if(t)sp.style.setProperty("--spl-bg",t);var a=JSON.parse(localStorage.getItem("imp-icon-v1")||"null"),c=JSON.parse(localStorage.getItem("imp-cache-v1")||"null"),s=c&&c.appicon,o=(a&&s)?((+s.t||0)>(+a.t||0)?s:a):(a||s);if(o&&!o.off&&o.i512)document.getElementById("imp-splash-img").src=o.i512}catch(e){}
+var t0=Date.now(),done=false;function hide(){if(done)return;done=true;var w=Math.max(0,900-(Date.now()-t0));setTimeout(function(){sp.classList.add("out");setTimeout(function(){sp.remove()},600)},w)}
+window.addEventListener("load",function(){setTimeout(hide,150)});setTimeout(hide,5000);
+var iv=setInterval(function(){if(document.getElementById("imp-login")){clearInterval(iv);hide()}if(done)clearInterval(iv)},100)})()

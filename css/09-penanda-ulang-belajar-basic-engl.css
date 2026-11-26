@@ -1,0 +1,10 @@
+/* penanda ulang belajar Basic English */
+.be-ul{margin:12px 0 8px;padding:10px 12px;border:1px solid var(--kp-line,var(--line));border-radius:10px;display:flex;flex-direction:column;gap:8px}
+.be-ul-h{font-size:13.5px}
+.be-ul-k{display:flex;flex-wrap:wrap;gap:6px}
+.be-ulk{width:28px;height:28px;padding:0;border-radius:6px;border:2px solid var(--kp-line,var(--line));background:transparent;color:var(--on-accent,#fff);font:700 14px/1 Inter,system-ui,sans-serif;cursor:pointer;display:grid;place-items:center}
+.be-ulk:hover{border-color:var(--accent)}
+.be-ulk.on{background:var(--ok,#2e9e5b);border-color:var(--ok,#2e9e5b);color:#fff}
+.be-ul-a{display:flex;gap:8px;flex-wrap:wrap}
+.be-ul-min{background:none;border:1px solid var(--kp-line,var(--line));color:var(--muted);border-radius:6px;padding:6px 12px;font:600 12.5px Inter,system-ui,sans-serif;cursor:pointer}
+.be-ul-b{display:inline-block;margin-left:6px;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;background:color-mix(in srgb,var(--ok,#2e9e5b) 16%,transparent);color:var(--ok,#2e9e5b);vertical-align:1px}

@@ -1,0 +1,39 @@
+/* layar pilihan menu (kartu) setelah membuka kunci */
+.launch-btn{margin-left:auto;display:inline-grid;place-items:center;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;padding:0;flex:none}
+.launch-btn svg{width:19px;height:19px}
+.launch-btn:hover{border-color:var(--accent);color:var(--accent)}
+.topbar .sync-top~.launch-btn{margin-left:10px}
+.lnc{position:fixed;inset:0;z-index:9000;background:var(--bg);overflow:auto;display:flex;flex-direction:column;align-items:center;padding:max(28px,env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom,0px));animation:lncIn .22s ease-out}
+.lnc[hidden]{display:none}
+@keyframes lncIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+:root[data-anim="off"] .lnc{animation:none}
+.lnc-in{width:min(980px,100%);display:flex;flex-direction:column;gap:18px}
+.lnc-h{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.lnc-h .mark{margin:0}
+.lnc-h .lnc-d{color:var(--muted);font-size:14px;margin:0 0 4px}
+.lnc-h .lnc-x{margin-left:auto;background:none;border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:8px 14px;font:inherit;font-size:13.5px;cursor:pointer}
+.lnc-h .lnc-x:hover{color:var(--ink);border-color:var(--ink)}
+.lnc-t{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--muted);margin:0}
+.lnc-t b{color:var(--ink);font-size:18px}
+.lnc-back{background:none;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:7px 12px;font:inherit;font-size:13.5px;cursor:pointer}
+.lnc-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.lnc-c{--mc:var(--accent);position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:14px;text-align:left;min-height:132px;padding:18px;border-radius:16px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;cursor:pointer;transition:transform .12s,box-shadow .12s,border-color .12s}
+.lnc-c:hover,.lnc-c:focus-visible{border-color:var(--mc);box-shadow:0 8px 24px color-mix(in srgb,var(--mc) 18%,transparent);transform:translateY(-2px);outline:none}
+.lnc-c .lnc-ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--mc) 15%,transparent);color:var(--mc)}
+.lnc-c .lnc-ic svg.ic{width:24px;height:24px;color:var(--mc)!important;margin:0;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.lnc-c .lnc-n{font-size:17px;font-weight:700}
+.lnc-c .lnc-s{font-size:12.5px;color:var(--muted);line-height:1.4;margin-top:-8px}
+.lnc-c .lnc-k{position:absolute;top:14px;right:14px;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--sunk,var(--line));color:var(--ink)}
+.lnc-c .lnc-k.alert{background:var(--crit);color:#fff}
+.lnc-c.last::after{content:"Last opened";position:absolute;bottom:14px;right:14px;font-size:11px;color:var(--mc);font-weight:600}
+:root[lang="id"] .lnc-c.last::after{content:"Terakhir dibuka"}
+@media (max-width:760px){
+  .lnc{padding-top:max(20px,env(safe-area-inset-top))}
+  .lnc-g{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .lnc-c{min-height:112px;padding:14px;gap:10px;border-radius:14px}
+  .lnc-c .lnc-ic{width:40px;height:40px}
+  .lnc-c .lnc-n{font-size:15.5px}
+  .lnc-c .lnc-s{display:none}
+  .lnc-c.last::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--mc);bottom:12px;right:12px}
+  .topbar .launch-btn{width:34px;height:34px}
+}

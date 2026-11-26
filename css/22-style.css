@@ -1,0 +1,2 @@
+#note-list[data-view="list"] .note{cursor:pointer}
+@media (max-width:760px){#note-list .note{cursor:pointer}#note-list .note:active{background:color-mix(in srgb,var(--accent) 8%,var(--surface))}}

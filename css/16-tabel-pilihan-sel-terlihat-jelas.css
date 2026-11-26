@@ -1,0 +1,8 @@
+/* Tabel: pilihan sel terlihat jelas, tombol aktif ditandai, gaya tampilan menu tidak merusak sel */
+#tab-tabel .tb-t input{border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important}
+#tab-tabel .tb-t input.tb-h{border-radius:6px!important}
+#tab-tabel .tb-t td input:focus,#tab-tabel .tb-t input.tb-h:focus{box-shadow:inset 0 0 0 2px var(--accent)!important;background:var(--surface)!important}
+#tab-tabel .tb-t td.on{background:color-mix(in srgb,var(--accent) 16%,transparent)}
+#tab-tabel .tb-t td.cur{outline:2px solid var(--accent);outline-offset:-2px}
+#tab-tabel .tb-bar button.on{background:color-mix(in srgb,var(--accent) 16%,transparent)!important;border-color:color-mix(in srgb,var(--accent) 45%,transparent)!important;color:var(--accent)}
+#tab-tabel .tb-bar button{box-shadow:none!important;text-transform:none!important}

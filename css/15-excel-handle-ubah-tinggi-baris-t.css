@@ -1,0 +1,12 @@
+/* Excel: handle ubah tinggi baris, tanpa teks bantuan di bawah sheet, tabel memenuhi layar */
+#tab-excel .xl>.met{display:none}
+#tab-excel .xl-t{width:1px}
+#tab-excel .xl-t th.xl-bh{position:sticky}
+#tab-excel .xl-rr{position:absolute;left:0;right:0;bottom:-3px;height:7px;cursor:row-resize;z-index:3;touch-action:none}
+#tab-excel .xl-rs{touch-action:none}
+#tab-excel .xl-rs:hover,#tab-excel .xl-rr:hover{background:#4fd18b66}
+#tab-excel .xl-t tr[style] td{height:auto}
+html.xl-rzc,html.xl-rzc *{cursor:col-resize!important;user-select:none!important}
+html.xl-rzr,html.xl-rzr *{cursor:row-resize!important;user-select:none!important}
+@media (min-width:761px){.main:has(>#tab-excel:not([hidden])){padding-bottom:12px}}
+@media (max-width:760px){#tab-excel .xl-rr{bottom:-6px;height:12px}#tab-excel .xl-rs{right:-6px!important;width:12px!important}}

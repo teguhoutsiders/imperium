@@ -1,0 +1,23 @@
+# Project Supabase paket gratis dijeda bila ±1 minggu tidak ada aktivitas.
+# Workflow ini mengetuk Supabase setiap hari supaya project tetap aktif.
+# Hanya memakai URL + publishable key yang memang sudah publik di imp-shim.js;
+# tanpa login, aturan RLS tidak mengeluarkan data apa pun.
+name: Supabase keepalive
+on:
+  schedule:
+    - cron: "17 2 * * *"   # setiap hari 09:17 WIB
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ketuk Supabase
+        run: |
+          URL="https://sdcjufdqpybvxvvccflb.supabase.co"
+          KEY="sb_publishable_tW8iVrAwFCHAgWKSTNo93Q_G0DQtQ38"
+          for p in "auth/v1/health" "rest/v1/docs?select=id&limit=1" "storage/v1/bucket"; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" -H "apikey: $KEY" -H "Authorization: Bearer $KEY" "$URL/$p")
+            echo "$p -> $code"
+          done

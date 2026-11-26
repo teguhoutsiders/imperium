@@ -24,10 +24,16 @@ Buka <https://teguhoutsiders.github.io/imperium/>, masuk dengan email & password
 - **Lihat data mentah**: Supabase › Table Editor › `docs` (satu baris per dokumen, isi di kolom `data`). Lebih aman mengubah lewat Imperium.
 - **Keluar dari satu perangkat**: Imperium › Pengaturan › Koneksi Supabase › Keluar dari perangkat ini.
 - **Ganti password**: Supabase › Authentication › Users › pilih akun › *Send password recovery* / ubah password.
-- **Project dijeda**: project gratis dijeda bila ±1 minggu tidak dipakai. Buka dashboard Supabase › *Restore project*. Data tidak hilang.
+- **Project dijeda**: project gratis dijeda bila ±1 minggu tidak dipakai. Workflow `.github/workflows/supabase-keepalive.yml` mengetuk Supabase setiap hari supaya hal ini tidak terjadi (bisa dijalankan manual di tab *Actions*). Kalau tetap terjeda: dashboard Supabase › *Restore project*. Data tidak hilang.
 - **Cadangan rutin**: tetap ekspor cadangan .zip sesekali.
 
 ## Batasan
 - Kuota paket gratis: database 500 MB, Storage 1 GB, berkas maks 50 MB per file.
 - Tanpa internet, Imperium menampilkan data terakhir; perubahan disimpan di perangkat dan dikirim saat online lagi.
 - Fitur yang memakai Claude langsung (examiner AI di IELTS) belum aktif di versi ini.
+
+## Struktur kode
+- `index.html`: kerangka halaman saja.
+- `css/`: tampilan, berurutan sesuai nomor (urutan penting, yang belakang menimpa yang depan).
+- `js/`: logika tiap menu, berurutan sesuai nomor.
+- Setelah mengubah file di `js/` atau `css/`, jalankan `python3 tools/stamp.py` agar browser memuat versi baru, dan naikkan nomor cache di `sw.js` (`imperium-shell-vNN`) serta di `js/22-…` dengan nomor yang sama.

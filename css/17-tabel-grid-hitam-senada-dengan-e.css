@@ -1,0 +1,22 @@
+/* ===== Tabel: grid hitam, senada dengan Excel (mode terang & gelap) ===== */
+#tab-tabel .tb-wrap{background:#141824;border-color:#2a3a44}
+#tab-tabel .tb-t th,#tab-tabel .tb-t td{border-right-color:#ffffff14;border-bottom-color:#ffffff14}
+#tab-tabel .tb-t thead th{background:#1d2232;border-right-color:#2a3a44;border-bottom-color:#2a3a44}
+#tab-tabel .tb-t thead th.on{background:#27402f}
+#tab-tabel .tb-t th.tb-rn{background:#1d2232;color:#8fa0aa;border-right-color:#2a3a44;border-bottom-color:#2a3a44}
+#tab-tabel .tb-t th.tb-rn.on{background:#27402f;color:#9fe3b9}
+#tab-tabel .tb-t th.tb-corner{background:#1d2232}
+#tab-tabel .tb-t input{color:#e6ecef}
+#tab-tabel .tb-t input.tb-h{color:#e6ecef}
+#tab-tabel .tb-t td.on{background-color:#4fd18b24}
+#tab-tabel .tb-t td[style*="background"].on{box-shadow:inset 0 0 0 999px #4fd18b24}
+#tab-tabel .tb-t td.cur{outline-color:#4fd18b}
+#tab-tabel .tb-t td input:focus,#tab-tabel .tb-t input.tb-h:focus{box-shadow:inset 0 0 0 2px #4fd18b!important;background:transparent!important}
+#tab-tabel .tb-t input.acc.neg{color:#f07a70}
+#tab-tabel .tb-cr:hover::after,#tab-tabel th[data-ch]:hover .tb-cr::after,#tab-tabel .tb-rr:hover::after{background:#4fd18b}
+/* pilihan warna */
+.tb-clr{position:relative;display:inline-flex!important;flex-direction:column!important;align-items:center;justify-content:center;gap:1px;width:30px;height:30px;border-radius:8px;cursor:pointer;border:1px solid transparent}
+.tb-clr:hover{background:var(--sunk,rgba(0,0,0,.05));border-color:var(--line)}
+.tb-clr-i{font-size:13px;line-height:1}
+.tb-sw{display:block;width:18px;height:4px;border-radius:2px;border:1px solid rgba(0,0,0,.2)}
+.tb-clr input[type=color]{position:absolute;inset:0;width:100%!important;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
