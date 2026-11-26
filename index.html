@@ -4864,8 +4864,9 @@ window.I18N=(function(){
     const rowUp=s=>{
       const n=-daysLeft(s.start),fut=n<0,t=today();
       const meta=['<span class="mono">'+LTL("Since ","Sejak ")+esc(fmtDate(s.start))+'</span>',s.note?'<span>'+esc(s.note)+'</span>':''];
-      return '<li class="mid lt-row"><div class="days t-info"><b>'+Math.abs(n)+'</b><span>'+(fut?LTL("days to go","hari lagi"):LTL("days","hari"))+'</span></div><div class="grow"><div class="ttl">'+esc(s.name)+'</div>'
-        +'<div class="lt-run"><span>'+(fut?LTL("Starts in ","Mulai dalam ")+ltSpan(t,s.start):'<b class="mono">'+ltSpan(s.start,t)+'</b> '+LTL("so far","sampai hari ini"))+'</span></div>'
+      const span=ltParts(fut?t:s.start,fut?s.start:t).map(p=>'<span class="lt-u"><b>'+p[0]+'</b> '+p[1]+'</span>').join(" ");
+      return '<li class="mid lt-row lt-up"><div class="grow"><div class="ttl">'+esc(s.name)+'</div>'
+        +'<div class="lt-span">'+(fut?'<small>'+LTL("Starts in","Mulai dalam")+'</small> ':'')+span+(fut?'':' <small>'+LTL("so far","sampai hari ini")+'</small>')+'</div>'
         +'<div class="meta">'+meta.join("")+'</div></div>'+acts(s)+'</li>';
     };
     if(up.length)h+=sec("📅",LTL("Days running","Hari berjalan"),up,rowUp);
@@ -9839,7 +9840,7 @@ document.addEventListener("click",function(e){
   window.IMP_SET_DATE();
   function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;window.IMP_SET_DATE();try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
   setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
-  var base="imperium-shell-v68",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  var base="imperium-shell-v69",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
   function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
   function chk(){
     if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
@@ -10107,6 +10108,15 @@ body{font-variant-numeric:tabular-nums}
 #tab-info #info-break{margin-top:var(--ds-4,16px)}
 #tab-info .info-act{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px}
 @media (max-width:760px){#tab-info .info-grid{grid-template-columns:1fr}.nav>a[data-tab="info"]{display:none}}
+
+/* Lead time › Hari berjalan: durasi tahun-bulan-hari jadi angka utama */
+.lt-up .lt-span{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:4px 0 6px;color:var(--muted);font-size:15px;line-height:1.2}
+.lt-up .lt-span .lt-u{white-space:nowrap}
+.lt-up .lt-span b{font-size:30px;font-weight:700;color:var(--accent);font-family:var(--f-body);letter-spacing:-.01em}
+.lt-up .lt-span small{font-size:13px;color:var(--muted)}
+.lt-row.lt-up{display:flex!important;align-items:center;gap:12px}
+.lt-row.lt-up>.grow{flex:1 1 auto;min-width:0}
+@media (max-width:760px){.lt-up .lt-span b{font-size:26px}.lt-row.lt-up{flex-wrap:wrap;row-gap:4px}.lt-row.lt-up>.grow{flex-basis:100%}}
 </style>
 <script>
 /* label pendek menu bawah HP (sistem desain) */
