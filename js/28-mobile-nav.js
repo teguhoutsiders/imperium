@@ -1,6 +1,6 @@
-/* ==== Imperium · bilah menu bawah HP gaya "drop" (Teguh 2026-11-26) ====
-   Bar hitam membulat; menu aktif naik ke lingkaran dengan ikon oranye.
-   Kalau menu aktif ada di dalam grup, submenu grup tampil di atas bar.
+/* ==== Imperium · bilah menu bawah HP gaya "homebar" (Teguh 2026-11-27) ====
+   Bar membulat; menu aktif ditandai lingkaran penuh di dalam bar yang bergeser.
+   Kalau menu aktif ada di dalam grup, submenu grup menempel di atas bar (satu panel).
    Dibangun otomatis dari .nav (urutan, kunci, badge, bahasa ikut). Hanya tampil di layar ≤760px. */
 (function(){
   "use strict";
@@ -34,9 +34,9 @@
   function ensure(){
     if(bar)return;
     bar=document.createElement("nav");bar.id="mnav";bar.setAttribute("aria-label","Menu");
-    bar.innerHTML='<div class="mn-ind" aria-hidden="true"><svg viewBox="0 0 58 70"><path d="M29 0a29 29 0 0 1 29 29c0 14-11 21-19 32-3.5 5-6 7-10 7s-6.5-2-10-7C11 50 0 43 0 29A29 29 0 0 1 29 0z"/></svg><span class="mn-ball"></span></div><div class="mn-items"></div>';
-    row=document.createElement("div");row.id="mnav-sub";row.setAttribute("role","navigation");row.hidden=true;
-    document.body.appendChild(row);document.body.appendChild(bar);
+    bar.innerHTML='<div id="mnav-sub" role="navigation" hidden></div><div class="mn-items"><span class="mn-ind" aria-hidden="true" hidden><span class="mn-ball"></span></span><div class="mn-row"></div></div>';
+    row=bar.querySelector("#mnav-sub");
+    document.body.appendChild(bar);
     ind=bar.querySelector(".mn-ind");
     bar.addEventListener("click",function(e){
       var b=e.target.closest("[data-go]");if(!b)return;e.preventDefault();
@@ -46,7 +46,6 @@
         if(it.subs.some(function(s){return s.tab===cur()}))return;go(t)}
       else go(k);
     });
-    row.addEventListener("click",function(e){var b=e.target.closest("[data-go]");if(!b)return;e.preventDefault();go(b.dataset.go)});
   }
   function go(t){if(cur()===t)return;try{navigator.vibrate&&navigator.vibrate(6)}catch(_){}location.hash=t}
 
@@ -58,7 +57,7 @@
     if(grp){last[grp.group]=c;try{sessionStorage.setItem("imp-mnav-last",JSON.stringify(last))}catch(_){}}
     var sig=JSON.stringify(its.map(function(i){return [i.key,i.name,i.count,i.c,i.subs&&i.subs.map(function(s){return [s.tab,s.name,s.count,s.c]})]}))+"|"+(act?act.key:"")+"|"+c;
     if(sig===built)return;built=sig;
-    var box=bar.querySelector(".mn-items");
+    var box=bar.querySelector(".mn-row");
     box.innerHTML=its.map(function(it){var on=act&&act.key===it.key;
       return '<a href="'+(it.tab?"#"+it.tab:"#")+'" class="mn-i'+(on?" on":"")+'" data-go="'+esc(it.key)+'" aria-label="'+esc(it.name)+'"'+(on?' aria-current="page"':"")+' title="'+esc(it.name)+'"'+(it.c?' style="--ic:'+esc(it.c)+'"':"")+'>'+it.icon+badge(it.count)+"</a>"}).join("");
     bar.style.setProperty("--n",its.length);
