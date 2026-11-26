@@ -347,6 +347,12 @@
   /* ---------- pintu masuk yang dipakai aplikasi ---------- */
   var readyP=null;
   function ensure(){if(!readyP)readyP=ready().then(function(ok){if(!ok)return needLogin();if(!unlocked())return needLogin("lock")});return readyP}
+  /* ---------- Info › pemakaian Supabase (fungsi imp_usage di database) ---------- */
+  window.IMP_USAGE=async function(){
+    await ensure();if(!sb)await lib();
+    var r=await sb.rpc("imp_usage");if(r.error)throw mapErr(r.error);
+    var d=r.data||{};d.st_max=FREE_BYTES;d.db_max=524288000;return d;
+  };
   window.claude={use:async function(name){
     if(name==="sample")return null;
     await ensure();

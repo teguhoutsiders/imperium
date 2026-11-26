@@ -2064,6 +2064,7 @@ html.xl-rzr,html.xl-rzr *{cursor:row-resize!important;user-select:none!important
       <a href="#tabel" data-tab="tabel"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 9v11"/><path d="M12 14h6M12 17h4"/></svg><span class="ni">Table</span></a>
       <div class="sep" role="presentation"></div>
       <a href="#pengaturan" data-tab="pengaturan"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg><span class="ni">Settings</span></a>
+      <a href="#info" data-tab="info"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/></svg><span class="ni">Info</span></a>
     </nav>
     <div>
       <h4 class="side-h">Shortcuts</h4>
@@ -2631,7 +2632,13 @@ html.xl-rzr,html.xl-rzr *{cursor:row-resize!important;user-select:none!important
   </section>
 
   <!-- PENGATURAN -->
+  <section class="panel" id="tab-info" hidden>
+    <div class="info-grid" id="info-meters"></div>
+    <div class="setcard" id="info-break"></div>
+    <p class="hint" id="info-foot"></p>
+  </section>
   <section class="panel" id="tab-pengaturan" hidden>
+    <a class="setcard info-mob" href="#info"><b>Info</b><span class="hint">Storage &amp; database usage</span></a>
     <div class="setcard" id="menu-card">
       <h3 class="set-h">Menu order</h3>
       <p class="hint">Pick the row number for each menu and submenu. It applies to the sidebar right away and is saved to your account.</p>
@@ -2779,7 +2786,7 @@ window.I18N=(function(){
   "⏱ Stopwatch":"⏱ Stopwatch","⏳ Countdown":"⏳ Hitung mundur","Hours":"Jam","Minutes":"Menit","Seconds":"Detik","+1 min":"+1 menit","1 min":"1 mnt","5 min":"5 mnt","10 min":"10 mnt","15 min":"15 mnt","25 min":"25 mnt","30 min":"30 mnt","45 min":"45 mnt","1 h":"1 jam","1.5 h":"1,5 jam","e.g. Makan, Bensin":"mis. Makan, Bensin","✳ Claude limit":"✳ Limit Claude","Not filled in yet · tap to fill in":"Belum diisi · ketuk untuk mengisi","Open Claude usage page ↗":"Buka halaman Usage Claude ↗","+ New task":"+ Tugas baru","+ New project":"+ Proyek baru","+ New dream":"+ Impian baru","+ New renewal":"+ Masa aktif baru","+ New link":"+ Tautan baru","+ New note":"+ Catatan baru","+ New finance entry":"+ Entri keuangan baru","Restart":"Ulangi","Time’s up — session saved.":"Waktu habis — sesi tersimpan.","Couldn’t save the session.":"Gagal menyimpan sesi.",
   "Budget month":"Bulan anggaran","Target type":"Jenis target","Savings goal (Rp)":"Target tabungan (Rp)","Linked training":"Pelatihan terhubung","For savings target":"Untuk target tabungan","— Not linked —":"— Tidak dihubungkan —","Table":"Tabel","Slide":"Geser","Zoom":"Zoom","Flip 3D":"Balik 3D","Bounce":"Memantul","Blur focus":"Fokus blur","Swing":"Ayun","Drop":"Jatuh","Elastic":"Kenyal","Choose from your expense categories":"Pilih dari kategori expense Anda","Or create a new category":"Atau buat kategori baru","Create & add":"Buat & tambahkan","All expense categories are already in the budget.":"Semua kategori expense sudah ada di anggaran.","No expense categories yet. Create one in Category.":"Belum ada kategori expense. Buat di menu Kategori.","New categories are made in Finance › Category.":"Kategori baru dibuat di Keuangan › Kategori.","No expenses in the budget yet. Tap “+ Add expense” to choose from your categories.":"Belum ada expense di anggaran. Ketuk “+ Tambah expense” untuk memilih dari kategori Anda.","Other spending (not in budget)":"Pengeluaran lain (di luar anggaran)","Remove from budget":"Hapus dari anggaran","Copy last month":"Salin dari bulan lalu","Next month":"Bulan depan","Expense types":"Tipe pengeluaran","Icon":"Ikon","Add type":"Tambah tipe","Expense type":"Tipe pengeluaran","No type":"Tanpa tipe","These types also appear when you record an outgoing transaction in Assets & debts, so spending is counted against the budget.":"Tipe ini juga muncul saat mencatat transaksi keluar di Aset & utang, jadi pengeluaran langsung dihitung terhadap anggaran.","Total budget":"Total anggaran","Spent":"Terpakai","Remaining":"Sisa","Over budget":"Melebihi anggaran","Type":"Tipe","Budget (Rp)":"Anggaran (Rp)","Untyped spending":"Pengeluaran tanpa tipe","Remove type":"Hapus tipe","Spending is taken from outgoing transactions in Assets & debts for this month.":"Pengeluaran diambil dari transaksi keluar di Aset & utang pada bulan ini.","No expense types yet. Add one on the left.":"Belum ada tipe pengeluaran. Tambahkan di sebelah kiri.","Copied from last month.":"Disalin dari bulan lalu.","Last month has no budget.":"Bulan lalu belum ada anggaran.","Saved":"Tersimpan","Claude limit":"Limit Claude","Color variety":"Variasi warna","Colorful":"Warna-warni","Single accent":"Satu warna aksen","5-hour":"5 jam","Weekly":"Mingguan","Set Claude limit":"Atur limit Claude","Used (%)":"Terpakai (%)","Resets at":"Reset pada","resets in":"reset dalam","reset":"sudah reset","Tap to fill in":"Ketuk untuk mengisi","Copy the numbers from Claude Settings › Usage. A page can't read your Claude usage by itself.":"Salin angkanya dari Pengaturan Claude › Penggunaan. Halaman ini tidak bisa membaca pemakaian Claude sendiri.",
   "Paste a link (https://…)":"Tempel link (https://…)","Name (optional)":"Nama (opsional)","Remove link":"Hapus link","Paste a link above and give it a name. It is also saved in Library › Links.":"Tempel link di atas lalu beri nama. Link juga tersimpan di Library › Tautan.","Interface style":"Gaya tampilan","Card, menu and button style":"Gaya kartu, menu, dan tombol","Applies to cards, inner cards, buttons and the sidebar. Saved to your account.":"Berlaku untuk kartu, kartu dalam, tombol, dan sidebar. Tersimpan di akun Anda.","Typing effect":"Efek mengetik","Effect":"Efek","Try typing here…":"Coba ketik di sini…","Adds a small effect each time you type in any text box. Saved to your account.":"Menambah efek kecil setiap kali Anda mengetik di kotak teks mana pun. Tersimpan di akun Anda.","Animation":"Animasi","Motion":"Gerakan","Lively":"Hidup","Subtle":"Halus","Off":"Mati","Movement when you open a menu, switch pages or press buttons. On a phone, swipe left or right to move between menus.":"Gerakan saat membuka menu, pindah halaman, atau menekan tombol. Di HP, geser kiri atau kanan untuk pindah menu.","Flat":"Datar","Glow":"Cahaya","Pop":"Letup","Sparks":"Percikan","Confetti":"Konfeti","Emoji burst":"Ledakan emoji","Power mode":"Mode power","Ripple":"Riak","Typewriter sound":"Suara mesin ketik","Rainbow":"Pelangi","Paper":"Kertas","Dark red":"Merah gelap","Deep teal":"Teal gelap","Indigo night":"Malam indigo","Bronze":"Perunggu","Dark green":"Hijau gelap","Navy night":"Biru malam","Gradient level":"Tingkat degradasi","Strong":"Kuat","Medium":"Sedang","Background, sidebar, cards and inner cards use steps of the same color. Strong makes the steps clearer.":"Latar, sidebar, kartu, dan kartu dalam memakai tingkatan dari warna yang sama. Kuat membuat tingkatannya lebih jelas.","Add link":"Tambah link","Tap a square to mark that day, week or month as done or not done.":"Ketuk kotak untuk menandai hari, minggu, atau bulan itu sudah atau belum dikerjakan.","List":"Daftar","Small cards":"Kartu kecil","Large cards":"Kartu besar","View":"Tampilan","No links yet. Tap Add link, paste the address and give it a name.":"Belum ada link. Ketuk Tambah link, tempel alamatnya, lalu beri nama.","Coming up":"Akan datang","Daily routines":"Rutinitas harian","Weekly routines":"Rutinitas mingguan","Monthly routines":"Rutinitas bulanan",
-  "Personal notebook":"Buku catatan pribadi","Overview":"Ringkasan","Agent AI":"Agen AI","Tasks":"Tugas","Stopwatch & Calendar":"Stopwatch & Kalender","Stopwatch":"Stopwatch","Calendar":"Kalender","Projects":"Proyek","Dreams":"Impian","Renewals":"Masa Aktif","Links":"Tautan","Files":"Berkas","Notes":"Catatan","Finance":"Keuangan","Settings":"Pengaturan","Shortcuts":"Pintasan","Connecting…":"Menghubungkan…","Auto-saved":"Tersimpan otomatis","Main menu":"Menu utama","Sections":"Bagian","Open menu":"Buka menu","Not connected":"Tidak terhubung","Not connected yet":"Belum terhubung","Disconnected":"Terputus",
+  "Personal notebook":"Buku catatan pribadi","Storage & database usage":"Pemakaian penyimpanan & database","Overview":"Ringkasan","Agent AI":"Agen AI","Tasks":"Tugas","Stopwatch & Calendar":"Stopwatch & Kalender","Stopwatch":"Stopwatch","Calendar":"Kalender","Projects":"Proyek","Dreams":"Impian","Renewals":"Masa Aktif","Links":"Tautan","Files":"Berkas","Notes":"Catatan","Finance":"Keuangan","Settings":"Pengaturan","Shortcuts":"Pintasan","Connecting…":"Menghubungkan…","Auto-saved":"Tersimpan otomatis","Main menu":"Menu utama","Sections":"Bagian","Open menu":"Buka menu","Not connected":"Tidak terhubung","Not connected yet":"Belum terhubung","Disconnected":"Terputus",
   "Your data and files are stored in your own Supabase project.":"Data dan berkas Anda tersimpan di project Supabase milik Anda.",
   "AI agent office view":"Tampilan kantor agen AI","Telegram @Nyenyo07_Bot":"Telegram @Nyenyo07_Bot","Remove shortcut":"Hapus pintasan","No shortcuts. Tick \"Show in Shortcuts\" on a link to add one.":"Belum ada pintasan. Centang \"Tampilkan di Pintasan\" pada sebuah tautan untuk menambahkannya.",
   /* common */
@@ -2944,7 +2951,7 @@ window.I18N=(function(){
   let downloads=null;
 
   /* ---------- tabs ---------- */
-  const TABS=["overview","english","ielts","tugas","calendar","proyek","dreams","files","notes","masa-aktif","akun","record","aset","hutang","budget","kategori","excel","tabel","pengaturan"];
+  const TABS=["overview","english","ielts","tugas","calendar","proyek","dreams","files","notes","masa-aktif","akun","record","aset","hutang","budget","kategori","excel","tabel","pengaturan","info"];
   const isMob=()=>matchMedia("(max-width:760px)").matches;
   const GROUPS={train:["english","ielts"],plan:["tugas","masa-aktif","calendar"],goals:["proyek","dreams"],money:["akun","record","aset","hutang","budget","kategori"],lib:["notes","files"]};
   const groupOf=t=>Object.keys(GROUPS).find(g=>GROUPS[g].includes(t))||null;
@@ -5360,7 +5367,7 @@ window.I18N=(function(){
   const DEF_ORDER={};Object.keys(GROUPS).forEach(g=>{DEF_ORDER[g]=curOrder(g)});
   function cleanMenu(m){const o={};Object.keys(GROUPS).concat(["__top"]).forEach(g=>{if(m&&Array.isArray(m[g]))o[g]=m[g].filter(t=>typeof t==="string")});return o}
   const NAV=document.querySelector(".nav"),NAVSEP=NAV.querySelector(".sep");
-  const topEls=()=>Array.prototype.filter.call(NAV.children,c=>c!==NAVSEP&&(c.matches("a[data-tab]")||c.matches(".ngrp"))&&!(c.matches('a[data-tab="pengaturan"]')));
+  const topEls=()=>Array.prototype.filter.call(NAV.children,c=>c!==NAVSEP&&(c.matches("a[data-tab]")||c.matches(".ngrp"))&&!(c.matches('a[data-tab="pengaturan"],a[data-tab="info"]')));
   const topKey=c=>c.matches(".ngrp")?"g:"+c.dataset.ng:"t:"+c.dataset.tab;
   const topName=c=>(c.querySelector(".ng-btn .ni")||c.querySelector(".ni")).textContent;
   const DEF_TOP=topEls().map(topKey);
@@ -9558,7 +9565,8 @@ document.addEventListener("click",function(e){
     files:["Photos and files stored in your account.","Foto dan berkas yang tersimpan di akun Anda."],
     excel:["A spreadsheet with formulas, formats and sheets.","Lembar kerja dengan rumus, format, dan sheet."],
     tabel:["Free tables: type in any cell, rename headers, align and format.","Tabel bebas: isi sel sesuka Anda, ganti nama header, atur rata dan format."],
-    pengaturan:["Appearance, menus, locks, backup and account.","Tampilan, menu, kunci, cadangan, dan akun."]
+    pengaturan:["Appearance, menus, locks, backup and account.","Tampilan, menu, kunci, cadangan, dan akun."],
+    info:["How much of your Supabase space is used and how much is left.","Seberapa banyak ruang Supabase yang terpakai dan sisanya."]
   };
   var tb=document.querySelector(".topbar"),vt=document.getElementById("view-title");
   if(tb&&vt&&!document.getElementById("vt-wrap")){
@@ -9831,7 +9839,7 @@ document.addEventListener("click",function(e){
   window.IMP_SET_DATE();
   function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;window.IMP_SET_DATE();try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
   setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
-  var base="imperium-shell-v67",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  var base="imperium-shell-v68",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
   function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
   function chk(){
     if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
@@ -10079,16 +10087,84 @@ body{font-variant-numeric:tabular-nums}
 #dream-list:not([data-view="list"]) .ie-dream :is(.ie-dc){min-width:0}
 #dream-list:not([data-view="list"]) .ie-dream :has(>.ie-dc){grid-template-columns:repeat(2,minmax(0,1fr))!important;display:grid}
 .ie-dc>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.info-mob{display:none}@media (max-width:760px){a.info-mob{display:flex!important;flex-direction:row!important;justify-content:space-between!important;align-items:center!important;text-align:left!important;gap:12px;padding:14px 18px!important;text-decoration:none;color:inherit}a.info-mob .hint{margin:0}}
+/* Info › pemakaian Supabase */
+#tab-info .info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--ds-4,16px)}
+#tab-info .im h3{margin:0 0 4px;font-size:var(--ds-fs-md,16px)}
+#tab-info .im .big{font-size:var(--ds-fs-xl,24px);font-weight:700;margin:6px 0 2px}
+#tab-info .im .big small{font-size:var(--ds-fs-sm,13px);font-weight:500;color:var(--muted)}
+#tab-info .im .bar{height:10px;margin:10px 0 8px}
+#tab-info .im .bar i.warn{background:var(--warn,#e0a03a)}#tab-info .im .bar i.bad{background:var(--bad,#e05a5a)}
+#tab-info .im .row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#tab-info .im .row3>div{padding:8px 10px;border-radius:var(--ds-r-tile,12px);background:var(--ds-tile-bg);border:1px solid var(--ds-tile-line)}
+#tab-info .im .row3 span{display:block;font-size:var(--ds-fs-xs,12px);color:var(--muted)}
+#tab-info .im .row3 b{font-size:var(--ds-fs-base,14.5px)}
+#tab-info .im .left{color:var(--ok)}
+#tab-info table{width:100%;border-collapse:collapse;font-size:var(--ds-fs-sm,13px)}
+#tab-info th,#tab-info td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+#tab-info td.n,#tab-info th.n{text-align:right;font-variant-numeric:tabular-nums}
+#tab-info #info-break{margin-top:var(--ds-4,16px)}
+#tab-info .info-act{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px}
+@media (max-width:760px){#tab-info .info-grid{grid-template-columns:1fr}.nav>a[data-tab="info"]{display:none}}
 </style>
 <script>
 /* label pendek menu bawah HP (sistem desain) */
 (function(){
-  var S={id:{overview:"Ringkas",train:"Latihan",plan:"Agenda",goals:"Target",money:"Uang",lib:"Arsip",excel:"Excel",tabel:"Tabel",pengaturan:"Atur"},
-         en:{overview:"Home",train:"Learn",plan:"Plan",goals:"Goals",money:"Money",lib:"Library",excel:"Excel",tabel:"Table",pengaturan:"Settings"}};
+  var S={id:{overview:"Ringkas",train:"Latihan",plan:"Agenda",goals:"Target",money:"Uang",lib:"Arsip",excel:"Excel",tabel:"Tabel",pengaturan:"Atur",info:"Info"},
+         en:{overview:"Home",train:"Learn",plan:"Plan",goals:"Goals",money:"Money",lib:"Library",excel:"Excel",tabel:"Table",pengaturan:"Settings",info:"Info"}};
   function apply(){var L=(document.documentElement.lang||"en").slice(0,2)==="id"?S.id:S.en;
     document.querySelectorAll(".nav>a[data-tab] .ni").forEach(function(n){var k=n.parentNode.dataset.tab;if(L[k])n.setAttribute("data-s",L[k]);else n.removeAttribute("data-s")});
     document.querySelectorAll(".nav>.ngrp>.ng-btn .ni").forEach(function(n){var k=n.closest(".ngrp").dataset.ng;if(L[k])n.setAttribute("data-s",L[k]);else n.removeAttribute("data-s")})}
   apply();addEventListener("imp-lang",apply);new MutationObserver(function(){apply()}).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
+})();
+</script>
+
+<script>
+/* ---------- Info: sisa penyimpanan Supabase ---------- */
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var ID=function(){return (document.documentElement.lang||"en").slice(0,2)==="id"};
+  var T=function(e,i){return ID()?i:e};
+  function sz(b){b=+b||0;var u=["B","KB","MB","GB"],k=0;while(b>=1024&&k<3){b/=1024;k++}return (k?b.toFixed(b<10?2:1):b)+" "+u[k]}
+  function esc(x){return String(x).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  var NAMES={dream:["Dreams","Impian"],proj:["Projects","Proyek"],pcost:["Project costs","Biaya proyek"],task:["Tasks","Tugas"],tlog:["Task log","Riwayat tugas"],link:["Links","Tautan"],fin:["Records","Record keuangan"],acct:["Accounts","Account"],asset:["Assets","Aset"],liab:["Liabilities","Liabilities"],liabpay:["Installment payments","Pembayaran cicilan"],sub:["Lead time","Lead time"],note:["Notes","Catatan"],ndraft:["Note drafts","Draft catatan"],file:["Files","Berkas"],folder:["Folders","Folder"],xlbook:["Excel books","Buku Excel"],excelbos:["Excel Bos","Excel Bos"],tabel:["Tables","Tabel"],prefs:["Settings","Pengaturan"],btype:["Expense types","Tipe pengeluaran"],budget:["Budget","Anggaran"],appicon:["App icon","Ikon aplikasi"],basicenglish:["Basic English progress","Progres Basic English"],btypes:["Expense types","Tipe pengeluaran"],ielts:["IELTS progress","Progres IELTS"],menu:["Menu order","Urutan menu"],menulock:["Menu lock","Kunci menu"],pay:["Installment payments","Pembayaran cicilan"],project:["Projects","Proyek"]};
+  function nm(k){var n=NAMES[k];return n?T(n[0],n[1]):k}
+  function meter(title,used,max,extra){
+    var pct=max?Math.min(100,used/max*100):0,left=Math.max(0,max-used),cl=pct>=90?"bad":pct>=75?"warn":"";
+    return '<div class="setcard im"><h3>'+title+'</h3>'
+      +'<div class="big left">'+sz(left)+' <small>'+T("left","tersisa")+'</small></div>'
+      +'<div class="bar ok"><i class="'+cl+'" style="width:'+Math.max(pct,pct>0?1:0).toFixed(1)+'%"></i></div>'
+      +'<div class="row3"><div><span>'+T("Used","Terpakai")+'</span><b>'+sz(used)+'</b></div><div><span>'+T("Limit (free plan)","Batas (paket gratis)")+'</span><b>'+sz(max)+'</b></div><div><span>'+T("Used %","Persen terpakai")+'</span><b>'+pct.toFixed(1)+'%</b></div></div>'
+      +(extra?'<p class="hint" style="margin:8px 0 0">'+extra+'</p>':'')+'</div>';
+  }
+  var busy=false,last=null;
+  async function load(){
+    if(busy)return;busy=true;var m=$("info-meters");
+    if(!last)m.innerHTML='<div class="setcard im"><p class="hint">'+T("Checking your Supabase usage…","Memeriksa pemakaian Supabase…")+'</p></div>';
+    try{
+      if(!window.IMP_USAGE)throw new Error("na");
+      var d=await window.IMP_USAGE();last=d;render();
+    }catch(e){
+      m.innerHTML='<div class="setcard im"><h3>'+T("Could not read usage","Gagal membaca pemakaian")+'</h3><p class="hint">'+T("Check your connection, then press Refresh.","Periksa koneksi lalu tekan Muat ulang.")+'</p><button type="button" class="soft" data-info-ref>'+T("Refresh","Muat ulang")+'</button></div>';
+      $("info-break").innerHTML="";$("info-foot").textContent="";
+    }finally{busy=false}
+  }
+  function render(){
+    var d=last;if(!d)return;
+    $("info-meters").innerHTML=
+      meter(T("File storage","Penyimpanan berkas")+' <span class="hint">(Storage)</span>',+d.st_bytes||0,+d.st_max||1073741824,(+d.st_n||0)+' '+T("files: photos, covers, proofs, logos and Archive › Files.","berkas: foto, sampul, bukti bayar, logo, dan Arsip › Berkas."))
+      +meter(T("Database","Database")+' <span class="hint">(Postgres)</span>',+d.db_bytes||0,+d.db_max||524288000,T("All notes, numbers and settings. Your own entries take ","Semua catatan, angka, dan pengaturan. Data Anda sendiri memakai ")+sz(d.my_db_bytes)+T("; the rest is Supabase's own system tables.","; sisanya tabel sistem bawaan Supabase."));
+    var rows=(d.docs||[]).map(function(x){return '<tr><td>'+esc(nm(x.kind))+'</td><td class="n">'+x.n+'</td><td class="n">'+sz(x.bytes)+'</td></tr>'}).join("");
+    $("info-break").innerHTML='<div class="info-act"><h3 class="set-h" style="margin:0">'+T("What is in the database","Isi database")+'</h3><button type="button" class="ghost" data-info-ref>'+T("Refresh","Muat ulang")+'</button></div>'
+      +'<table><thead><tr><th>'+T("Type","Jenis")+'</th><th class="n">'+T("Entries","Jumlah")+'</th><th class="n">'+T("Size","Ukuran")+'</th></tr></thead><tbody>'+(rows||'<tr><td colspan="3" class="hint">—</td></tr>')+'</tbody></table>';
+    var at=d.at?new Date(d.at):new Date();
+    $("info-foot").textContent=T("Checked ","Diperiksa ")+at.toLocaleString(ID()?"id-ID":"en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+T(". Limits follow the Supabase free plan (1 GB storage, 500 MB database).",". Batas mengikuti paket gratis Supabase (penyimpanan 1 GB, database 500 MB).");
+  }
+  document.addEventListener("click",function(e){if(e.target.closest("[data-info-ref]"))load()});
+  function chk(){if((location.hash||"").slice(1)==="info")load()}
+  addEventListener("hashchange",chk);addEventListener("imp-lang",render);
+  if(document.readyState!=="loading")setTimeout(chk,300);else addEventListener("DOMContentLoaded",function(){setTimeout(chk,300)});
 })();
 </script>
 </body></html>
