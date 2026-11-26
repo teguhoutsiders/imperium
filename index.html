@@ -9831,7 +9831,7 @@ document.addEventListener("click",function(e){
   window.IMP_SET_DATE();
   function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;window.IMP_SET_DATE();try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
   setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
-  var base="imperium-shell-v61",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  var base="imperium-shell-v64",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
   function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
   function chk(){
     if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
@@ -9923,5 +9923,136 @@ document.addEventListener("click",function(e){
 <script>
 /* garis bawah header muncul saat konten digulir di bawahnya */
 (function(){var m=document.querySelector(".main");if(!m)return;function f(){m.classList.toggle("hdr-stuck",m.scrollTop>4)}m.addEventListener("scroll",f,{passive:true});addEventListener("hashchange",function(){setTimeout(f,0)});f()})();
+</script>
+<style id="imp-ds">
+/* =====================================================================
+   IMPERIUM DESIGN SYSTEM (Teguh 2026-11-26)
+   Satu sistem untuk semua menu: token tipografi, jarak, sudut, kartu,
+   tombol, input, label. Warna tetap dari tema (latar, aksen, mode) yang
+   dipilih di Pengaturan; gaya tampilan menu hanya mengubah permukaan kartu.
+   ===================================================================== */
+:root{
+  /* tipografi: satu keluarga huruf, angka sejajar (tabular) */
+  --ds-fs-xs:12px;   /* label kecil, eyebrow */
+  --ds-fs-sm:13px;   /* keterangan, meta */
+  --ds-fs-base:14.5px;/* isi */
+  --ds-fs-md:16px;   /* judul kartu */
+  --ds-fs-lg:20px;   /* angka statistik */
+  --ds-fs-xl:24px;   /* judul halaman */
+  /* jarak (kelipatan 4) */
+  --ds-1:4px;--ds-2:8px;--ds-3:12px;--ds-4:16px;--ds-5:20px;--ds-6:24px;--ds-8:32px;
+  /* sudut */
+  --ds-r-card:16px;--ds-r-tile:12px;--ds-r-ctl:10px;--ds-r-pill:999px;
+  /* tinggi kontrol */
+  --ds-h-ctl:40px;--ds-h-btn:38px;--ds-h-chip:32px;
+  /* permukaan dalam (kotak di dalam kartu): rata, tanpa bayangan */
+  --ds-tile-bg:color-mix(in srgb,var(--ink) 4%,transparent);
+  --ds-tile-line:color-mix(in srgb,var(--ink) 9%,transparent);
+  --ds-label:var(--muted);
+}
+/* Claymorphism tetap empuk, sudutnya sedikit lebih besar */
+:root[data-ui="clay"]{--ds-r-card:22px;--ds-r-tile:14px;--ds-r-ctl:12px}
+:root[data-ui="brutal"],:root[data-ui="pixel"]{--ds-r-card:0px;--ds-r-tile:0px;--ds-r-ctl:0px}
+
+/* ---------- huruf ---------- */
+/* angka & tanggal memakai huruf yang sama dengan teks (bukan huruf mesin ketik), tetap sejajar */
+:root:not([data-ui="pixel"]){--f-mono:var(--f-body)}
+body{font-variant-numeric:tabular-nums}
+:root .mono{letter-spacing:0}
+:root .view-title{font-size:var(--ds-fs-xl);font-weight:650;letter-spacing:-.015em;line-height:1.2}
+:root .vt-sub{font-size:var(--ds-fs-sm);color:var(--muted);margin-top:var(--ds-1)}
+:root .vt-crumb{font-size:var(--ds-fs-xs);letter-spacing:.06em}
+/* judul kartu: satu ukuran */
+:root :is(.ovc .ov-h h3,.ovc>h3,.set-h,.card-head h3,.proj h3,.liab h3,.fb .kartu>b:first-child){font-size:var(--ds-fs-md);font-weight:600;letter-spacing:-.005em;line-height:1.3}
+/* eyebrow / judul kelompok: kapital kecil seragam */
+:root :is(.ov-sub,.group h4,.formtitle,.tk-head,.tk-sec>span:first-child,.set-sub,.lk-top+.lk-subs .lk-h){font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-label)}
+/* label statistik: huruf biasa (tidak kapital semua), kecil, redup */
+:root .stat .k,:root .kpi .k{font-size:12.5px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ds-label);line-height:1.35}
+:root .stat .k{min-height:0}
+/* Ringkasan: angka di satu baris kotak berukuran sama (yang panjang tetap mengecil kalau perlu) */
+:root #tab-overview :is(.kpi,.stat) .v{--vmax:18px}
+/* satu keluarga huruf: huruf display (serif) hanya untuk logo IMPERIUM */
+:root :is(.cover.blank span,.ie-card .z-big,.ie-fc .term,.ie-goal,.logo.ai){font-family:var(--f-body)!important;letter-spacing:-.01em}
+:root .ie-goal{font-weight:700}
+:root .cover.blank span{letter-spacing:.14em;font-weight:600;font-size:13px}
+/* kalender: kotak tanggal rata (tanpa bayangan tebal) */
+:root[data-ui] .cal button.day{box-shadow:none!important;background:var(--ds-tile-bg)!important;border:1px solid var(--ds-tile-line)!important;border-radius:var(--ds-r-tile)!important;backdrop-filter:none!important}
+:root[data-ui] .cal button.day.today{border-color:color-mix(in srgb,var(--accent) 60%,transparent)!important;background:color-mix(in srgb,var(--accent) 14%,transparent)!important}
+:root[data-ui] .cal button.day.sel{border-color:var(--accent)!important;box-shadow:inset 0 0 0 1px var(--accent)!important}
+:root .stat .v{font-weight:600;letter-spacing:-.01em;margin-top:6px}
+/* angka di Basic English / IELTS juga memakai huruf utama */
+:root :is(.fb .stat b,.fb .stat3 b,.be-xp,.fb .sw,.xl-bawah b){font-family:var(--f-body)!important;letter-spacing:0}
+:root .kpi .v{font-size:17px;font-weight:600;letter-spacing:-.01em}
+:root .meta{font-size:var(--ds-fs-sm)}
+:root .hint{font-size:var(--ds-fs-sm);line-height:1.5}
+:root .pill{font-size:11.5px;font-weight:600;letter-spacing:.01em;padding:3px 10px}
+
+/* ---------- kartu ---------- */
+:root :is(.ovc,.setcard,form.entry,.proj,.liab,.empty){border-radius:var(--ds-r-card)}
+:root :is(.ovc,.setcard,.proj,.liab){padding:var(--ds-5)}
+:root form.entry{padding:var(--ds-5);gap:var(--ds-3) var(--ds-4)}
+:root .setcard{gap:var(--ds-4)}
+:root .ovc{gap:var(--ds-3)}
+:root ul.list{border-radius:var(--ds-r-card);overflow:hidden}
+:root .stat{border-radius:var(--ds-r-card);padding:var(--ds-4) var(--ds-5)}
+:root .empty{padding:var(--ds-6)}
+/* kotak DI DALAM kartu: rata & tipis, supaya kartu tidak terlihat bertumpuk-tumpuk */
+:root[data-ui] :is(.ovc,.setcard,.proj,.liab,form.entry,.fb .kartu,.ie-card,.ie-hero) :is(.kpi,.stat,.ov-row,.ovl-list a,.ie-dc,.ie-sk,.dk-panel,.ndraft,.fb .stat3>div,.fb li.fb-i,.ovl-add,.ov-rc-row,ul.list){
+  background:var(--ds-tile-bg)!important;border:1px solid var(--ds-tile-line)!important;box-shadow:none!important;border-radius:var(--ds-r-tile)!important;backdrop-filter:none!important}
+:root[data-ui] :is(.ovc,.setcard,.proj,.liab) :is(.kpi,.stat){padding:var(--ds-3) var(--ds-4)}
+
+/* ---------- tombol ---------- */
+:root button:not(.ng-btn):not(.lnc-c):not(.thumb):not(.ftile):not(.be-ulk):not(.xl-sh):not(.xl-shx):not(.xl-shadd):not(.tb-pi):not([data-rc]):not([data-tdone]){border-radius:var(--ds-r-ctl)}
+:root :is(button.primary,button.soft){min-height:var(--ds-h-btn);padding:0 var(--ds-4);font-size:14px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+:root button.ghost{font-size:13.5px;font-weight:500}
+:root .chip{min-height:var(--ds-h-chip);padding:0 var(--ds-3);border-radius:var(--ds-r-pill)!important;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+:root .filters{gap:var(--ds-2)}
+
+/* ---------- input ---------- */
+:root :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),select){min-height:var(--ds-h-ctl);border-radius:var(--ds-r-ctl)}
+:root textarea{border-radius:var(--ds-r-ctl)}
+:root form.entry label{font-size:var(--ds-fs-sm);font-weight:500;color:var(--muted);gap:6px}
+:root form.entry label :is(input,select,textarea){color:var(--ink);font-size:var(--ds-fs-base)}
+/* Excel & Tabel punya ukuran sel sendiri */
+:root :is(#tab-excel,#tab-tabel) :is(input,select){min-height:0}
+:root #tab-excel button{min-height:0}
+
+/* ---------- tata letak halaman ---------- */
+@media (min-width:761px){
+  :root .main{gap:var(--ds-4);padding-left:var(--ds-8);padding-right:var(--ds-6)}
+  /* header ikut bermotif seperti latar, jadi tidak ada pita polos di atas */
+  :root .topbar{margin-left:calc(-1 * var(--ds-8));padding-left:var(--ds-8);margin-right:calc(-1 * var(--ds-6));padding-right:var(--ds-6);
+    background-color:var(--bg);background-image:var(--pat-img,none);background-attachment:fixed;box-shadow:none;clip-path:none}
+  :root .main.hdr-stuck .topbar{box-shadow:0 1px 0 var(--line),0 10px 20px -18px rgba(0,0,0,.6)}
+  /* Ringkasan: kartu setinggi isinya, tidak menyisakan ruang kosong besar */
+  :root #tab-overview .ov{grid-template-rows:auto auto;align-content:start;align-items:start;gap:var(--ds-4)}
+  :root #tab-overview .ovc{align-self:start;max-height:none}
+  :root #tab-overview .ovc .ov-body{max-height:min(58vh,560px)}
+}
+@media (max-width:760px){
+  :root{--ds-fs-xl:21px}
+  :root :is(.ovc,.setcard,.proj,.liab){padding:var(--ds-4)}
+  :root form.entry{padding:var(--ds-4)}
+  :root .stat{padding:var(--ds-3) var(--ds-4)}
+  :root .topbar{background-color:var(--bg);background-image:var(--pat-img,none);background-attachment:fixed;box-shadow:none;clip-path:none}
+  /* status simpan hanya tampil kalau ada masalah */
+  :root .sync-top:not(.bad){display:none}
+  :root .sync-top.bad{order:4;flex-basis:100%;font-size:12px;margin:2px 0 0}
+  :root .ov-date-m{font-size:var(--ds-fs-sm);color:var(--muted);margin:0}
+  /* menu bawah: label pendek supaya tidak terpotong ("Ringka…", "Pengat…") */
+  :root .nav .ni[data-s]{font-size:0!important;letter-spacing:0}
+  :root .nav .ni[data-s]::before{content:attr(data-s);font-size:10px;font-weight:600;letter-spacing:-.01em}
+}
+</style>
+<script>
+/* label pendek menu bawah HP (sistem desain) */
+(function(){
+  var S={id:{overview:"Ringkas",train:"Latihan",plan:"Agenda",goals:"Target",money:"Uang",lib:"Arsip",excel:"Excel",tabel:"Tabel",pengaturan:"Atur"},
+         en:{overview:"Home",train:"Learn",plan:"Plan",goals:"Goals",money:"Money",lib:"Library",excel:"Excel",tabel:"Table",pengaturan:"Settings"}};
+  function apply(){var L=(document.documentElement.lang||"en").slice(0,2)==="id"?S.id:S.en;
+    document.querySelectorAll(".nav>a[data-tab] .ni").forEach(function(n){var k=n.parentNode.dataset.tab;if(L[k])n.setAttribute("data-s",L[k]);else n.removeAttribute("data-s")});
+    document.querySelectorAll(".nav>.ngrp>.ng-btn .ni").forEach(function(n){var k=n.closest(".ngrp").dataset.ng;if(L[k])n.setAttribute("data-s",L[k]);else n.removeAttribute("data-s")})}
+  apply();addEventListener("imp-lang",apply);new MutationObserver(function(){apply()}).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
+})();
 </script>
 </body></html>
