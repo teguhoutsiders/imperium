@@ -9,11 +9,13 @@
   .ngrp[data-ng="goals"]{--mc:var(--v1)}
   .ngrp[data-ng="money"]{--mc:var(--v7)}
   .ngrp[data-ng="lib"]{--mc:var(--v5)}
-  .nav>a[data-tab="excel"]{--mc:#1D7A45}
-  .nav>a[data-tab="tabel"]{--mc:#C2410C}
-  :root[data-mode="dark"] .nav>a[data-tab="tabel"]{--mc:#FB923C}
+  .ngrp[data-ng="tools"]{--mc:#475569}
+  :root[data-mode="dark"] .ngrp[data-ng="tools"]{--mc:#94A3B8}
+  .nav a[data-tab="excel"]{--mc:#1D7A45}
+  .nav a[data-tab="tabel"]{--mc:#C2410C}
+  :root[data-mode="dark"] .nav a[data-tab="tabel"]{--mc:#FB923C}
   .nav>a[data-tab="pengaturan"]{--mc:var(--v6)}
-  :root[data-mode="dark"] .nav>a[data-tab="excel"]{--mc:#5FD38D}
+  :root[data-mode="dark"] .nav a[data-tab="excel"]{--mc:#5FD38D}
   .nav>a .ic,.ngrp>.ng-btn .ic,.ngrp .nsub>a .ic{color:var(--mc)!important}
   .nav>a,.ngrp>.ng-btn{color:color-mix(in srgb,var(--mc) 70%,var(--muted))!important}
   .nav>a[aria-current="page"],.ngrp .nsub>a[aria-current="page"]{background:color-mix(in srgb,var(--mc) 16%,transparent)!important;color:var(--mc)!important;font-weight:600}
