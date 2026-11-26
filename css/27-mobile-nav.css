@@ -3,12 +3,20 @@
    Menu aktif = lingkaran penuh di dalam bar yang bergeser.
    Warna ikut tema: panel = --surface, garis = --line, ikon & lingkaran = warna tiap menu
    di sidebar (--ic, diisi otomatis dari .nav), cadangan --accent. */
-#mnav{display:none}
+#mnav,.mn-gear{display:none}
+.nav a.nav-hide{display:none!important}
+.bg-catlink{margin-left:auto}
+.bg-catback{display:flex}
+.bg-catback .los-btn,.bg-catlink{border-color:transparent;background:none;color:var(--accent)}
 @media (max-width:760px){
   :root.mnav-on{--navh:84px;--mn-h:60px;--mn-sub:48px}
   :root.mnav-on.mnav-sub{--navh:132px}
   .mnav-on .side{display:none!important}
   .mnav-on .fx-toast{display:none!important}
+  .mnav-on .mn-gear{display:inline-flex;align-items:center;justify-content:center}
+  .mn-gear svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .mn-gear.on{color:var(--accent);border-color:var(--accent)!important}
+  .mnav-on .los-sbtn,.mnav-on .mn-gear{margin-right:6px}
 
   #mnav{display:flex;flex-direction:column;position:fixed;z-index:46;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));
     background:var(--surface);border:1px solid var(--line);border-radius:30px;padding:0 6px;overflow:hidden;

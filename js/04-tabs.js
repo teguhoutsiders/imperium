@@ -26,7 +26,7 @@
   /* ---------- tabs ---------- */
   const TABS=["overview","english","ielts","tugas","calendar","proyek","dreams","files","notes","masa-aktif","akun","record","aset","hutang","budget","kategori","excel","tabel","pengaturan","info","today","weekly","goalmap","insights","career","ventures","people","health","journal"];
   const isMob=()=>matchMedia("(max-width:760px)").matches;
-  const GROUPS={train:["english","ielts"],plan:["tugas","masa-aktif","calendar","weekly"],goals:["proyek","dreams","goalmap"],money:["akun","record","aset","hutang","budget","kategori","insights"],life:["career","ventures","people","health","journal"],lib:["notes","files"],tools:["excel","tabel"]};
+  const GROUPS={home:["overview","today","weekly"],plan:["tugas","masa-aktif","calendar","proyek","dreams","goalmap"],money:["akun","record","aset","hutang","budget","insights","ventures","kategori"],life:["english","ielts","career","people","health","journal"],lib:["notes","files","excel","tabel"]};
   const groupOf=t=>Object.keys(GROUPS).find(g=>GROUPS[g].includes(t))||null;
   function syncGroupCounts(){
     document.querySelectorAll("[data-gc]").forEach(el=>{

@@ -6,6 +6,7 @@
   :root[data-mode="dark"] .ngrp[data-ng="life"]{--mc:#F472B6}
   .ngrp[data-ng="train"]{--mc:var(--v2)}
   .ngrp[data-ng="plan"]{--mc:var(--v3)}
+  .ngrp[data-ng="home"]{--mc:var(--v4)}
   .ngrp[data-ng="goals"]{--mc:var(--v1)}
   .ngrp[data-ng="money"]{--mc:var(--v7)}
   .ngrp[data-ng="lib"]{--mc:var(--v5)}
