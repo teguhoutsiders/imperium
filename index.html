@@ -9831,7 +9831,7 @@ document.addEventListener("click",function(e){
   window.IMP_SET_DATE();
   function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;window.IMP_SET_DATE();try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
   setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
-  var base="imperium-shell-v64",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  var base="imperium-shell-v65",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
   function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
   function chk(){
     if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
@@ -10043,6 +10043,42 @@ body{font-variant-numeric:tabular-nums}
   :root .nav .ni[data-s]{font-size:0!important;letter-spacing:0}
   :root .nav .ni[data-s]::before{content:attr(data-s);font-size:10px;font-weight:600;letter-spacing:-.01em}
 }
+
+/* ds-fix r2: dream list + covers */
+.cover{position:relative}
+.cover>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+#dream-list[data-view="list"] .dream{grid-template-rows:auto auto;min-height:64px}
+#dream-list[data-view="list"] .dream>.cover{align-self:center}
+#dream-list[data-view="list"] .dream:has(>.dk-panel)>div:not(.dk-panel):has(>.barlab){display:none}
+#dream-list[data-view="list"] .dream>.dk-panel{grid-column:3;grid-row:1/span 2;align-self:center;padding:6px 10px!important;gap:4px;min-width:0}
+#dream-list[data-view="list"] .dream>.dk-panel .hint{display:none}
+#dream-list[data-view="list"] .dream .barlab{display:flex;justify-content:space-between;gap:8px;min-width:0;white-space:nowrap}
+#dream-list[data-view="list"] .dream .barlab>span:last-child{overflow:hidden;text-overflow:ellipsis}
+#dream-list[data-view="list"] .dream>.card-foot{align-self:center}
+@media (max-width:760px){#dream-list[data-view="list"] .dream>.dk-panel{display:none}}
+
+/* ds-fix r2: overview never overlaps — grow with content, page scrolls */
+@media (min-width:761px){
+ :root #tab-overview:not([hidden]){flex:none!important;min-height:auto!important}
+ :root #tab-overview .ov{flex:none!important;height:auto!important;min-height:0;grid-template-rows:auto auto!important;align-items:stretch!important}
+ :root #tab-overview .ovc{min-height:auto!important;height:auto!important;max-height:none!important;overflow:visible!important;display:flex;flex-direction:column}
+ :root #tab-overview .ovc .ov-body{max-height:none!important;overflow:visible!important}
+ :root #tab-overview .ovc[data-a="links"]{align-self:stretch!important;height:0!important;min-height:100%!important;overflow:hidden!important}
+ :root #tab-overview .ovc[data-a="links"] .ov-body{flex:1;min-height:0;overflow:auto!important}
+}
+
+@media (min-width:761px){#dream-list[data-view="list"] .dream{grid-template-columns:72px minmax(0,1fr) minmax(180px,280px) auto}}
+#dream-list[data-view="list"] .dream>.dk-panel .barlab>span:first-child{flex:none}
+
+#dream-list[data-view="list"] .dream>.dk-panel .barlab>span:first-child{max-width:1.5em;overflow:hidden;white-space:nowrap}
+
+/* ds-fix r2: dream card panels */
+.dk-panel .barlab{flex-wrap:wrap;row-gap:2px}
+.dk-panel .barlab>span:last-child{margin-left:auto}
+.barlab .mono{text-transform:none;letter-spacing:0}
+#dream-list:not([data-view="list"]) .ie-dream :is(.ie-dc){min-width:0}
+#dream-list:not([data-view="list"]) .ie-dream :has(>.ie-dc){grid-template-columns:repeat(2,minmax(0,1fr))!important;display:grid}
+.ie-dc>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 <script>
 /* label pendek menu bawah HP (sistem desain) */
