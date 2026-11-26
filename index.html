@@ -9831,7 +9831,7 @@ document.addEventListener("click",function(e){
   window.IMP_SET_DATE();
   function dayCheck(){var d=ymd(new Date());if(d!==day){day=d;window.IMP_SET_DATE();try{window.IMP_REFRESH&&window.IMP_REFRESH()}catch(_){}}}
   setInterval(dayCheck,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)dayCheck()});window.addEventListener("focus",dayCheck);
-  var base="imperium-shell-v65",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
+  var base="imperium-shell-v66",shown=false,lastChk=0; /* samakan dengan nama cache di sw.js setiap rilis */
   function ver(){return fetch("sw.js?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():null}).then(function(t){var m=t&&/const C="([^"]+)"/.exec(t);return m?m[1]:null}).catch(function(){return null})}
   function chk(){
     if(shown||document.hidden||Date.now()-lastChk<60000)return;lastChk=Date.now();
@@ -10057,15 +10057,15 @@ body{font-variant-numeric:tabular-nums}
 #dream-list[data-view="list"] .dream>.card-foot{align-self:center}
 @media (max-width:760px){#dream-list[data-view="list"] .dream>.dk-panel{display:none}}
 
-/* ds-fix r2: overview never overlaps — grow with content, page scrolls */
+/* ds-fix r3: overview fits the screen, no page scroll; cards never overlap */
 @media (min-width:761px){
- :root #tab-overview:not([hidden]){flex:none!important;min-height:auto!important}
- :root #tab-overview .ov{flex:none!important;height:auto!important;min-height:0;grid-template-rows:auto auto!important;align-items:stretch!important}
- :root #tab-overview .ovc{min-height:auto!important;height:auto!important;max-height:none!important;overflow:visible!important;display:flex;flex-direction:column}
- :root #tab-overview .ovc .ov-body{max-height:none!important;overflow:visible!important}
- :root #tab-overview .ovc[data-a="links"]{align-self:stretch!important;height:0!important;min-height:100%!important;overflow:hidden!important}
- :root #tab-overview .ovc[data-a="links"] .ov-body{flex:1;min-height:0;overflow:auto!important}
+ :root #tab-overview:not([hidden]){flex:1 1 auto!important;min-height:0!important}
+ :root #tab-overview .ov{flex:1 1 auto!important;min-height:0!important;height:auto!important;grid-template-rows:minmax(0,auto) minmax(0,auto)!important;align-content:stretch!important;align-items:stretch!important}
+ :root #tab-overview .ovc{align-self:stretch!important;min-height:0!important;height:auto!important;max-height:none!important;overflow:hidden!important;display:flex;flex-direction:column}
+ :root #tab-overview .ovc .ov-body{flex:1 1 auto;min-height:0;max-height:none!important;overflow:auto!important}
+ :root #tab-overview .ovc[data-a="links"]{height:0!important;min-height:100%!important}
 }
+
 
 @media (min-width:761px){#dream-list[data-view="list"] .dream{grid-template-columns:72px minmax(0,1fr) minmax(180px,280px) auto}}
 #dream-list[data-view="list"] .dream>.dk-panel .barlab>span:first-child{flex:none}
