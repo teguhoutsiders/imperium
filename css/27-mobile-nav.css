@@ -1,5 +1,5 @@
 /* ==== Imperium · bilah menu bawah HP gaya "homebar" (Teguh 2026-11-27) ====
-   Satu panel membulat: submenu (kalau ada) menempel di atas deretan menu utama.
+   Satu panel membulat, tiga tingkat: tab halaman (teks) › submenu (ikon) › menu utama (ikon).
    Menu aktif = lingkaran penuh di dalam bar yang bergeser.
    Warna ikut tema: panel = --surface, garis = --line, ikon & lingkaran = warna tiap menu
    di sidebar (--ic, diisi otomatis dari .nav), cadangan --accent. */
@@ -35,21 +35,34 @@
   #mnav .mn-ball.pop{animation:mnPop .4s cubic-bezier(.3,1.5,.5,1)}
   @keyframes mnPop{0%{transform:scale(.7)}100%{transform:scale(1)}}
 
-  /* submenu menempel di atas, dipisah garis tipis */
+  /* tingkat 2: submenu (ikon saja) menempel di atas menu utama */
   #mnav-sub{flex:none;border-bottom:1px solid var(--line);margin:0 -6px;padding:0 6px}
   #mnav-sub[hidden]{display:none}
-  #mnav-sub .mns-in{display:flex;gap:2px;height:var(--mn-sub);align-items:center;overflow-x:auto;scrollbar-width:none;animation:mnUp .25s ease}
+  #mnav-sub .mns-in{display:flex;height:var(--mn-sub);align-items:center;overflow-x:auto;scrollbar-width:none;animation:mnUp .25s ease}
   #mnav-sub .mns-in::-webkit-scrollbar{display:none}
-  #mnav-sub .mns-i{flex:1 0 auto;justify-content:center;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:99px;color:var(--muted);text-decoration:none;font:600 12.5px/1 Inter,system-ui,sans-serif;white-space:nowrap;-webkit-tap-highlight-color:transparent;transition:background .2s,color .2s}
-  #mnav-sub .ic{width:16px;height:16px;fill:none;stroke:var(--ic,currentColor);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;display:block}
-  #mnav-sub .mns-i.on{background:var(--ic,var(--accent));color:var(--on-accent,#fff)}
-  #mnav-sub .mns-i.on .ic{stroke:currentColor}
-  #mnav-sub .mn-c{min-width:16px;height:16px;padding:0 5px;border-radius:99px;background:var(--sunk,rgba(0,0,0,.07));color:var(--muted);font:700 9.5px/16px Inter,system-ui,sans-serif;text-align:center}
-  #mnav-sub .mns-i.on .mn-c{background:rgba(255,255,255,.25);color:inherit}
+  #mnav-sub .mns-i{flex:1 0 40px;display:grid;place-items:center;height:100%;position:relative;color:var(--ic,var(--muted));text-decoration:none;-webkit-tap-highlight-color:transparent}
+  #mnav-sub .mns-i::before{content:"";position:absolute;left:50%;top:50%;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;background:transparent;transition:background .25s,transform .25s;transform:scale(.7)}
+  #mnav-sub .mns-i.on{color:var(--on-accent,#fff)}
+  #mnav-sub .mns-i.on::before{background:var(--ic,var(--accent));transform:scale(1)}
+  #mnav-sub .ic{position:relative;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;display:block}
+  #mnav-sub .mn-c{position:absolute;top:6px;left:calc(50% + 5px);min-width:15px;height:15px;padding:0 4px;border-radius:99px;background:var(--sunk,rgba(0,0,0,.07));color:var(--muted);font:700 9px/15px Inter,system-ui,sans-serif;text-align:center;box-shadow:0 0 0 2px var(--surface)}
+  #mnav-sub .mns-i.on .mn-c{opacity:0}
   #mnav-sub .mn-c.al{background:var(--crit);color:#fff}
+
+  /* tingkat 3: tab di dalam halaman (mis. Basic English › Progres & Tier), paling atas */
+  :root.mnav-on.mnav-sub.mnav-l3{--navh:172px}
+  .mnav-on.mnav-l3 #tab-english .fb-tab,.mnav-on.mnav-l3 #ie-tabs{display:none!important}
+  .mnav-on .main:has(>#tab-english:not([hidden])),.mnav-on .main:has(>#tab-ielts:not([hidden])){padding-bottom:calc(var(--navh) + 28px + env(safe-area-inset-bottom,0px))}
+  #mnav-l3{flex:none;border-bottom:1px solid var(--line);margin:0 -6px;padding:0 8px}
+  #mnav-l3[hidden]{display:none}
+  #mnav-l3 .ml3-in{display:flex;gap:4px;height:40px;align-items:center;overflow-x:auto;scrollbar-width:none;animation:mnUp .25s ease}
+  #mnav-l3 .ml3-in::-webkit-scrollbar{display:none}
+  #mnav-l3 .ml3-i{flex:none;height:28px;padding:0 11px;border:0;border-radius:99px;background:transparent;color:var(--muted);font:600 12px/28px Inter,system-ui,sans-serif;white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .2s,color .2s}
+  #mnav-l3 .ml3-i.on{background:color-mix(in srgb,var(--gc,var(--accent)) 15%,transparent);color:var(--gc,var(--accent))}
+  #mnav-l3 .ml3-i:active{background:var(--sunk,rgba(0,0,0,.05))}
   @keyframes mnUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
-  @media (prefers-reduced-motion:reduce){#mnav .mn-ind{transition:none}#mnav .mn-ball.pop,#mnav-sub .mns-in{animation:none}}
+  @media (prefers-reduced-motion:reduce){#mnav .mn-ind{transition:none}#mnav .mn-ball.pop,#mnav-sub .mns-in,#mnav-l3 .ml3-in{animation:none}}
   :root[data-anim="off"] #mnav .mn-ind{transition:none}
-  :root[data-anim="off"] #mnav .mn-ball.pop,:root[data-anim="off"] #mnav-sub .mns-in{animation:none}
+  :root[data-anim="off"] #mnav .mn-ball.pop,:root[data-anim="off"] #mnav-sub .mns-in,#mnav-l3 .ml3-in{animation:none}
 }

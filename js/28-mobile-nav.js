@@ -5,7 +5,7 @@
 (function(){
   "use strict";
   var MQ=matchMedia("(max-width:760px)");
-  var bar,row,ind,last={},built="";
+  var bar,row,l3,l3sig="",ind,last={},built="";
   function nav(){return document.querySelector("#side .nav")||document.querySelector(".nav")}
   function shown(el){if(!el||el.hidden)return false;var p=el;while(p&&p!==document.body){if(p.hidden&&!p.classList.contains("nsub"))return false;p=p.parentElement}var cs=getComputedStyle(el);return cs.display!=="none"}
   function cur(){var h=(location.hash||"").slice(1).split("?")[0];if(h==="stopwatch")h="calendar";var n=nav();return n&&n.querySelector('a[data-tab="'+h+'"]')?h:"overview"}
@@ -34,8 +34,9 @@
   function ensure(){
     if(bar)return;
     bar=document.createElement("nav");bar.id="mnav";bar.setAttribute("aria-label","Menu");
-    bar.innerHTML='<div id="mnav-sub" role="navigation" hidden></div><div class="mn-items"><span class="mn-ind" aria-hidden="true" hidden><span class="mn-ball"></span></span><div class="mn-row"></div></div>';
-    row=bar.querySelector("#mnav-sub");
+    bar.innerHTML='<div id="mnav-l3" role="tablist" hidden></div><div id="mnav-sub" role="navigation" hidden></div><div class="mn-items"><span class="mn-ind" aria-hidden="true" hidden><span class="mn-ball"></span></span><div class="mn-row"></div></div>';
+    row=bar.querySelector("#mnav-sub");l3=bar.querySelector("#mnav-l3");
+    l3.addEventListener("click",function(e){var b=e.target.closest("[data-l3]");if(!b)return;e.preventDefault();e.stopPropagation();var src=l3src();if(!src)return;var t=src.items[+b.dataset.l3];if(t)t.click();setTimeout(renderL3,30)});
     document.body.appendChild(bar);
     ind=bar.querySelector(".mn-ind");
     bar.addEventListener("click",function(e){
@@ -61,6 +62,7 @@
     box.innerHTML=its.map(function(it){var on=act&&act.key===it.key;
       return '<a href="'+(it.tab?"#"+it.tab:"#")+'" class="mn-i'+(on?" on":"")+'" data-go="'+esc(it.key)+'" aria-label="'+esc(it.name)+'"'+(on?' aria-current="page"':"")+' title="'+esc(it.name)+'"'+(it.c?' style="--ic:'+esc(it.c)+'"':"")+'>'+it.icon+badge(it.count)+"</a>"}).join("");
     bar.style.setProperty("--n",its.length);
+    bar.style.setProperty("--gc",(grp&&grp.c)||(act&&act.c)||"");
     /* lingkaran aktif */
     var ball=ind.querySelector(".mn-ball");
     if(act){var i=its.indexOf(act);ball.innerHTML=act.icon;ind.hidden=false;ind.style.setProperty("--ic",act.c||"");
@@ -70,17 +72,40 @@
     }else ind.hidden=true;
     /* submenu di atas bar */
     if(grp){
-      row.innerHTML='<div class="mns-in">'+grp.subs.map(function(s){var on=s.tab===c;return '<a href="#'+esc(s.tab)+'" class="mns-i'+(on?" on":"")+'" data-go="'+esc(s.tab)+'"'+(on?' aria-current="page"':"")+(s.c?' style="--ic:'+esc(s.c)+'"':"")+">"+s.icon+"<span>"+esc(s.name)+"</span>"+badge(s.count)+"</a>"}).join("")+"</div>";
+      row.innerHTML='<div class="mns-in">'+grp.subs.map(function(s){var on=s.tab===c;return '<a href="#'+esc(s.tab)+'" class="mns-i'+(on?" on":"")+'" data-go="'+esc(s.tab)+'"'+(on?' aria-current="page"':"")+(s.c?' style="--ic:'+esc(s.c)+'"':"")+' aria-label="'+esc(s.name)+'" title="'+esc(s.name)+'">'+s.icon+badge(s.count)+"</a>"}).join("")+"</div>";
       row.setAttribute("aria-label",grp.name);row.hidden=false;document.documentElement.classList.add("mnav-sub");
       var a=row.querySelector(".mns-i.on");if(a)try{a.scrollIntoView({block:"nearest",inline:"center"})}catch(_){}
     }else{row.hidden=true;row.innerHTML="";document.documentElement.classList.remove("mnav-sub")}
   }
-  var t=null;function soon(){clearTimeout(t);t=setTimeout(render,40)}
+
+  /* ---------- tingkat ketiga: tab di dalam halaman (Basic English, IELTS) ---------- */
+  var L3=[
+    {sel:"#tab-english .fb-tab",item:"button[data-t]",on:function(b){return b.classList.contains("on")}},
+    {sel:"#ie-tabs",item:"[data-ietab]",on:function(b){return b.getAttribute("aria-pressed")==="true"||b.classList.contains("on")}}
+  ];
+  function l3src(){
+    for(var k=0;k<L3.length;k++){var el=document.querySelector(L3[k].sel);if(!el)continue;var pn=el.closest("section.panel");if(pn&&pn.hidden)continue;
+      var its=Array.prototype.slice.call(el.querySelectorAll(L3[k].item));if(its.length)return {def:L3[k],el:el,items:its}}
+    return null;
+  }
+  function renderL3(){
+    if(!l3)return;var src=MQ.matches?l3src():null;
+    if(!src){if(!l3.hidden){l3.hidden=true;l3.innerHTML="";l3sig=""}document.documentElement.classList.remove("mnav-l3");return}
+    var data=src.items.map(function(b){return [(b.textContent||"").trim(),src.def.on(b)]}),sig=JSON.stringify(data);
+    document.documentElement.classList.add("mnav-l3");l3.hidden=false;
+    if(sig===l3sig)return;var first=!l3sig;l3sig=sig;
+    l3.setAttribute("aria-label",(src.el.getAttribute("aria-label")||"").trim());
+    l3.innerHTML='<div class="ml3-in">'+data.map(function(d,i){return '<button type="button" role="tab" class="ml3-i'+(d[1]?" on":"")+'" data-l3="'+i+'" aria-selected="'+d[1]+'">'+esc(d[0])+"</button>"}).join("")+"</div>";
+    var a=l3.querySelector(".ml3-i.on");if(a)try{a.scrollIntoView({block:"nearest",inline:"center",behavior:first?"auto":"smooth"})}catch(_){}
+  }
+  var l3t=null;function l3soon(){clearTimeout(l3t);l3t=setTimeout(renderL3,40)}
+  function watchL3(){["tab-english","tab-ielts"].forEach(function(id){var p=document.getElementById(id);if(p)new MutationObserver(l3soon).observe(p,{subtree:true,childList:true,attributes:true,attributeFilter:["class","aria-pressed","hidden"]})})}
+  var t=null;function soon(){clearTimeout(t);t=setTimeout(function(){render();renderL3()},40)}
   addEventListener("hashchange",soon);
   addEventListener("imp-lang",function(){built="";soon()});
   addEventListener("resize",soon);
   if(MQ.addEventListener)MQ.addEventListener("change",function(){built="";soon()});
   function watch(){var n=nav();if(!n)return;new MutationObserver(soon).observe(n,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:["hidden","class","style","data-s"]})}
-  function start(){watch();render();setTimeout(render,600);setTimeout(render,2000)}
+  function start(){watch();watchL3();render();setTimeout(render,600);setTimeout(render,2000)}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();
 })();
