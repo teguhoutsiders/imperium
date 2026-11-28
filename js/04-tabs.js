@@ -404,7 +404,7 @@
     const meta=[PRIO_PILL[t.prio||2],'<span class="mono">'+on+' '+TKT("of","dari")+' '+tot+'</span>'];
     if(st)meta.push('<span class="mono">'+TKT(st+"-"+U+" streak","beruntun "+st+" "+U)+'</span>');
     if(p)meta.push('<span class="acn">'+esc(p.name)+'</span>');
-    return '<div class="tk-row" role="row"><div class="tk-name" role="cell"><div class="ttl">'+esc(t.title)+'</div><div class="meta">'+meta.join("")+'</div></div>'
+    return '<div class="tk-row'+(tkOpen.has(t.id)?" open":"")+'" role="row" data-tkrow="'+esc(t.id)+'"><div class="tk-name" role="cell"><div class="ttl">'+esc(t.title)+'</div><div class="meta">'+meta.join("")+'</div></div>'
       +'<div class="tk-cells rc-cells" role="cell">'+cells+'</div>'
       +'<div class="tk-rate mono '+(tot?(rate>=80?"t-ok":rate>=50?"t-warn":"t-crit"):"")+'" role="cell">'+(tot?rate+"%":"–")+'</div>'+rowActs(t.id)+'</div>';
   }
@@ -414,10 +414,11 @@
     const meta=[PRIO_PILL[t.prio||2]];
     if(p)meta.push('<span class="acn">'+esc(p.name)+'</span>');
     const due=t.due?'<span class="tk-due mono'+(late?" neg":"")+'">'+(late?TKT("Overdue · ","Terlambat · "):isT?TKT("Today · ","Hari ini · "):"")+esc(fmtDate(t.due))+'</span>':'<span class="tk-due hint">'+TKT("No due date","Tanpa tenggat")+'</span>';
-    return '<div class="tk-row'+(t.done?" done":"")+'" role="row"><div class="tk-name" role="cell"><div class="ttl">'+esc(t.title)+'</div><div class="meta">'+meta.join("")+'</div></div>'
+    return '<div class="tk-row'+(t.done?" done":"")+(tkOpen.has(t.id)?" open":"")+'" role="row" data-tkrow="'+esc(t.id)+'"><div class="tk-name" role="cell"><div class="ttl">'+esc(t.title)+'</div><div class="meta">'+meta.join("")+'</div></div>'
       +'<div class="tk-cells rc-cells" role="cell">'+due+'<i role="button" tabindex="0" data-tdone="'+esc(t.id)+'" class="'+(t.done?"on":"off")+' cur" title="'+esc(tip)+'" aria-label="'+esc(tip)+'"></i></div>'
       +'<div class="tk-rate mono'+(t.done?" t-ok":"")+'" role="cell">'+(t.done?"✓":"–")+'</div>'+rowActs(t.id)+'</div>';
   }
+  const tkOpen=new Set();
   const PRIO_PILL={1:'<span class="pill p-crit">High</span>',2:'<span class="pill p-mute">Medium</span>',3:'<span class="pill p-mute">Low</span>'};
   function renderTasks(){
     const projs=byKind("project");
@@ -450,7 +451,11 @@
   function tkTodo(el){const t=items.find(x=>x.id===el.dataset.tdone);if(!t)return;el.classList.toggle("on",!t.done);toggleTask(t.id,!t.done)}
   $("task-list").addEventListener("click",e=>{
     const c=e.target.closest("[data-rc]");if(c){window.IMP_RC(c);return}
-    const d=e.target.closest("[data-tdone]");if(d)tkTodo(d);
+    const d=e.target.closest("[data-tdone]");if(d){tkTodo(d);return}
+    /* HP: ketuk baris tugas untuk membuka detail (tren, edit, hapus) */
+    if(!isMob()||e.target.closest("button,a,input,select,textarea"))return;
+    const r=e.target.closest(".tk-row[data-tkrow]");if(!r)return;
+    const id=r.dataset.tkrow;tkOpen.has(id)?tkOpen.delete(id):tkOpen.add(id);r.classList.toggle("open",tkOpen.has(id));
   });
   $("task-list").addEventListener("keydown",e=>{
     const c=e.target.closest&&e.target.closest("[data-rc],[data-tdone]");if(!c||(e.key!=="Enter"&&e.key!==" "))return;
@@ -1761,8 +1766,8 @@
     }catch(err){await delAssets(up);st.textContent=assetErr(err)}
   });
   $("proj-list").addEventListener("click",e=>{
-    const xb=e.target.closest("button[data-pexp]");
-    if(xb){const k="pd-"+xb.dataset.pexp;expanded.has(k)?expanded.delete(k):expanded.add(k);renderProjects();return}
+    const xb=e.target.closest("button[data-pexp]")||(!e.target.closest("a,button,input,select,textarea,label")&&e.target.closest("tr.prow[data-prow]"));
+    if(xb){const k="pd-"+(xb.dataset.pexp||xb.dataset.prow);expanded.has(k)?expanded.delete(k):expanded.add(k);renderProjects();return}
     const ph=e.target.closest("button[data-pphoto]");
     if(ph){photoTarget=ph.dataset.pphoto;$("proj-photo-input").click();return}
     const cb=e.target.closest("button[data-cost]");
@@ -1808,19 +1813,26 @@
       const photos='<div class="thumbs">'+ev.slice(0,3).map(a=>thumb(p,a)).join("")+(ev.length>3?'<span class="pmore">+'+(ev.length-3)+'</span>':'')+(assets?'<button type="button" class="paddph" data-pphoto="'+esc(p.id)+'" aria-label="Add photo" title="Add photo">+</button>':(ev.length?'':'<span class="hint">—</span>'))+'</div>';
       const href=p.url&&safeHref(p.url)!=="#"?safeHref(p.url):"";
       const nm='<div class="ttl">'+esc(p.name)+(href?'<svg class="plink-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>':'')+'</div>';
-      let h='<tr class="prow'+(done?' done-row':'')+(href?' has-link':'')+'">'
-        +'<td><div class="pname"><button type="button" class="pexp" data-pexp="'+esc(p.id)+'" aria-expanded="'+open_+'" aria-label="Show details">▶</button><div class="grow">'+(href?'<a class="plink" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer" title="Open '+esc(host(href))+'">'+nm+'</a>':nm)+((!done||warn.length)?'<div class="pills">'+(done?'':'<span class="pill '+(SCLS[p.status]||"p-mute")+'">'+esc(STL[p.status]||p.status)+'</span>')+warn.join("")+'</div>':'')+'</div></div></td>'
+      const tgt='<span class="mono'+(late?' neg':'')+'">'+(done?(p.doneOn?esc(fmtDate(p.doneOn)):(p.due?esc(fmtDate(p.due)):'—')):(p.due?esc(fmtDate(p.due)):'—'))+'</span>';
+      let h='<tr class="prow'+(done?' done-row':'')+(open_?' open':'')+'" data-prow="'+esc(p.id)+'">'
+        +'<td><div class="pname"><button type="button" class="pexp" data-pexp="'+esc(p.id)+'" aria-expanded="'+open_+'" aria-label="Show details">▶</button><div class="grow">'+(href?'<a class="plink" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer" title="Open '+esc(host(href))+'">'+nm+'</a>':nm)+'</div></div></td>'
+        +'<td class="pst">'+(done?'<span class="mono">'+tgt+'</span>':'<span class="pill '+(SCLS[p.status]||"p-mute")+'">'+esc(STL[p.status]||p.status)+'</span>')+'</td>'
         +(done?'':'<td><div class="pprog"><div class="bar" role="progressbar" aria-valuenow="'+prog+'" aria-valuemin="0" aria-valuemax="100"><i style="width:'+prog+'%"></i></div><span class="mono">'+prog+'%</span></div></td>')
-        +'<td class="mono nw'+(late?' neg':'')+'">'+(done?(p.doneOn?esc(fmtDate(p.doneOn)):(p.due?esc(fmtDate(p.due)):'—')):(p.due?esc(fmtDate(p.due)):'—'))+'</td>'
-        +'<td class="mono nw">'+(mine.length?(done?mine.length:open+' / '+mine.length):'—')+'</td>'
-        +'<td class="r amt">'+(bud?money(bud):'—')+'</td>'
-        +'<td class="r amt spent">'+(spent?money(spent):'—')+'</td>'
-        +'<td class="r amt'+(bud&&rest<0?' neg':'')+'">'+(bud?money(rest,rest<0):'—')+'</td>'
-        +'<td>'+photos+'</td>'
-        +'<td>'+rowActs(p.id)+'</td></tr>';
+        +'</tr>';
       if(open_){
-        const cols=done?8:9;
-        h+='<tr class="pdet"><td colspan="'+cols+'"><div class="pdet-grid">'
+        const cols=done?2:3;
+        const kv=(k,v)=>'<div class="pkv"><span>'+k+'</span><b>'+v+'</b></div>';
+        h+='<tr class="pdet"><td colspan="'+cols+'">'
+          +'<div class="pdet-sum">'
+          +kv(done?"Finished":"Target",tgt)
+          +kv("Tasks",'<span class="mono">'+(mine.length?(done?mine.length:open+' / '+mine.length):'—')+'</span>')
+          +kv("Budget",bud?money(bud):'—')
+          +kv("Spent",spent?money(spent):'—')
+          +kv("Remaining",'<span class="'+(bud&&rest<0?'neg':'')+'">'+(bud?money(rest,rest<0):'—')+'</span>')
+          +'</div>'
+          +(warn.length?'<div class="pills pdet-warn">'+warn.join("")+'</div>':'')
+          +'<div class="pdet-acts">'+rowActs(p.id)+'</div>'
+          +'<div class="pdet-grid">'
           +'<div class="pdet-col">'+(p.url?'<h4>Link</h4><a class="lnk" href="'+esc(safeHref(p.url))+'" target="_blank" rel="noopener noreferrer">'+esc(host(p.url))+'</a>':'')+'<h4>Notes</h4>'+(p.notes?'<p class="pnotes">'+esc(p.notes)+'</p>':'<p class="hint">No notes.</p>')
           +'<h4>Project photos</h4><div class="pgal">'+ev.map(a=>thumb(p,a)).join("")+(assets?'<button type="button" class="paddph" data-pphoto="'+esc(p.id)+'">+ Add photos</button>':(ev.length?'':'<p class="hint">No photos yet.</p>'))+'</div></div>'
           +'<div class="pdet-col"><h4>Costs</h4>'+(cs.length?entryList(p.id,cs,6,"costs"):'<p class="hint">No costs logged yet.</p>')
@@ -1832,10 +1844,10 @@
     }
     function table(list,done,title){
       const tot=list.reduce((a,p)=>{const x=stat(p);a.b+=x.bud;a.s+=x.spent;return a},{b:0,s:0});
-      const head='<tr><th>Project</th>'+(done?'':'<th>Progress</th>')+'<th>'+(done?'Finished':'Target')+'</th><th>Tasks</th><th class="r">Budget</th><th class="r">Spent</th><th class="r">Remaining</th><th>Photos</th><th></th></tr>';
+      const head='<tr><th>Project</th><th>'+(done?'Finished':'Status')+'</th>'+(done?'':'<th>Progress</th>')+'</tr>';
       const rest=tot.b-tot.s;
-      const foot=list.length>1?'<tfoot><tr><td>Total</td>'+(done?'':'<td></td>')+'<td></td><td></td><td class="r amt">'+(tot.b?money(tot.b):'—')+'</td><td class="r amt">'+(tot.s?money(tot.s):'—')+'</td><td class="r amt'+(tot.b&&rest<0?' neg':'')+'">'+(tot.b?money(rest,rest<0):'—')+'</td><td></td><td></td></tr></tfoot>':'';
-      return '<section class="ptbl-sec"><div class="ptbl-h"><h3>'+title+'</h3><span class="count">'+list.length+'</span></div><div class="ptbl-wrap"><table class="ptbl"><thead>'+head+'</thead><tbody>'+list.map(p=>row(p,done)).join("")+'</tbody>'+foot+'</table></div></section>';
+      const foot=tot.b||tot.s?'<p class="hint ptbl-tot">Budget '+(tot.b?money(tot.b):'—')+' · Spent '+(tot.s?money(tot.s):'—')+(tot.b?' · Remaining <span class="'+(rest<0?'neg':'')+'">'+money(rest,rest<0)+'</span>':'')+'</p>':'';
+      return '<section class="ptbl-sec"><div class="ptbl-h"><h3>'+title+'</h3><span class="count">'+list.length+'</span></div><div class="ptbl-wrap"><table class="ptbl ptbl-slim"><thead>'+head+'</thead><tbody>'+list.map(p=>row(p,done)).join("")+'</tbody></table></div>'+foot+'</section>';
     }
     const act=ps.filter(p=>p.status!=="Selesai"),fin=ps.filter(p=>p.status==="Selesai");
     el.innerHTML='<div class="fin-cols">'
@@ -1899,7 +1911,13 @@
     $("sub-name").value=s.name||"";$("sub-grp").value=s.grp||"";$("sub-start").value=s.start||"";$("sub-end").value=s.end||"";$("sub-end").dataset.auto="";$("sub-cycle").value=s.cycle||"once";$("sub-cost").value=fmtIn(s.cost);$("sub-note").value=s.note||"";
     setEditing("sub",s.id,SL);$("sub-name").focus();
   });
-  let ltRolling=false;const ltOpen={};
+  let ltRolling=false;const ltOpen={},ltExp=new Set();
+  $("sub-list").addEventListener("click",e=>{
+    if(e.target.closest("button,a,input,select,textarea,summary"))return;
+    const r=e.target.closest("li.lt-row[data-ltx]");if(!r)return;
+    const id=r.dataset.ltx;ltExp.has(id)?ltExp.delete(id):ltExp.add(id);r.classList.toggle("open",ltExp.has(id));r.setAttribute("aria-expanded",String(ltExp.has(id)));
+  });
+  $("sub-list").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("li.lt-row[data-ltx]")){e.preventDefault();e.target.click()}});
   document.addEventListener("toggle",e=>{const d=e.target;if(d&&d.classList&&d.classList.contains("lt-g"))ltOpen[d.dataset.ltg]=d.open},true);
   function renderSubs(){
     const all=byKind("sub");
@@ -1928,19 +1946,20 @@
       const cls=d<0?"t-crit":d<=3?"t-crit":d<=7?"t-warn":"t-ok";
       const lab=d<0?LTL("days overdue","hari terlambat"):d===0?LTL("ends today","habis hari ini"):LTL("days left","hari lagi");
       const meta=[st?'<span class="mono">'+LTL("Start ","Mulai ")+esc(fmtDate(st))+'</span>':'','<span class="mono">'+LTL("Ends ","Habis ")+esc(fmtDate(s.end))+'</span>',CYCL[s.cycle]?'<span>🔁 '+CYCL[s.cycle]+'</span>':'',s.note?'<span>'+esc(s.note)+'</span>':''];
-      return '<li class="mid lt-row"><div class="days '+cls+'"><b>'+Math.abs(d)+'</b><span>'+lab+'</span></div><div class="grow"><div class="ttl">'+esc(s.name)+'</div>'
-        +(st?'<div class="lt-run"><span><b class="mono">'+run+'</b> '+LTL("of ","dari ")+tot+LTL(" days used"," hari terpakai")+'</span><span class="mono">'+pct+'%</span></div><div class="lt-bar '+cls+'"><i style="width:'+pct+'%"></i></div>':'')
-        +'<div class="meta">'+meta.join("")+'</div></div>'+acts(s)+'</li>';
+      const op=ltExp.has(s.id);
+      return '<li class="mid lt-row lt-dn'+(op?' open':'')+'" data-ltx="'+esc(s.id)+'" tabindex="0" aria-expanded="'+op+'"><div class="lt-main"><div class="ttl">'+esc(s.name)+'</div><div class="lt-val '+cls+'"><b>'+Math.abs(d)+'</b> '+lab+'</div><span class="lt-chev" aria-hidden="true">›</span></div>'
+        +'<div class="lt-det">'+(st?'<div class="lt-run"><span><b class="mono">'+run+'</b> '+LTL("of ","dari ")+tot+LTL(" days used"," hari terpakai")+'</span><span class="mono">'+pct+'%</span></div><div class="lt-bar '+cls+'"><i style="width:'+pct+'%"></i></div>':'')
+        +'<div class="meta">'+meta.join("")+'</div>'+acts(s)+'</div></li>';
     };
     const sec=(ic,t,list,row)=>'<section class="lt-sec"><header class="lt-sec-h"><h3>'+ic+' '+t+'</h3><span class="count">'+list.length+'</span></header>'+grouped(list,row)+'</section>';
     if(dn.length)h+=sec("⏳",LTL("Days left","Hari lagi"),dn,rowDn);
     const rowUp=s=>{
       const n=-daysLeft(s.start),fut=n<0,t=today();
       const meta=['<span class="mono">'+LTL("Since ","Sejak ")+esc(fmtDate(s.start))+'</span>',s.note?'<span>'+esc(s.note)+'</span>':''];
-      const span=ltParts(fut?t:s.start,fut?s.start:t).map(p=>'<span class="lt-u"><b>'+p[0]+'</b> '+p[1]+'</span>').join(" ");
-      return '<li class="mid lt-row lt-up"><div class="grow"><div class="ttl">'+esc(s.name)+'</div>'
-        +'<div class="lt-span">'+(fut?'<small>'+LTL("Starts in","Mulai dalam")+'</small> ':'')+span+(fut?'':' <small>'+LTL("so far","sampai hari ini")+'</small>')+'</div>'
-        +'<div class="meta">'+meta.join("")+'</div></div>'+acts(s)+'</li>';
+      const span=ltParts(fut?t:s.start,fut?s.start:t).map(p=>p[0]+' '+p[1]).join(" ");
+      const op=ltExp.has(s.id);
+      return '<li class="mid lt-row lt-upx'+(op?' open':'')+'" data-ltx="'+esc(s.id)+'" tabindex="0" aria-expanded="'+op+'"><div class="lt-main"><div class="ttl">'+esc(s.name)+'</div><div class="lt-val">'+(fut?LTL("in ","dalam ")+esc(span):esc(span))+'</div><span class="lt-chev" aria-hidden="true">›</span></div>'
+        +'<div class="lt-det"><div class="meta">'+meta.join("")+'</div>'+acts(s)+'</div></li>';
     };
     if(up.length)h+=sec("📅",LTL("Days running","Hari berjalan"),up,rowUp);
     el.innerHTML=h;

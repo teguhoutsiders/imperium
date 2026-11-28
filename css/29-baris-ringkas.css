@@ -1,0 +1,77 @@
+/* Baris ringkas (Teguh 2026-11-28): Lead time, Projects (semua layar) dan Tasks (HP) cukup tampilkan yang penting; klik baris untuk detail + Edit/Hapus */
+
+/* ---------- Lead time ---------- */
+.lt-list>li.lt-row{display:block!important;padding:0!important;cursor:pointer;grid-template-columns:none!important}
+.lt-row .lt-main{display:flex;align-items:center;gap:14px;padding:12px 14px;min-width:0}
+.lt-row .lt-main .ttl{flex:1 1 auto;min-width:0;font-weight:500;overflow-wrap:anywhere}
+.lt-row .lt-val{flex:none;font-size:15px;font-weight:600;color:var(--accent);white-space:nowrap;text-align:right}
+.lt-row .lt-val b{font-weight:600}
+.lt-row .lt-val.t-ok{color:var(--ok)}.lt-row .lt-val.t-warn{color:var(--warn)}.lt-row .lt-val.t-crit{color:var(--crit)}
+.lt-chev{flex:none;color:var(--muted);font-size:18px;line-height:1;transition:transform .15s}
+.lt-row.open .lt-chev{transform:rotate(90deg);color:var(--accent)}
+.lt-row .lt-det{display:none;padding:0 14px 12px;cursor:default}
+.lt-row.open .lt-det{display:block}
+.lt-row .lt-det .meta{margin:4px 0 6px}
+.lt-row .lt-det .row-actions{justify-content:flex-start;margin-left:-8px;opacity:1!important}
+.lt-row:hover .lt-main,.lt-row:focus-visible .lt-main{background:color-mix(in srgb,var(--sunk) 55%,transparent)}
+.lt-row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+@media (max-width:760px){.lt-row .lt-main{padding:12px}.lt-row .lt-val{font-size:14px}.lt-row .lt-det{padding:0 12px 12px}}
+
+/* ---------- Projects ---------- */
+.ptbl.ptbl-slim{min-width:0}
+.ptbl-slim tr.prow{cursor:pointer}
+.ptbl-slim tr.has-link a.plink::after{display:none}
+.ptbl-slim td.pst{white-space:nowrap;width:1%}
+.ptbl-slim .pprog{min-width:140px}
+.ptbl-slim th:last-child,.ptbl-slim td:last-child{width:28%}
+.ptbl-slim th:first-child,.ptbl-slim td:first-child{width:auto}
+.ptbl-slim tr.prow.open>td{background:color-mix(in srgb,var(--sunk) 55%,transparent)}
+.pdet-sum{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:10px}
+.pkv{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);min-width:0}
+.pkv>span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.pkv>b{font-size:14px;font-weight:600;overflow-wrap:anywhere}
+.pdet-warn{margin:0 0 8px}
+.pdet-acts{margin:0 0 12px}
+.pdet-acts .row-actions{justify-content:flex-start;margin-left:-8px;opacity:1!important}
+.ptbl-tot{margin:2px 2px 0}
+@media (max-width:760px){
+  .ptbl-slim td,.ptbl-slim th{padding:9px 8px}
+  .pdet-sum{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* ---------- Tasks (HP): nama + persen saja, ketuk untuk detail ---------- */
+@media (max-width:760px){
+  .tk-row{grid-template-columns:minmax(0,1fr) auto auto!important;row-gap:8px;cursor:pointer;align-items:center}
+  .tk-row>.tk-name{grid-column:1!important;grid-row:1}
+  .tk-row>.tk-rate{grid-column:2;grid-row:1;text-align:right!important;font-size:14px;font-weight:600}
+  .tk-row::after{content:"›";grid-column:3;grid-row:1;color:var(--muted);font-size:18px;line-height:1;transition:transform .15s}
+  .tk-row.open::after{transform:rotate(90deg);color:var(--accent)}
+  .tk-row:not(.open)>.tk-name .meta,.tk-row:not(.open)>.tk-cells,.tk-row:not(.open)>.row-actions{display:none!important}
+  .tk-row.open>.tk-name .meta{grid-column:1/-1}
+  .tk-row.open>.tk-cells{grid-column:1/-1!important;grid-row:2}
+  .tk-row.open>.row-actions{grid-column:1/-1;grid-row:3;justify-self:start!important;margin-left:-8px;opacity:1!important}
+  .tk-hint{display:none}
+}
+
+/* Layar kartu menu "Mau buka menu apa?" dihapus (Teguh 2026-11-28): tombolnya disembunyikan */
+#launch-btn{display:none!important}
+@media (max-width:760px){
+  .ptbl-slim thead{display:none}
+  .ptbl-slim tr.prow>td:first-child .ttl{font-size:15px}
+  .ptbl-slim .pprog{display:flex;align-items:center;gap:6px}
+  .ptbl-slim .pprog .bar{flex:1;min-width:30px}
+  .ptbl-slim tr.pdet>td{padding:12px}
+  .pdet-sum .pkv>b{font-size:13px}
+}
+@media (max-width:760px){
+  .ptbl-wrap:has(.ptbl-slim){overflow:hidden}
+  .ptbl-slim{table-layout:fixed;width:100%}
+  .ptbl-slim tr.prow>td.pst{width:96px}
+  .ptbl-slim tr.prow>td:nth-child(3){width:84px}
+  .ptbl-slim tr.prow>td:first-child{width:auto}
+  .ptbl-slim .pname{min-width:0}
+  .ptbl-slim .pname .ttl{overflow-wrap:anywhere}
+  .ptbl-slim .pprog{min-width:0}
+  .ptbl-slim .pprog .mono{font-size:12px}
+  .ptbl-slim tr.pdet>td{width:auto}
+}

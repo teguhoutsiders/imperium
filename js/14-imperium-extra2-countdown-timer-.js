@@ -17,7 +17,7 @@
   }
 
   /* ================= 2. tables become cards on mobile ================= */
-  var TSEL="table.ptbl,table.ie-tbl";
+  var TSEL="table.ptbl:not(.ptbl-slim),table.ie-tbl";
   function labelTables(root){
     (root||document).querySelectorAll(TSEL).forEach(function(t){
       var hr=t.querySelector("thead tr:last-child")||t.querySelector("tr");
