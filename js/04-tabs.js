@@ -1815,12 +1815,11 @@
       const nm='<div class="ttl">'+esc(p.name)+(href?'<svg class="plink-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>':'')+'</div>';
       const tgt='<span class="mono'+(late?' neg':'')+'">'+(done?(p.doneOn?esc(fmtDate(p.doneOn)):(p.due?esc(fmtDate(p.due)):'—')):(p.due?esc(fmtDate(p.due)):'—'))+'</span>';
       let h='<tr class="prow'+(done?' done-row':'')+(open_?' open':'')+'" data-prow="'+esc(p.id)+'">'
-        +'<td><div class="pname"><button type="button" class="pexp" data-pexp="'+esc(p.id)+'" aria-expanded="'+open_+'" aria-label="Show details">▶</button><div class="grow">'+(href?'<a class="plink" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer" title="Open '+esc(host(href))+'">'+nm+'</a>':nm)+'</div></div></td>'
+        +'<td><div class="pname"><button type="button" class="pexp" data-pexp="'+esc(p.id)+'" aria-expanded="'+open_+'" aria-label="Show details">▶</button><div class="grow">'+(href?'<a class="plink" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer" title="Open '+esc(host(href))+'">'+nm+'</a>':nm)+(done?'':'<div class="pprog psub"><div class="bar" role="progressbar" aria-valuenow="'+prog+'" aria-valuemin="0" aria-valuemax="100"><i style="width:'+prog+'%"></i></div><span class="mono">'+prog+'%</span></div>')+'</div></div></td>'
         +'<td class="pst">'+(done?'<span class="mono">'+tgt+'</span>':'<span class="pill '+(SCLS[p.status]||"p-mute")+'">'+esc(STL[p.status]||p.status)+'</span>')+'</td>'
-        +(done?'':'<td><div class="pprog"><div class="bar" role="progressbar" aria-valuenow="'+prog+'" aria-valuemin="0" aria-valuemax="100"><i style="width:'+prog+'%"></i></div><span class="mono">'+prog+'%</span></div></td>')
         +'</tr>';
       if(open_){
-        const cols=done?2:3;
+        const cols=2;
         const kv=(k,v)=>'<div class="pkv"><span>'+k+'</span><b>'+v+'</b></div>';
         h+='<tr class="pdet"><td colspan="'+cols+'">'
           +'<div class="pdet-sum">'
@@ -1844,7 +1843,7 @@
     }
     function table(list,done,title){
       const tot=list.reduce((a,p)=>{const x=stat(p);a.b+=x.bud;a.s+=x.spent;return a},{b:0,s:0});
-      const head='<tr><th>Project</th><th>'+(done?'Finished':'Status')+'</th>'+(done?'':'<th>Progress</th>')+'</tr>';
+      const head='<tr><th>Project</th><th class="r">'+(done?'Finished':'Status')+'</th></tr>';
       const rest=tot.b-tot.s;
       const foot=tot.b||tot.s?'<p class="hint ptbl-tot">Budget '+(tot.b?money(tot.b):'—')+' · Spent '+(tot.s?money(tot.s):'—')+(tot.b?' · Remaining <span class="'+(rest<0?'neg':'')+'">'+money(rest,rest<0)+'</span>':'')+'</p>':'';
       return '<section class="ptbl-sec"><div class="ptbl-h"><h3>'+title+'</h3><span class="count">'+list.length+'</span></div><div class="ptbl-wrap"><table class="ptbl ptbl-slim"><thead>'+head+'</thead><tbody>'+list.map(p=>row(p,done)).join("")+'</tbody></table></div>'+foot+'</section>';

@@ -75,3 +75,13 @@
   .ptbl-slim .pprog .mono{font-size:12px}
   .ptbl-slim tr.pdet>td{width:auto}
 }
+
+/* Projects: kemajuan di bawah judul (Teguh 2026-11-28) */
+.ptbl-slim td.pst{text-align:right;vertical-align:top}
+.ptbl-slim th:last-child,.ptbl-slim td:last-child{width:1%!important}
+.ptbl-slim tr.pdet>td{width:auto!important}
+.ptbl-slim .pname .grow{min-width:0;flex:1}
+.ptbl-slim .pprog.psub{display:flex;align-items:center;gap:8px;margin-top:6px;max-width:420px;min-width:0}
+.ptbl-slim .pprog.psub .bar{flex:1;min-width:40px}
+.ptbl-slim .pprog.psub .mono{font-size:12px;color:var(--muted);min-width:34px;text-align:right}
+@media (max-width:760px){.ptbl-slim tr.prow>td.pst{width:104px!important}.ptbl-slim .pprog.psub{max-width:none}}
