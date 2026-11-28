@@ -24,9 +24,9 @@
   let downloads=null;
 
   /* ---------- tabs ---------- */
-  const TABS=["overview","english","ielts","tugas","calendar","proyek","dreams","files","notes","masa-aktif","akun","record","aset","hutang","budget","kategori","excel","tabel","pengaturan","info","today","weekly","goalmap","insights","career","ventures","people","health","journal"];
+  const TABS=["overview","english","ielts","tugas","calendar","proyek","dreams","files","notes","masa-aktif","akun","record","aset","hutang","budget","kategori","excel","tabel","pengaturan","info","insights","career","ventures"];
   const isMob=()=>matchMedia("(max-width:760px)").matches;
-  const GROUPS={home:["overview","today","weekly"],plan:["tugas","masa-aktif","calendar","proyek","dreams","goalmap"],money:["akun","record","aset","hutang","budget","insights","ventures","kategori"],life:["english","ielts","career","people","health","journal"],lib:["notes","files","excel","tabel"]};
+  const GROUPS={plan:["tugas","masa-aktif","calendar","proyek","dreams"],money:["akun","record","aset","hutang","budget","insights","ventures","kategori"],life:["english","ielts","career"],lib:["notes","files","excel","tabel"]};
   const groupOf=t=>Object.keys(GROUPS).find(g=>GROUPS[g].includes(t))||null;
   function syncGroupCounts(){
     document.querySelectorAll("[data-gc]").forEach(el=>{
@@ -485,7 +485,7 @@
   function dreamKindUi(){const k=$("dream-kind").value;$("lb-dream-goal").hidden=k!=="save";$("lb-dream-train").hidden=k!=="train";
     const h=$("dream-kind-hint");h.hidden=k==="year";
     h.textContent=k==="save"?TT("Progress comes from accounts of type Savings that you link to this target in Finance › Account.","Progres dihitung dari saldo account bertipe Tabungan yang Anda hubungkan ke target ini di Keuangan › Account.")
-      :k==="train"?TT("Progress follows the topics you have marked as understood in Training › Basic English.","Progres mengikuti topik yang sudah Anda centang \"Sudah paham\" di Pelatihan › Basic English."):"";}
+      :k==="train"?TT("Progress follows the topics you have marked as understood in English Academy › Basic English.","Progres mengikuti topik yang sudah Anda centang \"Sudah paham\" di English Academy › Basic English."):"";}
   $("dream-kind").addEventListener("change",dreamKindUi);
   $("f-dream").addEventListener("reset",()=>setTimeout(dreamKindUi,0));
   $("dream-img-del").onclick=async()=>{
@@ -2445,7 +2445,7 @@
   const topKey=c=>c.matches(".ngrp")?"g:"+c.dataset.ng:"t:"+c.dataset.tab;
   const topName=c=>(c.querySelector(".ng-btn .ni")||c.querySelector(".ni")).textContent;
   const DEF_TOP=topEls().map(topKey);
-  function effTop(){const sv=(menuOrder.__top||[]).filter(k=>DEF_TOP.includes(k));DEF_TOP.forEach(k=>{if(!sv.includes(k))sv.push(k)});return Array.from(new Set(sv))}
+  function effTop(){const sv=(menuOrder.__top||[]).filter(k=>DEF_TOP.includes(k));if(sv.length&&!sv.includes("t:overview"))sv.unshift("t:overview");DEF_TOP.forEach(k=>{if(!sv.includes(k))sv.push(k)});return Array.from(new Set(sv))}
   function applyTop(){
     const want=effTop(),els={};topEls().forEach(c=>{els[topKey(c)]=c});
     if(topEls().map(topKey).join()===want.join())return;

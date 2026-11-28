@@ -1,0 +1,20 @@
+/* English Academy (Teguh 2026-11-28): tombol pindah Basic English | IELTS di atas kedua halaman */
+.ea-bar{margin:0 0 var(--ds-4,16px)}
+.ea-in{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ea-k{font-size:var(--ds-fs-xs,12px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ea-seg{display:flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:var(--ds-r-ctl,12px);background:color-mix(in srgb,var(--line) 35%,transparent)}
+.ea-b{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:calc(var(--ds-r-ctl,12px) - 4px);color:var(--muted);text-decoration:none;transition:background .15s,color .15s}
+.ea-b:hover{color:var(--ink);background:color-mix(in srgb,var(--bg) 60%,transparent)}
+.ea-b.on{background:var(--bg);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.ea-no{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;font-size:12px;font-weight:700;background:color-mix(in srgb,var(--muted) 18%,transparent)}
+.ea-b.on .ea-no{background:#DB2777;color:#fff}
+:root[data-mode="dark"] .ea-b.on .ea-no{background:#F472B6;color:#111}
+.ea-t{display:flex;flex-direction:column;line-height:1.2}
+.ea-t b{font-size:var(--ds-fs-sm,14px);font-weight:600}
+.ea-t small{font-size:11px;opacity:.8}
+@media (max-width:760px){
+  .ea-k{display:none}
+  .ea-seg{flex:1}
+  .ea-b{flex:1;justify-content:center;padding:8px 10px}
+  .ea-t small{display:none}
+}

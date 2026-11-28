@@ -80,7 +80,7 @@
     }else ind.hidden=true;
     /* submenu di atas bar */
     if(grp){
-      row.innerHTML='<div class="mns-in">'+grp.subs.filter(function(x){return !x.hide}).map(function(s){var on=s.tab===c;return '<a href="#'+esc(s.tab)+'" class="mns-i'+(on?" on":"")+'" data-go="'+esc(s.tab)+'"'+(on?' aria-current="page"':"")+(s.c?' style="--ic:'+esc(s.c)+'"':"")+' aria-label="'+esc(s.name)+'" title="'+esc(s.name)+'">'+s.icon+badge(s.count)+"</a>"}).join("")+"</div>";
+      row.innerHTML='<div class="mns-in">'+grp.subs.filter(function(x){return !x.hide}).map(function(s){var on=s.tab===c||(c==="ielts"&&s.tab==="english");return '<a href="#'+esc(s.tab)+'" class="mns-i'+(on?" on":"")+'" data-go="'+esc(s.tab)+'"'+(on?' aria-current="page"':"")+(s.c?' style="--ic:'+esc(s.c)+'"':"")+' aria-label="'+esc(s.name)+'" title="'+esc(s.name)+'">'+s.icon+badge(s.count)+"</a>"}).join("")+"</div>";
       row.setAttribute("aria-label",grp.name);row.hidden=false;document.documentElement.classList.add("mnav-sub");
       var a=row.querySelector(".mns-i.on");if(a)try{a.scrollIntoView({block:"nearest",inline:"center"})}catch(_){}
     }else{row.hidden=true;row.innerHTML="";document.documentElement.classList.remove("mnav-sub")}

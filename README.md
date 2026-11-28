@@ -1,6 +1,6 @@
 # Imperium
 
-Buku catatan pribadi (Life OS): hari ini (prioritas, kebiasaan, check-in, jurnal), tugas & rutinitas, tinjauan mingguan, proyek, impian & peta target, keuangan, anggaran & grafik, karier (lamaran kerja), usaha, orang, kesehatan, catatan, berkas, serta pelatihan Basic English dan IELTS. Tekan Ctrl+K untuk mencari apa saja atau mencatat cepat.
+Buku catatan pribadi (Life OS): tugas & rutinitas, proyek, impian, keuangan, anggaran & grafik, karier (lamaran kerja), usaha, catatan, berkas, serta English Academy (Basic English + IELTS dalam satu paket). Tekan Ctrl+K untuk mencari apa saja atau mencatat cepat.
 
 - **Buka**: https://teguhoutsiders.github.io/imperium/
 - **Pemasangan & perawatan**: lihat [PANDUAN.md](PANDUAN.md)

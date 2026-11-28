@@ -10,18 +10,12 @@
 
   /* ---------- header: jalur menu + keterangan singkat ---------- */
   var DESC={
-    today:["Your top 3, routines, habits, check-in and journal for today.","Tiga prioritas, rutinitas, kebiasaan, check-in, dan jurnal hari ini."],
-    weekly:["Look back on the week and set the focus for the next one.","Tinjau minggu ini dan tentukan fokus minggu depan."],
-    goalmap:["Dreams, the projects that serve them and their tasks.","Impian, proyek yang mendukungnya, dan tugas-tugasnya."],
     insights:["Charts of your money, focus time and finished tasks.","Grafik keuangan, waktu fokus, dan tugas selesai."],
     career:["Job applications from wishlist to offer, with follow-ups.","Lamaran kerja dari incaran sampai offer, lengkap dengan follow-up."],
     ventures:["Each business: cash in and out, and its KPIs.","Tiap usaha: uang masuk-keluar dan KPI-nya."],
-    people:["Important contacts, birthdays and who to follow up.","Kontak penting, ulang tahun, dan siapa yang perlu dihubungi."],
-    health:["Sleep, exercise and weight over time.","Tidur, olahraga, dan berat badan dari waktu ke waktu."],
-    journal:["Every journal entry, newest first.","Semua catatan jurnal, terbaru di atas."],
-    overview:["Today, projects, money and links at a glance.","Ringkasan hari ini, proyek, keuangan, dan tautan dalam satu layar."],
-    english:["Grammar step by step, practice and your study streak.","Grammar bertahap, latihan soal, dan catatan belajar Anda."],
-    ielts:["IELTS practice towards band 7: listening, reading, writing, speaking.","Latihan IELTS menuju band 7: listening, reading, writing, speaking."],
+    overview:["Tasks, projects, money and links at a glance.","Ringkasan tugas, proyek, keuangan, dan tautan dalam satu layar."],
+    english:["Basic English · grammar step by step, practice and your study streak.","Basic English · grammar bertahap, latihan soal, dan catatan belajar Anda."],
+    ielts:["IELTS · practice towards band 7 in listening, reading, writing, speaking.","IELTS · latihan menuju band 7: listening, reading, writing, speaking."],
     tugas:["Tasks and daily, weekly and monthly routines.","Tugas dan rutinitas harian, mingguan, bulanan."],
     "masa-aktif":["Things that run out: subscriptions, documents, warranties.","Hal yang punya masa berlaku: langganan, dokumen, garansi."],
     calendar:["Stopwatch sessions and your calendar.","Sesi stopwatch dan kalender Anda."],

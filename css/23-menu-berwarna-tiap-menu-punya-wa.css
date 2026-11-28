@@ -1,7 +1,5 @@
 /* menu berwarna: tiap menu punya warna sendiri (HP dan laptop) */
   .nav>a[data-tab="overview"]{--mc:var(--v4)}
-  .nav>a[data-tab="today"]{--mc:#D97706}
-  :root[data-mode="dark"] .nav>a[data-tab="today"]{--mc:#FBBF24}
   .ngrp[data-ng="life"]{--mc:#DB2777}
   :root[data-mode="dark"] .ngrp[data-ng="life"]{--mc:#F472B6}
   .ngrp[data-ng="train"]{--mc:var(--v2)}
