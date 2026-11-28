@@ -1,5 +1,5 @@
 /* Imperium service worker: jaringan dulu, salinan terakhir saat offline. Data tidak disimpan di sini. */
-const C="imperium-shell-v80";
+const C="imperium-shell-v81";
 const SHELL=["./","index.html","imp-shim.js","manifest.webmanifest","icon-192-v2.png","icon-512-v2.png"];
 /* js/ dan css/ (pecahan index.html) ikut tersimpan otomatis saat pertama dibuka online */
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});

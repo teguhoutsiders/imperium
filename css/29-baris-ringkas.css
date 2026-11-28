@@ -85,3 +85,17 @@
 .ptbl-slim .pprog.psub .bar{flex:1;min-width:40px}
 .ptbl-slim .pprog.psub .mono{font-size:12px;color:var(--muted);min-width:34px;text-align:right}
 @media (max-width:760px){.ptbl-slim tr.prow>td.pst{width:104px!important}.ptbl-slim .pprog.psub{max-width:none}}
+
+/* ---------- HP: perapian (Teguh 2026-11-28) ---------- */
+@media (max-width:760px){
+  /* header atas selebar layar (sebelumnya kurang ±28px di kanan sehingga isi di belakangnya terlihat) */
+  .main>.topbar{width:calc(100% + 28px)!important;max-width:none!important}
+  /* status proyek tidak terpotong: kolom status selebar isinya, nama proyek mengisi sisanya */
+  .ptbl-slim{table-layout:auto!important}
+  .ptbl-slim tr.prow>td.pst{width:1%!important;white-space:nowrap;padding-left:6px}
+  .ptbl-slim tr.prow>td:first-child{width:100%!important}
+  .ptbl-slim td.pst .pill{max-width:none;overflow:visible;text-overflow:clip}
+}
+/* kotak di dalam kartu Ringkasan: beri ruang kiri-kanan supaya teks & bar tidak menempel ke tepi */
+:root[data-ui] .ovc .ov-row{padding:10px 12px!important;margin-top:6px}
+.ovc .ov-row>.grow,.ovc .ov-row .grow{min-width:0}
